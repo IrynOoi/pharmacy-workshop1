@@ -21,15 +21,24 @@
     <ClInclude Include="ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="login.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main_function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="db_connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="login.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
