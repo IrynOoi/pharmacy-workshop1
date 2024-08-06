@@ -17,9 +17,7 @@ using namespace std;
 // Function declaration
 void Loading(); // Declare the function if used
 
-// Define the global variables
-string Admin_ID;
-string Staff_Name;
+string Admin_ID, Staff_ID;
 
 int main()
 {
@@ -28,6 +26,7 @@ int main()
     db_connection db;
     login lg;
 
+
     // Declare variable
     int choice1;
 
@@ -35,12 +34,10 @@ int main()
     system("cls"); // Clear the screen
 
     ui.welcome();
-    db.ConnectionFunction();
-
-    // Input validation loop
 
     do
     {
+        SetConsoleColor(2, 14);
         cout << "\n\n\t\t Please enter your choice: ";
         cin >> choice1;
         // Check for invalid input (if input is not an integer)
@@ -112,7 +109,8 @@ void Loading()
     printf("\t\t\t\t\t");
 
     // Print loading bar progress using character 'b'
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 30; i++)
+    {
         printf("%c", b); // Print filled part of the bar
 
         // Sleep for 60 milliseconds to simulate loading
@@ -120,8 +118,3 @@ void Loading()
     }
 }
 
-// Define the ForgetPassword function if used
-void ForgetPassword()
-{
-    // Implement the forget password functionality here if needed
-}

@@ -31,7 +31,7 @@ void ui::welcome()
     cout << endl << endl << endl;
     system("cls");
     // Set global background to yellow and text to light yellow
-    system("color e0");
+    system("color ec");
 
     // Print the rest of the content with custom colors
     cout << "\t\t|_________________________________________________________________________________________________________________________________________________________|\n";

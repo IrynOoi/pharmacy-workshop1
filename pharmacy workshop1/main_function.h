@@ -1,16 +1,16 @@
-// main_function.h
-#ifndef MAIN_FUNCTIONS_H
-#define MAIN_FUNCTIONS_H
+//main_function
 using namespace std;
-#include <string>
+#ifndef MAIN_FUNCTION_H
+#define MAIN_FUNCTION_H
+
+#include <string> // Include necessary headers
 
 // Function declarations
 int main();
 void Loading();
-void ForgetPassword();
 
-// Global variable declarations
+// Global varible declarations
 extern string Admin_ID;
-extern string Staff_Name;
+extern string Staff_ID;
 
-#endif // MAIN_FUNCTION_H
+#endif // MAIN_FUNCTIONS_H
