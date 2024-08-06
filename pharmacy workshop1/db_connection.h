@@ -1,3 +1,4 @@
+//db_connection.h
 #ifndef DB_CONNECTION_H
 #define DB_CONNECTION_H
 
@@ -6,12 +7,14 @@
 
 class db_connection
 {
-private:
-    MYSQL* conn;
 
+protected: 
+        MYSQL* conn;
+        MYSQL_RES* res; // Declare the result set
+        MYSQL_ROW row; // Declare a row to fetch data
+        int qstate; // Declare the query state
 public:
-    db_connection();
-    ~db_connection();
     void ConnectionFunction();
+
 };
 #endif
