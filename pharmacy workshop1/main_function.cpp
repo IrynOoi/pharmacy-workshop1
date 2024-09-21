@@ -17,7 +17,7 @@ using namespace std;
 // Function declaration
 void Loading(); // Declare the function if used
 
-string Admin_ID,Staff_ID;
+string Admin_ID, Staff_ID;
 
 
 int main()
@@ -58,7 +58,7 @@ int main()
             break; // Valid input, exit the loop
         }
 
-    } while (choice1!=1 || choice1 != 2 || choice1 != 3 ||  choice1 != 4); // Loop will continue until valid input is given
+    } while (choice1 != 1 || choice1 != 2 || choice1 != 3 || choice1 != 4); // Loop will continue until valid input is given
 
     switch (choice1)
     {
@@ -157,5 +157,3 @@ bool isAlphabetic(const string& str) {
     }
     return true;
 }
-
-

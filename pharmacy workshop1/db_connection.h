@@ -8,14 +8,13 @@
 class db_connection
 {
 
-protected: 
-        MYSQL* conn;
-        MYSQL_RES* res; // Declare the result set
-        MYSQL_ROW row; // Declare a row to fetch data
-        int qstate; // Declare the query state
+protected:
+    MYSQL* conn;
+    MYSQL_RES* res; // Declare the result set
+    MYSQL_ROW row; // Declare a row to fetch data
+    int qstate; // Declare the query state
 public:
-    db_connection();
-    ~db_connection();
     void ConnectionFunction();
+
 };
 #endif

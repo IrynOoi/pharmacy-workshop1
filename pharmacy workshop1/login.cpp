@@ -14,10 +14,10 @@ using namespace std;
 void login::mainlogin_pg()
 {
     char choiceLogin;
-   
+
     system("cls");
 
-    SetConsoleColor(0,4);
+    SetConsoleColor(0, 4);
 
     cout << "*******" << endl;
     cout << " LOGIN " << endl;
@@ -158,7 +158,7 @@ void login::AdminMainMenu(string name)//light blue background
     cout << "\nPlease enter your choice: ";
     cin >> AdminMain;
 
-    while (1) 
+    while (1)
     {
 
         if (AdminMain == '1')
@@ -195,16 +195,16 @@ void login::AdminMainMenu(string name)//light blue background
 }
 void login::AdminControlMain(string Admin_Name)
 {
-   
+
     char AdminControl;
     system("cls");
     SetConsoleColor(0, 9);
-   
+
     cout << "********************" << endl;
     cout << " ADMIN CONTROL MENU " << endl;
     cout << "********************" << endl;
     SetConsoleColor(0, 11);
-    cout << "Welcome, admin"<< Admin_Name <<"! What would you like to do?" << endl;
+    cout << "Welcome, admin" << Admin_Name << "! What would you like to do?" << endl;
     cout << endl;
 
     cout << "[A] Add Record" << endl;
@@ -219,7 +219,7 @@ void login::AdminControlMain(string Admin_Name)
 
     switch (AdminControl)
     {
-    
+
     case 'A':
     case 'a':
         AddRecord();
@@ -243,12 +243,12 @@ void login::AdminControlMain(string Admin_Name)
         SearchRecord();
         break;
 
-       case 'E':
+    case 'E':
     case 'e':
         system("cls");
         ModifyRecord();
         break;
-   
+
     case 'M':
     case 'm':
         system("cls");
@@ -282,7 +282,7 @@ void login::AddRecord()
     cout << "\nPlease enter your choice (D, H, B, S, M): ";
     cin >> AdminAdd;
 
-    switch (AdminAdd) 
+    switch (AdminAdd)
     {
 
     case 'D':
@@ -362,7 +362,7 @@ void login::AddPatientMenu()
             DnID.append("PT000");
             DnID.append(to_string(IDNum1));
             break; // Break loop if valid input is received
-}
+        }
         else if (IDNum1 >= 10 && IDNum1 < 100)
         {
             DnID.append("PT00");
@@ -432,13 +432,13 @@ void login::AddPatientMenu()
         cin >> d_year >> d_month >> d_day;
 
         // Check if the input is valid (no alphabetic characters) and non-negative
-        if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31) 
+        if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31)
         {
             cout << "Invalid input! Please enter valid numerical values for year, month, and day.\n";
             cin.clear(); // Clear the error flags
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
         }
-        else 
+        else
         {
             break; // Exit loop if the input is valid
         }
@@ -463,7 +463,7 @@ void login::AddPatientMenu()
     cin.ignore(1, '\n');// Ignore 1 character (likely the leftover newline) in the input buffer from previous input
     getline(cin, Patient_Email);
     cout << "Height: ";
-    while (!(cin >> Patient_Height) || Patient_Height < 0) 
+    while (!(cin >> Patient_Height) || Patient_Height < 0)
     {
         cout << "Invalid input. Please enter a positive number: ";
         cin.clear();
@@ -478,7 +478,7 @@ void login::AddPatientMenu()
     }
 
     cout << "Telephone Number: "; // prompt the user to enter their telephone number
-    while (true) 
+    while (true)
     { // infinite loop until valid input is entered
         cin >> Patient_TelNo; // read input from the user
         bool isValid = true; // assume the input is valid until proven otherwise
@@ -497,7 +497,7 @@ void login::AddPatientMenu()
         // if no dash, add it to the input
         if (!hasDash)
         {
-            if (Patient_TelNo.length() == 10) 
+            if (Patient_TelNo.length() == 10)
             {
                 Patient_TelNo.insert(3, "-"); // add dash after 3 characters
             }
@@ -511,7 +511,7 @@ void login::AddPatientMenu()
         }
 
         // check if the input is in the format XXX-XXXXXXX or XXX-XXXXXXXX
-        if (Patient_TelNo.length() == 11 && Patient_TelNo[3] == '-') 
+        if (Patient_TelNo.length() == 11 && Patient_TelNo[3] == '-')
         {
             for (int i = 0; i < 11; i++) {
                 if (i == 3) continue; // skip the dash character
@@ -602,9 +602,9 @@ void login::AddPatientMenu()
 
 
 
-void login::AddHospitalMenu() 
+void login::AddHospitalMenu()
 {
-    
+
 }
 void login::AddDrugMenu() {}
 void login::AddMedicationTransactionMenu() {}
@@ -620,14 +620,14 @@ void login::ModifyRecord() {}
 void login::SupplierMenu()
 {}
 
-void login::PatientReport() 
+void login::PatientReport()
 {
 
 }
 
 
 
-void login:: StaffMainMenu(string id, string name)//green background
+void login::StaffMainMenu(string id, string name)//green background
 {
     char StaffMainChoice;
 
@@ -704,7 +704,6 @@ void login::ForgetPassword()
 {
     ConnectionFunction();
     system("cls");
-
     cout << "*******************" << endl;
     cout << " PASSWORD RECOVERY " << endl;
     cout << "*******************" << endl;
@@ -773,7 +772,3 @@ void login::ForgetPassword()
         mainlogin_pg();
     }
 }
-
-
-
-   
