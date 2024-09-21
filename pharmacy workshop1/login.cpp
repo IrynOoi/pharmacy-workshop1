@@ -716,7 +716,7 @@ void login::ForgetPassword()
     cout << "\nYour choice: ";
     cin >> recover;
 
-    if (recover == '12')
+    if (recover == '1')
     {
         string Staff_Password;
         system("cls");
