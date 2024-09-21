@@ -1,16 +1,16 @@
 ﻿//main.cpp
 #define NOMINMAX // Prevents windows.h from defining min and max macros
 #include <windows.h>
-
 #include <iostream>
 #include <string> // Include for std::string
 #include <limits> // Include for numeric_limits
 #include <algorithm> // Include for std::max
-
+#include <ctime> // Include this header for time-related functions
 #include "db_connection.h"
 #include "ui.h"
 #include "login.h"
 #include "main_functions.h"
+#include <cctype> // for isalpha() and isspace()
 
 
 using namespace std;
@@ -19,11 +19,12 @@ void Loading(); // Declare the function if used
 
 string Admin_ID,Staff_ID;
 
+
 int main()
 {
     // Declare objects
     ui ui;
-    db_connection db;
+    //db_connection db{};
     login lg;
 
 
@@ -38,7 +39,7 @@ int main()
     do 
     {
         SetConsoleColor(2, 14);
-        cout << "\n\n\t\t Please enter your choice: ";
+        cout << "\n\t\t Please enter your choice: ";
         cin >> choice1;
         // Check for invalid input (if input is not an integer)
         if (cin.fail())
@@ -64,6 +65,7 @@ int main()
     case 1:
         lg.mainlogin_pg();
         break;
+
     }
 
     return 0;
@@ -117,4 +119,43 @@ void Loading()
         Sleep(60);
     }
 }
+
+//calculate age
+int calculateAge(int year, int month, int day)
+{
+    //Getting the current date
+    int currYear, currMonth, currDay;
+    int age = 0;
+
+    time_t now = time(0);
+    tm ltm;
+    localtime_s(&ltm, &now);  // Use localtime_s instead of localtime
+
+    currYear = 1900 + ltm.tm_year;
+    currMonth = 1 + ltm.tm_mon;
+    currDay = ltm.tm_mday;
+
+    // Getting the age by comparing current date and user input date
+    if (currMonth < month || (currMonth == month && currDay < day))
+    {
+        age = currYear - year - 1;
+    }
+    else
+    {
+        age = currYear - year;
+    }
+
+    return age;
+}
+
+// Function to check if a string contains only alphabetic characters and spaces
+bool isAlphabetic(const string& str) {
+    for (char ch : str) {
+        if (!isalpha(ch) && !isspace(ch)) { // Allow spaces if you want names like "John Doe"
+            return false;
+        }
+    }
+    return true;
+}
+
 

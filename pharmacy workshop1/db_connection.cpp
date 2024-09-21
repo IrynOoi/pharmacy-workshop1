@@ -29,6 +29,7 @@ void db_connection::ConnectionFunction()
         else
         {
             cout << "Failed To Connect to MySql!" << mysql_errno(conn) << endl;
+            cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
         }
     
 }
