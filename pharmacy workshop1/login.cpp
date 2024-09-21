@@ -340,9 +340,9 @@ void login::AddPatientMenu()
     {
         system("cls");
         SetConsoleColor(0, 9);
-        cout << "**********************" << endl;
+        cout << "***********************" << endl;
         cout << " ADD RECORDS - Patient " << endl;
-        cout << "**********************" << endl;
+        cout << "***********************" << endl;
         SetConsoleColor(0, 11);
         cout << "Patient ID (nonnegative integer digit only): ";
         cin >> IDNum1;
@@ -716,7 +716,7 @@ void login::ForgetPassword()
     cout << "\nYour choice: ";
     cin >> recover;
 
-    if (recover == '1')
+    if (recover == '12')
     {
         string Staff_Password;
         system("cls");
