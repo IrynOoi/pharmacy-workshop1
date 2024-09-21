@@ -138,7 +138,7 @@
   <ItemGroup>
     <ClCompile Include="db_connection.cpp" />
     <ClCompile Include="login.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_functions.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
