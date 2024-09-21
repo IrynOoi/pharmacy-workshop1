@@ -9,7 +9,7 @@
 #include "db_connection.h"
 #include "ui.h"
 #include "login.h"
-#include "main_functions.h"
+#include "main_function.h"
 #include <cctype> // for isalpha() and isspace()
 
 

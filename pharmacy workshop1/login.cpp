@@ -2,7 +2,7 @@
 #include "login.h"
 #include <iostream>
 #include "ui.h"
-#include "main_functions.h"
+#include "main_function.h"
 #include <conio.h>//for _getch()
 #include <mysql.h>
 #undef max     // Undefine the `max` macro
