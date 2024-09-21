@@ -26,15 +26,15 @@ void login::mainlogin_pg()
     SetConsoleColor(4, 14);
 
     cout << "[1] Login As Admin " << endl;
-    
+
     cout << "[2] Login As Staff " << endl;
-  
+
     cout << "[3] Forget Password" << endl;
-    
+
     cout << "[4] Back to Main Menu" << endl;
     cout << endl;
 
-    while (1) 
+    while (1)
     {
         cout << "Enter your choice (Number 1 - 5 only): ";
         cin >> choiceLogin;
@@ -75,7 +75,7 @@ void login::login_admin()
     cout << " LOGIN AS ADMIN " << endl;
     cout << "****************" << endl;
     cout << endl;
- 
+
     SetConsoleColor(0, 11);
     cout << "Enter Admin ID: ";
     cin >> Admin_ID; // Read the Admin ID from the user
@@ -142,7 +142,7 @@ void login::AdminMainMenu(string name)//light blue background
 
     system("cls");
     SetConsoleColor(0, 9);
-   
+
     cout << "********************" << endl;
     cout << " ADMIN MAIN MENU    " << endl;
     cout << "********************" << endl;
@@ -160,7 +160,7 @@ void login::AdminMainMenu(string name)//light blue background
 
     while (1) 
     {
-      
+
         if (AdminMain == '1')
         {
             AdminControlMain(name);
@@ -362,7 +362,7 @@ void login::AddPatientMenu()
             DnID.append("PT000");
             DnID.append(to_string(IDNum1));
             break; // Break loop if valid input is received
-        }
+}
         else if (IDNum1 >= 10 && IDNum1 < 100)
         {
             DnID.append("PT00");
@@ -704,6 +704,7 @@ void login::ForgetPassword()
 {
     ConnectionFunction();
     system("cls");
+
     cout << "*******************" << endl;
     cout << " PASSWORD RECOVERY " << endl;
     cout << "*******************" << endl;

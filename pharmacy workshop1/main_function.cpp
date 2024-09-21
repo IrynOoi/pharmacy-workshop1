@@ -36,7 +36,7 @@ int main()
 
     ui.welcome();
 
-    do 
+    do
     {
         SetConsoleColor(2, 14);
         cout << "\n\t\t Please enter your choice: ";
@@ -45,15 +45,15 @@ int main()
         if (cin.fail())
         {
             cin.clear(); // Clear the error state
-           cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
             cout << "\n\n\t\t Invalid input. Please enter a number between 1 and 4." << endl;
         }
         // Check for negative values and out-of-range values
-        else if (choice1 < 1 || choice1 > 4) 
+        else if (choice1 < 1 || choice1 > 4)
         {
             cout << "\n\n\t\t Invalid choice. Please enter a number between 1 and 4." << endl;
         }
-        else 
+        else
         {
             break; // Valid input, exit the loop
         }

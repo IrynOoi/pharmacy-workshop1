@@ -11,7 +11,7 @@ void Loading();
 int calculateAge(int year, int month, int day);
 bool isAlphabetic(const string& str);
 // Global varible declarations
-extern string Admin_ID; 
+extern string Admin_ID;
 extern string Staff_ID;
 
 #endif // MAIN_FUNCTIONS_H

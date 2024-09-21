@@ -1,11 +1,9 @@
-//db_connection 
 #include <iostream>
-#define DARK_GREEN "\033[38;5;22m"
 using namespace std;
 #include "db_connection.h"
+#include <mysql.h> //libmysql
 
-
-void db_connection::ConnectionFunction()
+void db_connection:: ConnectionFunction()
 {
         //check whether if database connected
         conn = mysql_init(0); // Initialize the MYSQL object
