@@ -17,7 +17,6 @@ void ui::welcome()
     ifstream in("welcome.txt");
     string line;
 
-   
     system("cls");
     // Clear the screen with the new background color
 
@@ -56,5 +55,4 @@ void ui::welcome()
     cout << "\t\t| Press 4 to EXIT                                                                                                                                         |" << endl;
     cout << "\t\t|_________________________________________________________________________________________________________________________________________________________|\n";
 
-    
 }
