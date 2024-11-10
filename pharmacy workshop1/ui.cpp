@@ -6,6 +6,7 @@
 #include <thread> // For std::this_thread::sleep_for
 #include <chrono> // For std::chrono::milliseconds
 #include <windows.h>
+#include "main_function.h"
 using namespace std;
 
 
@@ -55,6 +56,8 @@ void ui::welcome()
     cout << "\t\t| Press 3 for FORGOT PASSWORD                                                                                                                             |" << endl;
     cout << "\t\t| Press 4 to EXIT                                                                                                                                         |" << endl;
     cout << "\t\t|_________________________________________________________________________________________________________________________________________________________|\n";
-
+    cout << "\t\t";
+    showtime();
+    cout<< endl;
 
 }

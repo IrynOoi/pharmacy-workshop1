@@ -142,6 +142,7 @@
     <ClCompile Include="db_connection.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="main_function.cpp" />
+    <ClCompile Include="registration.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>

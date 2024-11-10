@@ -7,9 +7,9 @@ class login : public db_connection
 {
 public:
 	void mainlogin_pg();
-	void ForgetPassword();
 	void login_staff();
 	void login_admin();
+	void login_patient();
 	void AdminMainMenu(string name);
 	void AdminControlMain(string Admin_Name);
 	void SupplierMenu();
@@ -18,13 +18,15 @@ public:
 	void AddRecord();
 	void DeleteRecord();
 	void UpdateRecord();
-	void SearchRecord();
-	void ModifyRecord();
+	void ViewRecord();
 	void AddPatientMenu();
 	void AddHospitalMenu();
 	void AddDrugMenu();
 	void AddMedicationTransactionMenu();
-
+    void DeletePatientMenu();
+	void DeleteHospitalMenu();
+	void DeleteDrugMenu();
+	void DeleteMedicationTransactionMenu();
 
 };
 #endif

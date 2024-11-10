@@ -10,8 +10,13 @@ int main();
 void Loading();
 int calculateAge(int year, int month, int day);
 bool isAlphabetic(const string& str);
+void showtime();
+void ForgetPassword();
+
 // Global varible declarations
 extern string Admin_ID;
 extern string Staff_ID;
-
+extern string  Patient_ID;
 #endif // MAIN_FUNCTIONS_H
+
+
