@@ -3,7 +3,7 @@
 #define LOGIN_H
 #include "db_connection.h"
 using namespace std;
-class login : public db_connection
+class login 
 {
 public:
 	void mainlogin_pg();

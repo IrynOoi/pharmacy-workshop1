@@ -288,7 +288,7 @@ void login::AddRecord()
 	cout << "[P] Add Record of Patient" << endl;
 	cout << "[H] Add Record of Hospital" << endl;
 	cout << "[D] Add Record of Drugs" << endl;
-	cout << "[S] Add Record of Medical Transaction" << endl;
+	cout << "[T] Add Record of Medical Transaction" << endl;
 	cout << "[M] Main Menu" << endl;
 
 	cout << "\nPlease enter your choice (P, H, D, T, M): ";
@@ -1259,7 +1259,10 @@ void login::AddMedicationTransactionMenu()
 
 }
 
-void login::login_patient() {}
+void login::login_patient()
+{
+
+}
 void login::DeleteRecord()
 {
 	system("cls");
@@ -1317,10 +1320,350 @@ void login::DeleteRecord()
 
 
 
-void login::DeleteHospitalMenu() {}
-void login::DeleteDrugMenu() {}
+void login::DeleteHospitalMenu() 
+{
+	string Hospital_ID;
+	char confirmDel, continueDel;
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "**************************" << endl;
+	cout << " DELETE RECORD - HOSPITAL " << endl;
+	cout << "**************************" << endl;
+	SetConsoleColor(0, 11);
+	cout << "\nEnter Hospital ID to search: ";
+	cin >> Hospital_ID;
 
-void login::DeleteMedicationTransactionMenu() {}
+	// Construct the SQL query to check for the matching hospital record 
+	string searchDel_query = "SELECT Hospital_ID, Hospital_Name, Hospital_Street,Hospital_City, Hospital_State,Availability FROM Hospital WHERE Hospital_ID = '" + Hospital_ID + "';";
+
+	const char* q = searchDel_query.c_str();
+	qstate = mysql_query(conn, q);
+
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+		{
+
+			while (row = mysql_fetch_row(res))
+			{
+				SetConsoleColor(1,11);
+				cout << "\nHere's the record found: \n" << endl;
+				cout << "Hospital ID: " << row[0] << endl;
+				cout << "Hospital Name: " << row[1] << endl;
+				cout << "Hospital Street: " << row[2] << endl;
+				cout << "Hospital City: " << row[3] << endl;
+				cout << "Hospital State: " << row[4] << endl;
+				cout << "Hospital Availability: " << row[5] << endl<<endl;
+				SetConsoleColor(0, 11);
+
+			}
+		}
+		else // If no matching admin is found
+		{
+			char c;
+			cout << "\nInvalid Hospital_ID . Want to try again? (Y/N): ";
+			cin >> c; // Ask the user if they want to try again
+			if (c == 'y' || c == 'Y')
+				DeleteHospitalMenu(); // If yes, call the AdminLogin function to try again
+			else
+				DeleteRecord(); // If no, call the MainLogin function to return to the main login menu
+		}
+	}
+	else
+	{
+		// If the query execution failed
+		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+	}
+
+
+	cout << "Are you sure you want to delete this record? [Y/N]: ";
+	cin >> confirmDel;
+
+	if (confirmDel == 'Y' || confirmDel == 'y')
+	{
+		// Modify to delete query instead of update
+		string delete_query = "DELETE FROM hospital WHERE Hospital_ID = '" + Hospital_ID + "'";
+		const char* q = delete_query.c_str();
+		qstate = mysql_query(conn, q);
+
+		if (!qstate)
+		{
+			cout << "Successfully deleted the hospital 's record!" << endl;
+			char continueDel;
+			bool validInput;
+			do
+			{
+				cout << "Do you want to continue deleting another records? [Y/N]: ";
+				cin >> continueDel;
+
+				// Clear input buffer
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				// Check for valid input
+				if (continueDel == 'y' || continueDel == 'Y') {
+					DeleteHospitalMenu();
+					validInput = true;
+				}
+				else if (continueDel == 'n' || continueDel == 'N') {
+					DeleteRecord();
+					validInput = true;
+				}
+				else {
+					cout << "Invalid input! Please enter Y or N only." << endl;
+					validInput = false;
+				}
+			} while (!validInput);
+		}
+		else
+		{
+			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
+			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+			system("pause");
+			DeleteHospitalMenu();
+		}
+	}
+	else
+	{
+		cout << "Hospital record deletion cancelled." << endl;
+		system("pause");
+		DeleteRecord();
+	}
+
+}
+void login::DeleteDrugMenu()
+{
+	string Medication_ID;
+	char confirmDel, continueDel;
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "**************************" << endl;
+	cout << " DELETE RECORD - DRUGS    " << endl;
+	cout << "**************************" << endl;
+	SetConsoleColor(0, 11);
+	cout << "\nEnter Medication ID to search: ";
+	cin >> Medication_ID ;
+
+	// Construct the SQL query to check for the matching hospital record 
+	string searchDel_query = "SELECT Medication_ID, Medication_Name, Medication_Type,Dosage_Form,Strength ,Description_text,Side_Effects,usage_text FROM medication WHERE Medication_ID = '" + Medication_ID + "';";
+
+	const char* q = searchDel_query.c_str();
+	qstate = mysql_query(conn, q);
+
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+		{
+
+			while (row = mysql_fetch_row(res))
+			{
+				SetConsoleColor(1, 11);
+				cout << "\nHere's the record found : \n" << endl;
+				cout << "Medication ID : " << row[0] << endl;
+				cout << "Medication Name: " << row[1] << endl;
+				cout << "Medication Type : " << row[2] << endl;
+				cout << "Dosage Form : " << row[3] << endl;
+				cout << "Strength : " << row[4] << endl;
+				cout << "Description text : " << row[5] << endl;
+				cout << "Side Effects : " << row[6] << endl;
+				cout << "Usage text : " << row[7] << endl << endl;
+				SetConsoleColor(0, 11);
+
+			}
+		}
+		else // If no matching admin is found
+		{
+			char c;
+			cout << "\nInvalid Medication_ID . Want to try again? (Y/N): ";
+			cin >> c; // Ask the user if they want to try again
+			if (c == 'y' || c == 'Y')
+				DeleteDrugMenu(); // If yes, call the DeleteDrugMenu function to try again
+			else
+				DeleteRecord(); // If no, call the DeleteRecord  function to return to the main login menu
+		}
+	}
+	else
+	{
+		// If the query execution failed
+		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+	}
+
+
+	cout << "Are you sure you want to delete this record? [Y/N]: ";
+	cin >> confirmDel;
+
+	if (confirmDel == 'Y' || confirmDel == 'y')
+	{
+		// Modify to delete query instead of update
+		string delete_query = "DELETE FROM medication WHERE Medication_ID = '" + Medication_ID + "'";
+		const char* q = delete_query.c_str();
+		qstate = mysql_query(conn, q);
+
+		if (!qstate)
+		{
+			cout << "Successfully deleted the drug 's record!" << endl;
+			char continueDel;
+			bool validInput;
+			do
+			{
+				cout << "Do you want to continue deleting another records? [Y/N]: ";
+				cin >> continueDel;
+
+				// Clear input buffer
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				// Check for valid input
+				if (continueDel == 'y' || continueDel == 'Y') {
+					DeleteDrugMenu();
+					validInput = true;
+				}
+				else if (continueDel == 'n' || continueDel == 'N') {
+					DeleteRecord();
+					validInput = true;
+				}
+				else {
+					cout << "Invalid input! Please enter Y or N only." << endl;
+					validInput = false;
+				}
+			} while (!validInput);
+		}
+		else
+		{
+			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
+			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+			system("pause");
+			DeleteDrugMenu();
+		}
+	}
+	else
+	{
+		cout << "Drug record deletion cancelled." << endl;
+		system("pause");
+		DeleteRecord();
+	}
+
+	
+	
+
+}
+
+void login::DeleteMedicationTransactionMenu() 
+{
+	string Transaction_ID ;
+	char confirmDel, continueDel;
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "*******************************************" << endl;
+	cout << " DELETE RECORD -  MEDICATION TRANSACTION   " << endl;
+	cout << "*******************************************" << endl;
+	SetConsoleColor(0, 11);
+	cout << "\nEnter Transaction ID to search: ";
+	cin >> Transaction_ID ;
+
+	// Construct the SQL query to check for the matching hospital record 
+	string searchDel_query = "SELECT Transaction_ID,Transaction_Date, Medication_ID,Quantity,Patient_ID ,Status FROM medication_transaction WHERE Transaction_ID = '" + Transaction_ID + "';";
+
+	const char* q = searchDel_query.c_str();
+	qstate = mysql_query(conn, q);
+
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+		{
+
+			while (row = mysql_fetch_row(res))
+			{
+				SetConsoleColor(1, 11);
+				cout << "\nHere's the record found : \n" << endl;
+				cout << "Transaction ID : " << row[0] << endl;
+				cout << "Transaction Date " << row[1] << endl;
+				cout << "Medication ID : " << row[2] << endl;
+				cout << "Quantity : " << row[3] << endl;
+				cout << "Patient ID : " << row[4] << endl;
+			
+				SetConsoleColor(0, 11);
+
+			}
+		}
+		else // If no matching admin is found
+		{
+			char c;
+			cout << "\nInvalid Transaction ID. Want to try again? (Y/N): ";
+			cin >> c; // Ask the user if they want to try again
+			if (c == 'y' || c == 'Y')
+				DeleteMedicationTransactionMenu() ; // If yes, call the DeleteDrugMenu function to try again
+			else
+				DeleteRecord(); // If no, call the DeleteRecord  function to return to the main login menu
+		}
+	}
+	else
+	{
+		// If the query execution failed
+		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+	}
+
+
+	cout << "Are you sure you want to delete this record? [Y/N]: ";
+	cin >> confirmDel;
+
+	if (confirmDel == 'Y' || confirmDel == 'y')
+	{
+		// Modify to delete query instead of update
+		string delete_query = "DELETE FROM medication_transaction WHERE Transaction_ID = '" + Transaction_ID + "'";
+		const char* q = delete_query.c_str();
+		qstate = mysql_query(conn, q);
+
+		if (!qstate)
+		{
+			cout << "Successfully deleted the drug 's record!" << endl;
+			char continueDel;
+			bool validInput;
+			do
+			{
+				cout << "Do you want to continue deleting another records? [Y/N]: ";
+				cin >> continueDel;
+
+				// Clear input buffer
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+				// Check for valid input
+				if (continueDel == 'y' || continueDel == 'Y') {
+					DeleteMedicationTransactionMenu() ;
+					validInput = true;
+				}
+				else if (continueDel == 'n' || continueDel == 'N') {
+					DeleteRecord();
+					validInput = true;
+				}
+				else {
+					cout << "Invalid input! Please enter Y or N only." << endl;
+					validInput = false;
+				}
+			} while (!validInput);
+		}
+		else
+		{
+			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
+			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+			system("pause");
+			DeleteDrugMenu();
+		}
+	}
+	else
+	{
+		cout << "Drug record deletion cancelled." << endl;
+		system("pause");
+		DeleteRecord();
+	}
+}
 
 void login::DeletePatientMenu()
 {
@@ -1568,7 +1911,9 @@ void login::ViewRecord() {}
 
 
 void login::SupplierMenu()
-{}
+{
+
+}
 
 void login::PatientReport()
 {

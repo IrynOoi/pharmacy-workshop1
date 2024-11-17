@@ -134,12 +134,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="db_connection.h" />
+    <ClInclude Include="DeleteItem.h" />
     <ClInclude Include="login.h" />
     <ClInclude Include="main_function.h" />
     <ClInclude Include="ui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="db_connection.cpp" />
+    <ClCompile Include="DeleteItem.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="main_function.cpp" />
     <ClCompile Include="registration.cpp" />
