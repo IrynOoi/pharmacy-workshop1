@@ -12,6 +12,7 @@
 #include "login.h"
 #include "main_function.h"
 #include <cctype> // for isalpha() and isspace()
+#include "registration.h"
 
 
 using namespace std;
@@ -25,8 +26,8 @@ int main()
 {
 	// Declare objects
 	ui ui;
-	//db_connection db{};
 	login lg;
+	registration rg;
 
 
 	// Declare variable
@@ -69,9 +70,13 @@ int main()
 		break;
 
 	case 2:
+		rg.Registration();
 
 	case 3:
 		ForgetPassword();
+	case 4:
+		exit(0);
+		break;
 	default:
 		cout << "Please choose between 1 - 3. Press Enter To Continue...";
 		_getch(); //get char - pause console 
@@ -195,9 +200,12 @@ void ForgetPassword()
 {
 	login lg;
 	system("cls");
+	SetConsoleColor(0, 3);
 	cout << "*******************" << endl;
 	cout << " PASSWORD RECOVERY " << endl;
 	cout << "*******************" << endl;
+	SetConsoleColor(0,14);
+
 	char recover;
 
 	cout << "\nAre you a ?" << endl;

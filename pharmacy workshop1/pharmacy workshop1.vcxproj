@@ -133,19 +133,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="InsertData.h" />
     <ClInclude Include="db_connection.h" />
-    <ClInclude Include="DeleteItem.h" />
+    <ClInclude Include="Delete.h" />
     <ClInclude Include="login.h" />
     <ClInclude Include="main_function.h" />
+    <ClInclude Include="registration.h" />
     <ClInclude Include="ui.h" />
+    <ClInclude Include="UpdateData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InsertData.cpp" />
     <ClCompile Include="db_connection.cpp" />
-    <ClCompile Include="DeleteItem.cpp" />
+    <ClCompile Include="Delete.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="main_function.cpp" />
     <ClCompile Include="registration.cpp" />
     <ClCompile Include="ui.cpp" />
+    <ClCompile Include="UpdateData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

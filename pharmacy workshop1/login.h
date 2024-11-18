@@ -15,18 +15,11 @@ public:
 	void SupplierMenu();
 	void PatientReport();
 	void StaffMainMenu(string id, string name);
-	void AddRecord();
-	void DeleteRecord();
+	
 	void UpdateRecord();
 	void ViewRecord();
-	void AddPatientMenu();
-	void AddHospitalMenu();
-	void AddDrugMenu();
-	void AddMedicationTransactionMenu();
-    void DeletePatientMenu();
-	void DeleteHospitalMenu();
-	void DeleteDrugMenu();
-	void DeleteMedicationTransactionMenu();
+	
+
 
 };
 #endif
