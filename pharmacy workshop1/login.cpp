@@ -161,7 +161,6 @@ void login::login_admin()
 
 
 
-
 void login::AdminMainMenu(string name)//light blue background
 {
 	char AdminMain;
@@ -189,7 +188,7 @@ void login::AdminMainMenu(string name)//light blue background
 
 		if (AdminMain == '1')
 		{
-			AdminControlMain(name);
+			AdminControlMenu(name);
 		}
 		else if (AdminMain == '2')
 		{
@@ -215,21 +214,29 @@ void login::AdminMainMenu(string name)//light blue background
 
 
 }
-void login::AdminControlMain(string Admin_Name)
+
+void login::AdminControlMenu(string name) {}
+
+
+
+
+
+
+void login::StaffControlMain(string Staff_Name)
 {
 	InsertData id;
 	UpdateData ud;
-	char AdminControl;
+	char StaffControl;
 	Delete dl;
 	system("cls");
 	SetConsoleColor(0, 9);
 
 	cout << "********************" << endl;
-	cout << " ADMIN CONTROL MENU " << endl;
+	cout << " STAFF CONTROL MENU " << endl;
 	cout << "********************" << endl;
 	SetConsoleColor(0, 11);
 
-	cout << "Welcome, admin" << Admin_Name << "! What would you like to do?" << endl;
+	cout << "Welcome, " << Staff_Name << "! What would you like to do?" << endl;
 	cout << endl;
 
 	cout << "[A] Add Record" << endl;
@@ -239,9 +246,9 @@ void login::AdminControlMain(string Admin_Name)
 	cout << "[M] Admin Main Menu" << endl;
 
 	cout << "\nPlease enter your choice (A, B, C, D, M): ";
-	cin >> AdminControl;
+	cin >> StaffControl;
 
-	switch (AdminControl)
+	switch (StaffControl)
 	{
 
 	case 'A':
@@ -271,13 +278,13 @@ void login::AdminControlMain(string Admin_Name)
 	case 'M':
 	case 'm':
 		system("cls");
-		AdminMainMenu(Admin_Name);
+		StaffMainMenu(Staff_Name);
 		break;
 
 
 	default:
 		cout << "Invalid choice!" << endl;
-		AdminControlMain(Admin_Name);
+		StaffControlMain(Staff_Name);
 	}
 }
 
@@ -304,13 +311,15 @@ void login::PatientReport()
 
 
 
-void login::StaffMainMenu(string id, string name)//green background
+void login::StaffMainMenu(string name)//green background
 {
-	char StaffMainChoice;
 
+	char StaffMainChoice;
+	SetConsoleColor(0, 9);
 	cout << "******************" << endl;
 	cout << " STAFF MAIN MENU  " << endl;
 	cout << "******************" << endl;
+	SetConsoleColor(0,11);
 
 
 	cout << "Welcome, staff " << name << "!" << endl;
@@ -322,7 +331,26 @@ void login::StaffMainMenu(string id, string name)//green background
 	cout << "[4] Account Information" << endl;
 	cout << "[5] Back to main menu" << endl;
 	cout << "\nYour choice (1 - 5): ";
-	cin >> StaffMainChoice;
+	cin >> StaffMainChoice ;
+
+	while (1)
+	{
+
+		if (StaffMainChoice == '1')
+		{
+			StaffControlMain(name);
+		}
+		
+		else {
+			cout << "Invalid Choice! Only numeric number! Please enter again! ";
+			cout << "\n";
+			system("pause");
+			mainlogin_pg();
+		}
+	}
+
+
+
 }
 
 void login::login_staff()
@@ -330,22 +358,40 @@ void login::login_staff()
 
 	string Staff_Password, Staff_Name;
 	system("cls");
-	SetConsoleColor(0, 12);
+
+	system("color B0");
+
+	SetConsoleColor(0, 9);
 	cout << "*****************" << endl;
 	cout << " LOGIN AS STAFF  " << endl;
 	cout << "*****************" << endl;
 	cout << endl;
-	SetConsoleColor(0, 14);
+	SetConsoleColor(0, 11);
 	cout << "Enter Staff ID: ";
 	cin >> Staff_ID;
 	cout << "Enter Password: ";
 	char ch;
 	while ((ch = _getch()) != 13)
-	{
-		Staff_Password += ch;
-		cout << "*";
+	{ // Read each character of the password until Enter key (ASCII 13) is pressed
+		if (ch == 8)
+		{ // If the character is backspace (ASCII 8)
+			if (!Staff_Password.empty())
+			{
+				Staff_Password.pop_back(); // Remove last character from the password string
+				cout << "\b \b"; // Move the cursor back, print space to overwrite the asterisk, and move back again
+			}
+		}
+		else if (ch == ' ') { // Allow spaces in the password
+			Staff_Password += ch;
+			cout << " "; // Display a space
+		}
+		else
+		{
+			Staff_Password += ch; // Append each character to the password string
+			cout << "*"; // Display an asterisk for each character typed
+		}
 	}
-
+	cout << endl; // Move to the next line after pressing Enter
 	string checkUser_query = "SELECT Staff_ID, Staff_Name FROM staff WHERE Staff_ID = '" + Staff_ID + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active' ";
 	const char* cu = checkUser_query.c_str();
 	qstate = mysql_query(conn, cu);
@@ -360,7 +406,7 @@ void login::login_staff()
 				Staff_Name = row[1];
 			}
 			system("cls");
-			StaffMainMenu(Staff_ID, Staff_Name);
+			StaffMainMenu( Staff_Name);
 		}
 		else
 		{

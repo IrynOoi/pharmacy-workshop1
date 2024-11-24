@@ -11,11 +11,11 @@ public:
 	void login_admin();
 	void login_patient();
 	void AdminMainMenu(string name);
-	void AdminControlMain(string Admin_Name);
+	void StaffControlMain(string Admin_Name);
 	void SupplierMenu();
 	void PatientReport();
-	void StaffMainMenu(string id, string name);
-	
+	void StaffMainMenu( string name);
+	void AdminControlMenu(string name);
 	void UpdateRecord();
 	void ViewRecord();
 	

@@ -52,7 +52,7 @@ void Delete ::DeleteRecord()
 
 	case 'M':
 	case 'm':
-		lg.AdminControlMain(name);
+		lg.StaffControlMain(name);
 		break;
 
 	default:

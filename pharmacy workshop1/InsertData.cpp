@@ -1,4 +1,4 @@
-//Delete.cpp
+//Insert.cpp
 #include "login.h"
 #include <iostream>
 #include "ui.h"
@@ -54,7 +54,7 @@ void  InsertData ::AddRecord()
 
 	case 'M':
 	case 'm':
-		lg.AdminControlMain(name);
+		lg.StaffControlMain(name);
 		break;
 
 	default:
@@ -330,6 +330,9 @@ void  InsertData::AddPatientMenu()
 	cout << "Diagnosed_Symptoms: ";
 	cin.ignore(); // Clear newline character from previous input
 	getline(cin, Diagnosed_Symptoms);
+	cout << "Patient Password : ";
+	cin.ignore(); // Clear newline character from previous input
+	getline(cin, Patient_Password);
 
 	string Active_Status = "Active";
 	string insert_query = "INSERT INTO patient (Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
@@ -350,6 +353,8 @@ void  InsertData::AddPatientMenu()
 
 	const char* q = insert_query.c_str();
 	qstate = mysql_query(conn, q);
+
+
 	if (!qstate)
 	{
 		cout << endl << "Patient is successfully added in database." << endl;
