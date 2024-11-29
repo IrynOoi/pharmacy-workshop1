@@ -141,6 +141,7 @@
     <ClInclude Include="registration.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="UpdateData.h" />
+    <ClInclude Include="ViewData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InsertData.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="registration.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="UpdateData.cpp" />
+    <ClCompile Include="ViewData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

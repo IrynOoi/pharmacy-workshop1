@@ -12,6 +12,7 @@
 #include "Delete.h"
 #include "InsertData.h"
 #include "UpdateData.h"
+#include "ViewData.h"
 
 
 using namespace std;
@@ -228,6 +229,7 @@ void login::StaffControlMain(string Staff_Name)
 	UpdateData ud;
 	char StaffControl;
 	Delete dl;
+	ViewData vr;
 	system("cls");
 	SetConsoleColor(0, 9);
 
@@ -271,7 +273,7 @@ void login::StaffControlMain(string Staff_Name)
 	case 'D':
 	case 'd':
 		system("cls");
-		ViewRecord();
+		vr.ViewRecord();
 		break;
 
 
