@@ -520,7 +520,7 @@ void UpdateData::UpdatePatientMenu()
 			{
 				cout << "Patient Password : ";
 				cin.ignore(); // Clear newline character from previous input
-				getline(cin, Diagnosed_Symptoms);
+				getline(cin, Patient_Password);
 
 				string update_query = "UPDATE patient SET  Patient_Password  = '" + Patient_Password + "'WHERE Patient_ID = '" + Patient_ID + "';";
 				const char* q = update_query.c_str();
@@ -1327,7 +1327,10 @@ void UpdateData::UpdateMedicationTransactionMenu()
 					cout << "Status:" << endl;
 					cout << "[1] Completed" << endl;
 					cout << "[2] Pending" << endl;
+					cout << "[3] Cancelled " << endl;
+
 					cout << "Enter your choice (1 or 2): ";
+				
 					cin >> choicestatus;
 
 					// Validate input
@@ -1349,6 +1352,12 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				{
 					status = "Pending";
 				}
+				else if (choicestatus == 3)
+				{
+					status = "Cancelled";
+				}
+
+
 				string update_query = "UPDATE medication_transaction Status = '" + status + "'WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
