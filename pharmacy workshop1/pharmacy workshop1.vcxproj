@@ -121,15 +121,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\xienx\Desktop\大学\WORKSHOP REFERENCE\pharmacy workshop1\pharmacy workshop1\vcpkg\packages\libharu_x64-windows\include;C:\mysql-connector-c++-9.0.0-winx64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ASUS\Desktop\UTEM%28temporary%29\pharmacy workshop1\pharmacy workshop1\pharmacy workshop1\vcpkg\packages\libharu_x64-windows\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\xienx\Desktop\大学\WORKSHOP REFERENCE\pharmacy workshop1\pharmacy workshop1\vcpkg\packages\libharu_x64-windows\lib;C:\mysql-connector-c++-9.0.0-winx64\lib64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>hpdf.lib;vs14/mysqlcppconn.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\ASUS\Desktop\UTEM%28temporary%29\pharmacy workshop1\pharmacy workshop1\pharmacy workshop1\vcpkg\packages\libharu_x64-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>hpdf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
