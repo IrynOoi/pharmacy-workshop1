@@ -13,7 +13,14 @@
 #include "ViewData.h"
 #include <iomanip> // Required for setprecision
 #include <ctime>
-#include <sstream>
+// ANSI escape codes for colors
+#define MAGENTA "\033[35m"
+#define RESET "\033[0;30;106m" // Black text with Light Aqua background
+#define BLUE "\033[34m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#include <windows.h> // Example, if `BLUE` is a Windows color constant
+
 using namespace std;
 
 
@@ -381,11 +388,10 @@ void ViewData::ViewDrugMenu()
 {
 
     login lg;
-    string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name;
+    string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name, searchDChoice;
     double Price;
 
     char SearchHosp;
-    int searchHospChoice;
     bool valid = false;
     system("cls");
     SetConsoleColor(0, 9);
@@ -408,9 +414,9 @@ void ViewData::ViewDrugMenu()
 
     cout << "\nYour Choice >> ";
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
-    cin >> searchHospChoice;
+    cin >> searchDChoice;
 
-    if (searchHospChoice == 1)
+    if (searchDChoice == "1")
     {
         cout << "\nEnter Medication ID to search (positive number input): ";
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
@@ -455,7 +461,7 @@ void ViewData::ViewDrugMenu()
             ViewRecord();
         }
     }
-    else if (searchHospChoice == 2)
+    else if (searchDChoice == "2")
     {
         do
         {
@@ -505,14 +511,20 @@ void ViewData::ViewDrugMenu()
         }
         else
         {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
+            if (cin.fail())
+            {
+                cin.clear(); // Clear the error flag
+                cin.ignore(INT_MAX, '\n'); // Ignore invalid input
+                cout << "Please enter a valid choice." << endl;
+                ViewRecord();
+            }
+
         }
+
     }
 
 
-    else if (searchHospChoice == 3)
+    else if (searchDChoice == "3")
     {
         do
         {
@@ -565,7 +577,7 @@ void ViewData::ViewDrugMenu()
         }
     }
 
-    else if (searchHospChoice == 4)
+    else if (searchDChoice =="4" )
     {
         cin.ignore();
         do
@@ -620,7 +632,7 @@ void ViewData::ViewDrugMenu()
     }
 
 
-    else if (searchHospChoice == 5)
+    else if (searchDChoice == "5")
     {
 
         cin.ignore();
@@ -680,7 +692,7 @@ void ViewData::ViewDrugMenu()
         }
     }
 
-    else if (searchHospChoice == 6)
+    else if (searchDChoice == "6")
     {
 
 
@@ -741,7 +753,7 @@ void ViewData::ViewDrugMenu()
         }
     }
 
-    else if (searchHospChoice == 7)
+    else if (searchDChoice == "7")
     {
 
         cin.ignore();
@@ -801,7 +813,7 @@ void ViewData::ViewDrugMenu()
 
     }
 
-    else if (searchHospChoice == 8)
+    else if (searchDChoice == "8")
     {
         cin.ignore();
 
@@ -858,7 +870,7 @@ void ViewData::ViewDrugMenu()
 
     }
 
-    else if (searchHospChoice == 9)
+    else if (searchDChoice == "9")
     {
         do
         {
@@ -921,85 +933,24 @@ void ViewData::ViewDrugMenu()
         }
     }
 
-    else if (searchHospChoice == 9)
-    {
 
-        do
+   
+        else if (searchDChoice == "10")
         {
-            cout << "Price: ";
-            cin >> Price;
-
-            // Check if the input is numeric and positive
-            if (cin.fail() || Price <= 0)
-            {
-                cin.clear();                  // Clear the error flag
-                cin.ignore(INT_MAX, '\n');    // Ignore invalid input
-                cout << "Invalid Input! Please enter a positive numeric value for the price." << endl;
-                valid = false;
-            }
-            else
-            {
-                valid = true;
-            }
-        } while (!valid);
-
-        // Construct the SQL query with an exact numeric comparison
-        string search_query = "SELECT Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, Price "
-            "FROM medication WHERE ROUND(Price, 2) = ROUND(" + to_string(Price) + ", 2);";
-
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-                SetConsoleColor(1, 11);
-                cout << "\nHere's the record found: \n" << endl;
-
-                cout << "Medication ID: " << row[0] << endl;
-                cout << "Medication Name: " << row[1] << endl;
-                cout << "Medication Type: " << row[2] << endl;
-                cout << "Dosage Form: " << row[3] << endl;
-                cout << "Strength: " << row[4] << endl;
-                cout << "Description: " << row[5] << endl;
-                cout << "Side Effects: " << row[6] << endl;
-                cout << "Usage Instructions: " << row[7] << endl;
-                cout << "Price: " << row[8] << endl << endl;
-
-                SetConsoleColor(0, 11);
-            }
-            cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+            lg.StaffControlMain(name);
         }
+
         else
         {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
+            if (cin.fail())
+            {
+                cin.clear(); // Clear the error flag
+                cin.ignore(INT_MAX, '\n'); // Ignore invalid input
+                cout << "Please enter a valid choice." << endl;
+                ViewRecord();
+            }
+
         }
-    }
-
-
-
-
-
-    else if (searchHospChoice == 10)
-    {
-        lg.StaffControlMain(name);
-    }
-
-    else
-    {
-        cout << "Error! Invalid input for searching!" << endl;
-        system("pause");
-        // Call the same menu to stay within context
-        ViewMedicationTransactionMenu(); // or ViewDrugMenu() based on context
-    }
 
 
 }
@@ -1590,6 +1541,7 @@ void ViewData::ViewPatientMenu()
     cout << "[11]   Medical History" << endl;
     cout << "[12]   Diagnosed Symptoms" << endl;
     cout << "[13]   Active Status" << endl;
+    cout << "[14]   Back to View Record Menu" << endl;
 
 
 
@@ -2443,14 +2395,344 @@ void ViewData::ViewPatientMenu()
 
     }
 
+    else if (searchPChoice == "14")
+    {
+        lg.StaffControlMain(name);
+    }
+
+    else
+    {
+        if (cin.fail())
+        {
+            cin.clear(); // Clear the error flag
+            cin.ignore(INT_MAX, '\n'); // Ignore invalid input
+            cout << "Please enter a valid choice." << endl;
+            ViewRecord();
+        }
+
+    }
+}
 
 
 
+void getreport()
+{
+    system("cls");
+    ViewData Vd;
+
+    cout << "\n";
+    cout << "\t\t\t\t\t\t\t";
+
+    cout << "*************" << MAGENTA << " SALES YEAR REPORT " << RESET << "*************" << endl;
+    cout << "\n";
+    string select_queryqq = "SELECT YEAR(Transaction_time)  AS sale_year, COUNT(*) AS total_sales, SUM( total_price) AS total_price  FROM medication_transaction GROUP BY sale_year ORDER BY sale_year ";
+    //cout << select_query<<endl;
+    const char* q23 = select_queryqq.c_str();
+    qstate = mysql_query(conn, q23);
+
+
+
+    if (!qstate)
+    {
+
+        cout << "\t\t\t";
+
+        cout << "YEAR" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << setw(16) << "CHART" << endl;
+        cout << "\t               ";
+        cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+        res = mysql_store_result(conn);
+        double totalPercentage = 0.0;
+        double totalpriceall = 0.0;
+
+        string namemonth;
+        while ((row = mysql_fetch_row(res)) != NULL)
+        {
+            string  date = row[0];
+            int totalSales = atoi(row[1]);//the number of transactions for that year
+            double totalPrice = atof(row[2]);
+
+            // Calculate percentage
+            double percentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) );
+
+            // Update total percentage
+            totalPercentage += percentage;
+        }
+
+        // Adjust percentages proportionally to ensure the total is 100%
+        if (totalPercentage != 100.0)
+        {
+            //cout << "Adjusting percentages to ensure total is 100%" << endl;
+            double scale = 100.0 / totalPercentage;
+
+            // Output adjusted percentages
+            mysql_data_seek(res, 0); // Reset the result set to the beginning
+            while ((row = mysql_fetch_row(res)) != NULL) 
+            {
+                string  date = row[0];
+                int totalSales = atoi(row[1]);
+                double totalPrice = atof(row[2]);
+                totalpriceall += totalPrice;
+
+
+                // Calculate and output adjusted percentage
+                double adjustedPercentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) ) * scale;
+                //cout << fixed  << setprecision(2)  << setw(5) << left << namemonth  <<setw(27) << right << totalPrice << setw(22) << right << adjustedPercentage << "%" << setw(20);
+                cout << fixed << setprecision(2);
+                cout << "\t\t        " << setw(15) << date
+                    << setw(20) << right << totalPrice
+                    << setw(20) << right << adjustedPercentage << "%" << setw(20);
+
+                for (int i = 0; i < totalSales; ++i) 
+                {
+                    cout << BLUE << "*" << RESET;
+                }
+
+                cout << endl;
+            }
+        }
+
+        // Display the total percentage row without month information
+        cout << "\t               ";
+        cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+        cout << "\t               ";
+        cout << "TOTAL SALES " << setw(24) << BLUE << totalpriceall << RESET << setw(23) << "100.00 % " << endl;
+        mysql_free_result(res);
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << "\n";
+    cout << "\t\t\t\t\t\t\t";
+    std::cout << "*************" << MAGENTA << " SALES MONTHLY REPORT " << RESET << "*************" << endl;
+    cout << "\n";
+    // Execute the query
+    string select_query = "SELECT MONTH(Transaction_time) AS sales_month, COUNT(*) AS total_sales, SUM(total_price)   FROM medication_transaction GROUP BY sales_month ORDER BY sales_month ";
+    const char* q = select_query.c_str();
+    qstate = mysql_query(conn, q);
+
+
+    if (!qstate)
+    {
+
+        cout << "\t\t\t";
+        cout << "MONTH" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << setw(15) << "CHART" << endl;
+        cout << "\t               ";
+        cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+        res = mysql_store_result(conn);
+        double totalPercentage = 0.0;
+        double totalpriceall = 0.0;
+
+
+
+        string namemonth;
+        while ((row = mysql_fetch_row(res)) != NULL) {
+            int month = atoi(row[0]);
+            int totalSales = atoi(row[1]);
+            double totalPrice = atof(row[2]);
+
+            // Calculate percentage
+            double percentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) );
+
+
+            // Update total percentage
+            totalPercentage += percentage;
+        }
+
+        // Adjust percentages proportionally to ensure the total is 100%
+        if (totalPercentage != 100.0) {
+            //cout << "Adjusting percentages to ensure total is 100%" << endl;
+            double scale = 100.0 / totalPercentage;
+
+            // Output adjusted percentages
+            mysql_data_seek(res, 0); // Reset the result set to the beginning
+            while ((row = mysql_fetch_row(res)) != NULL) {
+
+                int month = atoi(row[0]);
+                int totalSales = atoi(row[1]);
+                double totalPrice = atof(row[2]);
+                totalpriceall += totalPrice;
+                if (month == 1)
+                {
+                    namemonth = "January";
+                }
+                else if (month == 2) {
+                    namemonth = "February";
+                }
+                else if (month == 3) 
+                {
+                    namemonth = "March";
+                }
+                else if (month == 4) {
+                    namemonth = "April";
+                }
+                else if (month == 5) {
+                    namemonth = "May";
+                }
+                else if (month == 6) {
+                    namemonth = "June";
+                }
+                else if (month == 7) {
+                    namemonth = "July";
+                }
+                else if (month == 8) {
+                    namemonth = "August";
+                }
+                else if (month == 9) {
+                    namemonth = "September";
+                }
+                else if (month == 10) {
+                    namemonth = "October";
+                }
+                else if (month == 11) {
+                    namemonth = "November";
+                }
+                else if (month == 12) {
+                    namemonth = "December";
+                }
+
+
+                // Calculate and output adjusted percentage
+                double adjustedPercentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) )  * scale;
+                //cout << fixed  << setprecision(2)  << setw(5) << left << namemonth  <<setw(27) << right << totalPrice << setw(22) << right << adjustedPercentage << "%" << setw(20);
+                cout << fixed << setprecision(2);
+                cout << "\t\t        " << setw(15) << left << namemonth
+                    << setw(20) << right << totalPrice
+                    << setw(20) << right << adjustedPercentage << "%" << setw(20);
+
+                for (int i = 0; i < totalSales; ++i) {
+                    cout << BLUE << "*" << RESET;
+                }
+
+                cout << endl;
+            }
+        }
+
+        // Display the total percentage row without month information
+        cout << "\t               ";
+        cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+        cout << "\t               ";
+        cout << "TOTAL SALES " << setw(23) << BLUE << totalpriceall << RESET << setw(24) << "100.00 % " << endl;
+
+
+
+
+
+        mysql_free_result(res);
+
+
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << "\n";
+    cout << "\t\t\t\t\t\t\t";
+    std::cout << "*************" << MAGENTA << " SALES DAILY REPORT " << RESET << "*************" << endl;
+    cout << "\n";
+    string select_query_date = "SELECT DATE(Transaction_Time)  AS sale_date, COUNT(*) AS total_sales,total_price  FROM medication_transaction GROUP BY sale_date ORDER BY sale_date ";
+    const char* q_date = select_query_date.c_str();
+    qstate = mysql_query(conn, q_date);
+
+    if (!qstate) 
+    {
+        cout << "\n";
+        cout << "\t\t                     ";
+        cout << "DATE" << setw(30) << "TIME" << setw(25) << "INCOME (RM) " << endl;
+        res = mysql_store_result(conn);
+
+        double grandTotalSales = 0.0;
+
+        // Output adjusted percentages
+        mysql_data_seek(res, 0); // Reset the result set to the beginning
+        while ((row = mysql_fetch_row(res)) != NULL) 
+{
+            cout << "\t                           ";
+            cout << RED << setfill('*') << setw(80) << "" << setfill(' ') << RESET << endl;
+
+            string date = row[0];
+            int totalSales = atoi(row[1]); // Convert total sales to integer
+            double totalIncome = atof(row[2]); // Convert total income to double
+
+            cout << "\t                           ";
+            cout << date << "\n";
+            cout << "\t                           ";
+            cout << RED << setfill('*') << setw(80) << "" << setfill(' ') << RESET << endl;
+
+            // Output detailed sales data
+            string select_query_detail = "SELECT DATE(Transaction_Time), TIME(Transaction_Time), total_price FROM medication_transaction WHERE DATE(Transaction_Time) = '" + date + "'";
+
+            const char* q_date_detail = select_query_detail.c_str();
+            int qstate_detail = mysql_query(conn, q_date_detail);
+
+            if (!qstate_detail) //if query=0 ,means it is successful
+            {
+                MYSQL_RES* res_detail = mysql_store_result(conn);
+                double totalSalesForDate = 0.0;
+
+                while (MYSQL_ROW row_detail = mysql_fetch_row(res_detail)) {
+                    string date_detail = row_detail[0];
+                    string time_detail = row_detail[1];
+                    double totalPrice = atof(row_detail[2]);
+
+                    totalSalesForDate += totalPrice;
+
+                    // Output detailed sales data
+                    cout << "\t                           " << setw(15) << left << date_detail
+                        << setw(14) << left << " " << time_detail
+                        << setw(20) << right << fixed << setprecision(2) << totalPrice << "\n";
+                }
+
+                // Display total for the date
+                cout << "\t                           ";
+                cout << setfill('-') << setw(80) << "" << setfill(' ') << endl;
+                cout << "\t                           " << "TOTAL  " << setw(50) << right << fixed << setprecision(2) << GREEN << totalSalesForDate << RESET << "\n\n";
+
+                // Update grand total
+                grandTotalSales += totalSalesForDate;
+
+                mysql_free_result(res_detail);
+            }
+        }
+
+        // Display the grand total
+        cout << "\t                           ";
+        cout << setfill('-') << setw(80) << "" << setfill(' ') << endl;
+        cout << "\t                           " << "GRAND TOTAL SALES " << setw(39) << right << fixed << setprecision(2) << BLUE << grandTotalSales << RESET << "\n";
+
+
+
+
+
+
+
+    }
+    else 
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+
+    // Pause the program and wait for the user to press Enter before returning to the menu
+    cout << "\nPress Enter to go back to the previous menu...";
+    cin.ignore();  // Ignore any previous newline characters
+    cin.get();     // Wait for the user to press Enter
+
+    // Call the function to go back to the previous menu or any function you want
+    // For example, call the main menu function (replace `main_menu()` with your actual function)
+    Vd.ViewRecord();  // Assuming `main_menu()` is the function to show the main menu again
 
 
 
 
 
 }
-
-

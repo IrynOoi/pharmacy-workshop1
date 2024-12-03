@@ -14,4 +14,6 @@ public:
 
 
 };
+
+void getreport();
 #endif

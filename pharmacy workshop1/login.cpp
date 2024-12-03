@@ -55,6 +55,7 @@ void login::mainlogin_pg()
 		else if (choiceLogin == '2')
 		{
 			login_staff();
+			break;
 		}
 		else if (choiceLogin == '3')
 		{
@@ -245,7 +246,7 @@ void login::StaffControlMain(string Staff_Name)
 	cout << "[B] Delete Record" << endl;
 	cout << "[C] Update Record" << endl;
 	cout << "[D] Search and View Record" << endl;
-	cout << "[M] Admin Main Menu" << endl;
+	cout << "[M] Back to Staff Main Menu" << endl;
 
 	cout << "\nPlease enter your choice (A, B, C, D, M): ";
 	cin >> StaffControl;
@@ -341,7 +342,15 @@ void login::StaffMainMenu(string name)//green background
 		if (StaffMainChoice == '1')
 		{
 			StaffControlMain(name);
+			break;
 		}
+
+		else if (StaffMainChoice == '2')
+		{
+			getreport();
+			break;
+		}
+
 		
 		else {
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
