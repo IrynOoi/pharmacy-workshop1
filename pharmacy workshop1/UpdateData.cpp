@@ -1180,7 +1180,8 @@ void UpdateData::UpdateMedicationTransactionMenu()
 						cerr << "Quantity not found for the given Transaction_ID!" << endl;
 					}
 				}
-				else {
+				else 
+				{
 					cerr << "Medication ID not found!" << endl;
 				}
 
@@ -1407,6 +1408,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 	else
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 		system("pause");
 		UpdateHospitalMenu();
 	}
@@ -1415,6 +1417,10 @@ void UpdateData::UpdateMedicationTransactionMenu()
 
 }
 
+void UpdateData::UpdateStaff()
+{
+
+}
 
 
 

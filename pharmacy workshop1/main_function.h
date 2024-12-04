@@ -14,9 +14,7 @@ void showtime();
 void ForgetPassword();
 
 // Global varible declarations
-extern string Admin_ID;
-extern string Staff_ID;
-extern string  Patient_ID;
+extern int Admin_ID, Staff_ID, Patient_ID;
 #endif // MAIN_FUNCTIONS_H
 
 

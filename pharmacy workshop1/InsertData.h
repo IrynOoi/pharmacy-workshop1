@@ -11,6 +11,7 @@ public:
 	void AddHospitalMenu();
 	void AddDrugMenu();
 	void AddMedicationTransactionMenu();
+	void AddStaffs();
 
 
 };

@@ -19,7 +19,7 @@ using namespace std;
 // Function declaration
 void Loading(); // Declare the function if used
 
-string Admin_ID, Staff_ID, Patient_ID;
+int Admin_ID, Staff_ID, Patient_ID;
 
 
 int main()
@@ -228,7 +228,7 @@ void ForgetPassword()
 		cout << "\nPlease insert your staff ID: ";
 		cin >> Staff_ID;
 
-		string search_query = "SELECT Staff_ID FROM staff WHERE Staff_ID = '" + Staff_ID + "' AND Active_Status = 'Active'";
+		string search_query = "SELECT Staff_ID FROM staff WHERE Staff_ID = '" + to_string(Staff_ID) + "' AND Active_Status = 'Active'";
 		const char* q = search_query.c_str();
 		qstate = mysql_query(conn, q);
 		if (!qstate)
@@ -236,7 +236,8 @@ void ForgetPassword()
 			res = mysql_store_result(conn);
 			while (row = mysql_fetch_row(res))
 			{
-				Staff_ID = row[0];
+				Staff_ID = atoi(row[0]); // Convert the char* to an int using atoi
+
 			}
 			cout << "Staff found!" << endl;
 			cout << "Set your new password: ";
@@ -263,7 +264,7 @@ void ForgetPassword()
 				}
 			}
 
-			string update_query = "UPDATE staff SET Staff_Password = sha1('" + Staff_Password + "') WHERE Staff_ID = '" + Staff_ID + "'";
+			string update_query = "UPDATE staff SET Staff_Password = sha1('" + Staff_Password + "') WHERE Staff_ID = '" + to_string(Staff_ID) + "'";
 			const char* q = update_query.c_str();
 			qstate = mysql_query(conn, q);
 			cout << "\n Successfully Updated!" << endl;
@@ -289,7 +290,7 @@ void ForgetPassword()
 		cout << "\nPlease insert your Patient ID: ";
 		cin >> Patient_ID;
 
-		string search_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + Patient_ID + "' AND Active_Status = 'Active'";
+		string search_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + to_string(Patient_ID) + "' AND Active_Status = 'Active'";
 		const char* q = search_query.c_str();
 		qstate = mysql_query(conn, q);
 		if (!qstate)
@@ -297,7 +298,8 @@ void ForgetPassword()
 			res = mysql_store_result(conn);
 			while (row = mysql_fetch_row(res))
 			{
-				Patient_ID = row[0];
+				Patient_ID = atoi(row[0]);  // Convert the char* to an int using atoi
+
 			}
 			cout << "Patient found!" << endl;
 			cout << "Set your new password: ";
@@ -326,7 +328,7 @@ void ForgetPassword()
 				}
 			}
 
-			string update_query = "UPDATE patient SET Patient_Password = sha1('" + Patient_Password + "') WHERE Patient_ID = '" + Patient_ID + "'";
+			string update_query = "UPDATE patient SET Patient_Password = sha1('" + Patient_Password + "') WHERE Patient_ID = '" + to_string(Patient_ID )+ "'";
 			const char* q = update_query.c_str();
 			qstate = mysql_query(conn, q);
 			cout << "\n Successfully Updated!" << endl;

@@ -7,12 +7,15 @@
 #include "UpdateData.h"
 #include <regex> // Required for regex
 #include <string>
+#include <hpdf.h>
 #undef max    // Undefine the `max` macro
 #include <algorithm> // For std::transform
 #include <sstream>
 #include "ViewData.h"
+#include <fstream>
 #include <iomanip> // Required for setprecision
 #include <ctime>
+
 // ANSI escape codes for colors
 #define MAGENTA "\033[35m"
 #define RESET "\033[0;30;106m" // Black text with Light Aqua background
@@ -2415,10 +2418,13 @@ void ViewData::ViewPatientMenu()
 
 
 
-void getreport()
+void ViewData:: getreport()
 {
     system("cls");
-    ViewData Vd;
+    login lg;
+    char option;
+    string name;
+    int Staff_ID=0;
 
     cout << "\n";
     cout << "\t\t\t\t\t\t\t";
@@ -2709,30 +2715,205 @@ void getreport()
         cout << setfill('-') << setw(80) << "" << setfill(' ') << endl;
         cout << "\t                           " << "GRAND TOTAL SALES " << setw(39) << right << fixed << setprecision(2) << BLUE << grandTotalSales << RESET << "\n";
 
-
-
-
-
-
-
     }
     else 
     {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
     }
+    cout << "Do u want to print out the sales report in pdf?(Y/N)"<<endl;
+        cin >> option;
+        if (option == 'Y' || option == 'y')
+            GeneratePDFSalesReport(conn);
+        else
+            lg.StaffMainMenu(name, Staff_ID);
 
+    
 
-    // Pause the program and wait for the user to press Enter before returning to the menu
-    cout << "\nPress Enter to go back to the previous menu...";
-    cin.ignore();  // Ignore any previous newline characters
-    cin.get();     // Wait for the user to press Enter
+}
 
-    // Call the function to go back to the previous menu or any function you want
-    // For example, call the main menu function (replace `main_menu()` with your actual function)
-    Vd.ViewRecord();  // Assuming `main_menu()` is the function to show the main menu again
+void ViewData::GeneratePDFSalesReport(MYSQL* conn)
+{
+    // Step 1: Initialize the PDF
+    HPDF_Doc pdf = HPDF_New(NULL, NULL); // HPDF_New(error_handler, user_data)
+    if (!pdf) {
+        cerr << "Error: Unable to create PDF object" << endl;
+        return;
+    }
 
+    // Declare variables
+    HPDF_Page page = nullptr;
+    HPDF_Font font = nullptr;
+    float y = 0.0f;
 
+    try {
+        // Ensure "sales_report.pdf" can be overwritten
+        const char* filename = "sales_report.pdf";
+        std::ofstream fileCheck(filename, ios::out | ios::trunc);
+        if (!fileCheck) {
+            cerr << "Error: Unable to overwrite existing file '" << filename << "'." << endl;
+            HPDF_Free(pdf);
+            return;
+        }
+        fileCheck.close();
 
+        // Step 2: Add a page to the PDF
+        page = HPDF_AddPage(pdf);
+        HPDF_Page_SetSize(page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT);
 
+        // Step 3: Set font and title
+        font = HPDF_GetFont(pdf, "Helvetica", NULL);
+        HPDF_Page_SetFontAndSize(page, font, 12);
+
+        y = 800; // Y-coordinate for writing text
+
+        // Add title to the page
+        HPDF_Page_BeginText(page);
+        HPDF_Page_TextOut(page, 50, y, "************* SALES YEAR REPORT *************");
+        y -= 30;
+        HPDF_Page_SetFontAndSize(page, font, 10);
+        HPDF_Page_TextOut(page, 50, y, "Year-wise Income, Percentage, and Chart Representation");
+        y -= 20;
+        HPDF_Page_EndText(page);
+
+        // Step 4: Perform database query
+        string query = "SELECT YEAR(Transaction_time) AS sale_year, COUNT(*) AS total_sales, SUM(total_price) AS total_price FROM medication_transaction GROUP BY sale_year ORDER BY sale_year";
+        const char* q = query.c_str();
+
+        if (mysql_query(conn, q) == 0) {
+            MYSQL_RES* res = mysql_store_result(conn);
+            MYSQL_ROW row;
+
+            // Write table headers
+            HPDF_Page_BeginText(page);
+            HPDF_Page_TextOut(page, 50, y, "Year       Income (RM)       Percentage       Chart");
+            y -= 20;
+            HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------");
+            y -= 20;
+            HPDF_Page_EndText(page);
+
+            double totalIncome = 0.0;
+            double totalSalesCount = 0.0;
+
+            // First pass to calculate totals
+            while ((row = mysql_fetch_row(res)) != NULL) {
+                totalIncome += atof(row[2]);
+                totalSalesCount += atof(row[1]);
+            }
+
+            // Adjust percentages
+            double scale = (totalSalesCount == 0) ? 0 : 100.0 / totalSalesCount;
+
+            // Reset result set for the second pass
+            mysql_data_seek(res, 0);
+
+            // Second pass to generate rows
+            HPDF_Page_BeginText(page);
+            while ((row = mysql_fetch_row(res)) != NULL) {
+                string year = row[0];
+                double totalSales = atof(row[1]);
+                double totalPrice = atof(row[2]);
+                double percentage = totalSales * scale;
+
+                // Use std::ostringstream to format numbers with two decimal places
+                ostringstream totalPriceStream, percentageStream;
+                totalPriceStream.precision(2);
+                totalPriceStream << std::fixed << totalPrice;
+
+                percentageStream.precision(2);
+                percentageStream << std::fixed << percentage;
+
+                // Format and write row
+                string line = year + "    " + totalPriceStream.str() + " RM     " + percentageStream.str() + "%    ";
+                HPDF_Page_TextOut(page, 50, y, line.c_str());
+                // Add chart representation
+                // Add chart representation, scaling down if necessary
+                string chart;
+                int stars = static_cast<int>(totalSales / 10); // Scale totalSales for better representation
+                int maxStars = 50; // Max stars for the chart width
+                if (stars > maxStars) {
+                    stars = maxStars; // Limit the number of stars
+                }
+                for (int i = 0; i < static_cast<int>(totalSales); ++i) {
+                    chart += '*'; // Scale down stars if necessary
+                }
+                HPDF_Page_TextOut(page, 300, y, chart.c_str());
+                y -= 20;
+
+                // Add new page if content exceeds page length
+                if (y < 50) {
+                    HPDF_Page_EndText(page);
+                    page = HPDF_AddPage(pdf);
+                    HPDF_Page_SetFontAndSize(page, font, 10);
+                    y = 800;
+                    HPDF_Page_BeginText(page);
+                }
+            }
+            HPDF_Page_EndText(page);
+
+            mysql_free_result(res);
+        }
+        else
+        {
+            cerr << "Query Execution Problem: " << mysql_error(conn) << endl;
+        }
+
+        // Step 5: Save the PDF to file
+        HPDF_SaveToFile(pdf, filename);
+        cout << "PDF generated: " << filename << endl;
+
+    }
+    catch (...)
+    {
+        cerr << "An error occurred during PDF creation." << endl;
+    }
+
+    // Step 6: Clean up
+    HPDF_Free(pdf);
+
+}
+
+void ViewData::ViewStaffAcount(int id)
+{
+    system("cls");
+    login lg;
+    string Staff_Name;
+    SetConsoleColor(0, 9);
+    cout << "===================================" << endl;
+    cout << "       ACCOUNT INFORMATION         " << endl;
+    cout << "===================================" << endl;
+
+    SetConsoleColor(0,11);
+    showtime();
+    string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_Address, Staff_Telno, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID FROM staff WHERE Staff_ID = '" + to_string(id) + "'";
+    const char* q = search_query.c_str();
+    qstate = mysql_query(conn, q);
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        while (row = mysql_fetch_row(res))
+        {
+            cout << "Staff ID: " << row[0] << endl;
+            cout << "Name: " << row[1] << endl;
+            cout << "Gender: " << row[2] << endl;
+            cout << "Age: " << row[3] << endl;
+            cout << "Address: " << row[4] << endl;
+            cout << "Phone: " << row[5] << endl;
+            cout << "Position: " << row[6] << endl;
+            cout << "Password: " << row[7] << endl;
+            cout << "Admin ID: " << row[8] << endl;
+            cout << "Active Status: " << row[9] << endl;
+            cout << "Hospital ID: " << row[10] << endl;
+        }
+        system("pause");
+        system("cls");
+        lg.StaffMainMenu(Staff_Name, id);
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+        system("pause");
+        system("cls");
+        lg.StaffMainMenu( Staff_Name,id);
+    }
 
 }

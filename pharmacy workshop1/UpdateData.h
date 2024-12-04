@@ -10,6 +10,7 @@ public:
 	void UpdateHospitalMenu();
 	void UpdateDrugMenu();
 	void UpdateMedicationTransactionMenu();
+	void UpdateStaff();
 
 
 };

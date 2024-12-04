@@ -21,6 +21,7 @@ using namespace std;
 void login::mainlogin_pg()
 {
 	char choiceLogin;
+	system("color E0");
 
 	system("cls");
 
@@ -127,7 +128,7 @@ void login::login_admin()
 	cout << endl; // Move to the next line after pressing Enter
 
 	// Construct the SQL query to check for a matching admin user in the database
-	string checkUser_query = "SELECT Admin_ID, Staff_Name FROM staff WHERE Admin_ID = '" + Admin_ID + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active'";
+	string checkUser_query = "SELECT Admin_ID, Staff_Name FROM staff WHERE Admin_ID = '" + to_string(Admin_ID)  + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active'";
 	const char* cu = checkUser_query.c_str(); // Convert the C++ string to a C-style string
 	qstate = mysql_query(conn, cu); // Execute the SQL query
 
@@ -138,7 +139,7 @@ void login::login_admin()
 		{
 			while (row = mysql_fetch_row(res)) // Fetch the row from the result set
 			{
-				Admin_ID = row[0]; // Assign the first column (Admin_ID) to the variable Admin_ID
+				Admin_ID = atoi(row[0]); 
 				Staff_Name = row[1]; // Assign the second column (Staff_Name) to the variable Staff_Name
 			}
 
@@ -165,46 +166,50 @@ void login::login_admin()
 
 void login::AdminMainMenu(string name)//light blue background
 {
-	char AdminMain;
+	char StaffMainChoice;
 
-	system("cls");
+	ViewData vd;
 	SetConsoleColor(0, 9);
-
-	cout << "********************" << endl;
-	cout << " ADMIN MAIN MENU    " << endl;
-	cout << "********************" << endl;
+	cout << "******************" << endl;
+	cout << " ADMIN MAIN MENU  " << endl;
+	cout << "******************" << endl;
 	SetConsoleColor(0, 11);
-	cout << "Welcome, admin" << name << "!" << endl;
-	cout << endl;
 
-	cout << "[1] Administration Control " << endl;
+
+	cout << "Welcome, admin " << name << "!" << endl;
+	
+
+	cout << "[1] Administration Control" << endl;
 	cout << "[2] Supplier menu" << endl;
-	cout << "[3] Report Generation For Patient " << endl;
+	cout << "[3] Report Generation For Patient" << endl;
 	cout << "[4] Back to main menu" << endl;
-
-	cout << "\nPlease enter your choice: ";
-	cin >> AdminMain;
+	cout << "\nYour choice (1 - 5): ";
+	cin >> StaffMainChoice;
 
 	while (1)
 	{
 
-		if (AdminMain == '1')
+		if (StaffMainChoice == '1')
 		{
 			AdminControlMenu(name);
-		}
-		else if (AdminMain == '2')
-		{
-			SupplierMenu();//haven't done
-		}
-		else if (AdminMain == '3')
-		{
-			PatientReport();
+			break;
 		}
 
-		else if (AdminMain == '4')
+		else if (StaffMainChoice == '2')
 		{
-			system("cls");
-			main();
+			SupplierMenu();
+			break;
+		}
+		else if (StaffMainChoice == '3')
+		{
+			vd.ViewStaffAcount(Staff_ID);
+			break;
+		}
+
+		else if (StaffMainChoice == '3')
+		{
+			mainlogin_pg();
+			break;
 		}
 		else {
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
@@ -214,10 +219,77 @@ void login::AdminMainMenu(string name)//light blue background
 		}
 	}
 
-
 }
 
-void login::AdminControlMenu(string name) {}
+void login::AdminControlMenu(string name) 
+{
+	InsertData id;
+	UpdateData ud;
+	Delete dl;
+	ViewData vr;
+	system("cls");
+	SetConsoleColor(0, 9);
+	char AdminControl;
+	cout << "********************" << endl;
+	cout << " STAFF CONTROL MENU " << endl;
+	cout << "********************" << endl;
+	SetConsoleColor(0, 11);
+
+	cout << "Welcome, " << name << "! What would you like to do?" << endl;
+	cout << endl;
+
+	cout << "[A] Add Staff" << endl;
+	cout << "[B] Delete Staff" << endl;
+	cout << "[C] Update Staff" << endl;
+	cout << "[D] Search and View Staff" << endl;
+	cout << "[M] Back to Staff Main Menu" << endl;
+
+	cout << "\nPlease enter your choice (A, B, C, D, M): ";
+	cin >> AdminControl;
+
+	switch (AdminControl)
+	{
+
+	case 'A':
+	case 'a':
+		id.AddStaffs();
+		break;
+
+	case 'B':
+	case 'b':
+		system("cls");
+		dl.DeleteStaff();
+		break;
+
+	case 'C':
+	case 'c':
+		system("cls");
+		ud.UpdateStaff();
+		break;
+
+	case 'D':
+	case 'd':
+		system("cls");
+		vr.ViewRecord();
+		break;
+
+
+	case 'M':
+	case 'm':
+		system("cls");
+		StaffMainMenu(name , Staff_ID);
+		break;
+
+
+	default:
+		cout << "Invalid choice!" << endl;
+		system("pause");
+		StaffMainMenu(name, Staff_ID);
+	}
+
+	
+
+}
 
 
 
@@ -228,6 +300,7 @@ void login::StaffControlMain(string Staff_Name)
 {
 	InsertData id;
 	UpdateData ud;
+	string name;
 	char StaffControl;
 	Delete dl;
 	ViewData vr;
@@ -281,19 +354,21 @@ void login::StaffControlMain(string Staff_Name)
 	case 'M':
 	case 'm':
 		system("cls");
-		StaffMainMenu(Staff_Name);
+		StaffMainMenu(Staff_Name,Staff_ID);
 		break;
 
 
 	default:
 		cout << "Invalid choice!" << endl;
-		StaffControlMain(Staff_Name);
+		system("pause");
+		StaffMainMenu(name, Staff_ID);
 	}
 }
 
 
 void login::login_patient()
 {
+
 
 }
 
@@ -303,21 +378,19 @@ void login::ViewRecord() {}
 
 
 void login::SupplierMenu()
-{
-
-}
+{}
 
 void login::PatientReport()
-{
-
-}
+{}
 
 
 
-void login::StaffMainMenu(string name)//green background
+void login::StaffMainMenu(string name, int Staff_ID)//green background
 {
 
 	char StaffMainChoice;
+
+	ViewData vd;
 	SetConsoleColor(0, 9);
 	cout << "******************" << endl;
 	cout << " STAFF MAIN MENU  " << endl;
@@ -330,10 +403,9 @@ void login::StaffMainMenu(string name)//green background
 
 	cout << "[1] Staff Control Panel" << endl;
 	cout << "[2] Sales report " << endl;
-	cout << "[3] Report Generation" << endl; //haven't done for this function
-	cout << "[4] Account Information" << endl;
-	cout << "[5] Back to main menu" << endl;
-	cout << "\nYour choice (1 - 5): ";
+	cout << "[3] Account Information" << endl;
+	cout << "[4] Back to main menu" << endl;
+	cout << "\nYour choice (1 - 4): ";
 	cin >> StaffMainChoice ;
 
 	while (1)
@@ -347,11 +419,20 @@ void login::StaffMainMenu(string name)//green background
 
 		else if (StaffMainChoice == '2')
 		{
-			getreport();
+			vd.getreport();
 			break;
 		}
-
+		else if (StaffMainChoice == '3')
+		{
+			vd.ViewStaffAcount(Staff_ID ) ;
+			break;
+		}
 		
+		else if (StaffMainChoice == '4')
+		{
+			mainlogin_pg();
+			break;
+		}
 		else {
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
 			cout << "\n";
@@ -403,7 +484,7 @@ void login::login_staff()
 		}
 	}
 	cout << endl; // Move to the next line after pressing Enter
-	string checkUser_query = "SELECT Staff_ID, Staff_Name FROM staff WHERE Staff_ID = '" + Staff_ID + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active' ";
+	string checkUser_query = "SELECT Staff_ID, Staff_Name FROM staff WHERE Staff_ID = '" + to_string(Staff_ID) + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active' ";
 	const char* cu = checkUser_query.c_str();
 	qstate = mysql_query(conn, cu);
 	if (!qstate)
@@ -413,11 +494,11 @@ void login::login_staff()
 		{
 			while (row = mysql_fetch_row(res))
 			{
-				Staff_ID = row[0];
+				Staff_ID = atoi(row[0]);
 				Staff_Name = row[1];
 			}
 			system("cls");
-			StaffMainMenu( Staff_Name);
+			StaffMainMenu(Staff_Name,Staff_ID);
 		}
 		else
 		{

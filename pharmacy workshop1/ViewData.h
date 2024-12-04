@@ -11,9 +11,12 @@ public:
 	void ViewHospitalMenu();
 	void ViewDrugMenu();
 	void ViewMedicationTransactionMenu();
+	void getreport();
+	void GeneratePDFSalesReport(MYSQL* conn);
+	void ViewStaffAcount(int id);
 
 
 };
 
-void getreport();
+
 #endif

@@ -6,6 +6,9 @@
 #include "db_connection.h"
 #include "InsertData.h"
 #include <conio.h>//for _getch()
+#include <algorithm> // For std::any_of
+#include <cctype>    // For std::isdigit
+
 #undef max     // Undefine the `max` macro
 
 void  InsertData ::AddRecord()
@@ -69,72 +72,24 @@ void  InsertData ::AddRecord()
 void  InsertData::AddPatientMenu()
 {
 	system("cls");
-	string Patient_ID, Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_BloodType, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
+	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
 	int Patient_Age;
 	double Patient_Height, Patient_Weight;
 
 	int d_year, d_month, d_day;
 	string year, month, day, DOB;
 	char AddPatient;
-	int IDNum1;
-
-	string PtID;
-
 	cout << "Enter new records: " << endl;
 
-	while (true) // Loop until valid input is received
-	{
 		system("cls");
 		SetConsoleColor(0, 9);
 		cout << "***********************" << endl;
 		cout << " ADD RECORDS - Patient " << endl;
 		cout << "***********************" << endl;
 		SetConsoleColor(0, 11);
-		cout << "Patient ID (nonnegative integer digit only): ";
-		cin >> IDNum1;
+		
 
-		// Check if the input failed (e.g., user entered a letter)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear error state
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
-			cout << "Invalid Input! Please enter a non-negative integer." << endl;
-			continue; // Re-prompt for input
-		}
 
-		// Valid input range checks
-		if (IDNum1 >= 0 && IDNum1 < 10)
-		{
-			PtID.append("PT000");
-			PtID.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 10 && IDNum1 < 100)
-		{
-			PtID.append("PT00");
-			PtID.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 100 && IDNum1 < 1000)
-		{
-			PtID.append("PT0");
-			PtID.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 1000 && IDNum1 < 10000)
-		{
-			PtID.append("PT");
-			PtID.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else
-		{
-			cout << "Invalid Input! Non-negative Integer (0-9999) is used! Please try again!" << endl;
-			continue;
-		}
-	}
-
-	Patient_ID = PtID;
 	bool valid = false;
 
 	// Clear the input buffer to discard the leftover newline character
@@ -160,7 +115,7 @@ void  InsertData::AddPatientMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
-	cout << "Enter Password: ";
+	cout << "Enter Patient's Password: ";
 	char ch;
 
 	while ((ch = _getch()) != 13)
@@ -231,14 +186,35 @@ void  InsertData::AddPatientMenu()
 
 	// Calculate age
 	Patient_Age = calculateAge(d_year, d_month, d_day);
+	  // Clear any leftover characters in the input buffer just once before starting
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	do
+	{
+		cout << "Address: ";
+	// Use getline for robust input handling
+	
+		getline(cin, Patient_Address);
 
-	cout << "Address: ";
-	cin.ignore(1, '\n');// Ignore 1 character (likely the leftover newline) in the input buffer from previous input
-	getline(cin, Patient_Address);
+		// Validate the input
+		if (Patient_Address.empty()) 
+		{
+			cerr << "Error: Address cannot be empty. Please try again." << endl;
+		}
+	} while (Patient_Address.empty());
+	
+	do
+	{
+		cout << "Email Address: ";
+		// Use getline for robust input handling
+		getline(cin, Patient_Email);
 
-	cout << "Email Address: ";
-	cin.ignore(1, '\n');// Ignore 1 character (likely the leftover newline) in the input buffer from previous input
-	getline(cin, Patient_Email);
+		// Validate the input
+		if (Patient_Email.empty()) {
+			cerr << "Error: Address cannot be empty. Please try again." << endl;
+		}
+	} while (Patient_Email.empty());
+
+	
 	cout << "Height: ";
 	while (!(cin >> Patient_Height) || Patient_Height < 0)
 	{
@@ -317,7 +293,7 @@ void  InsertData::AddPatientMenu()
 			break; // exit the loop if the input is valid
 		}
 		else {
-			cout << "Invalid input. Please enter a valid phone number in the format XXX-XXXXXXX or XXX-XXXXXXXX: "; // prompt the user to enter a valid phone number
+			cout << "Invalid input. Please enter a valid phone number in the format XXX-XXXXXXX or XXX-XXXXXXXX: " << endl;// prompt the user to enter a valid phone number
 			cin.clear(); // clear the input buffer
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore any remaining input
 		}
@@ -327,16 +303,13 @@ void  InsertData::AddPatientMenu()
 	cout << "Medical_History: ";
 	cin.ignore(); // Clear newline character from previous input
 	getline(cin, Medical_History);
+
 	cout << "Diagnosed_Symptoms: ";
 	cin.ignore(); // Clear newline character from previous input
 	getline(cin, Diagnosed_Symptoms);
-	cout << "Patient Password : ";
-	cin.ignore(); // Clear newline character from previous input
-	getline(cin, Patient_Password);
-
+	
 	string Active_Status = "Active";
-	string insert_query = "INSERT INTO patient (Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
-		+ Patient_ID + "', '"
+	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
 		+ Patient_Name + "', '"
 		+ Patient_Gender + "', '"
 		+ to_string(Patient_Age) + "', '"
@@ -388,10 +361,9 @@ void  InsertData::AddPatientMenu()
 
 void  InsertData::AddHospitalMenu()
 {
-	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, HsID;
+	string  Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, HsID;
 	char AddHospital;
-	while (true) // Loop until valid input is received
-	{
+	
 		system("cls");
 		SetConsoleColor(0, 9);// Set the console text color to blue (foreground) with black background (0 is for the background color, 9 is for the blue foreground color)
 		cout << "************************" << endl;
@@ -399,53 +371,8 @@ void  InsertData::AddHospitalMenu()
 		cout << "************************" << endl;
 		SetConsoleColor(0, 11);// Set the console text color to light cyan (foreground) with black background (0 is for the background color, 11 is for the light cyan foreground color)
 
-		cout << "Enter new records: " << endl;
-		cout << "Hospital ID(non-negative integer digit only): ";
-		int IDNum4;
-		cin >> IDNum4;
+		
 
-		// Check if the input failed (e.g., user entered a letter)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear error state
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
-			cout << "Invalid Input! Please enter a non-negative integer." << endl;
-			continue; // Re-prompt for input
-		}
-
-		// Valid input range checks
-		if (IDNum4 >= 0 && IDNum4 < 10)
-		{
-			HsID.append("HS000");
-			HsID.append(to_string(IDNum4));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum4 >= 10 && IDNum4 < 100)
-		{
-			HsID.append("HS00");
-			HsID.append(to_string(IDNum4));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum4 >= 100 && IDNum4 < 1000)
-		{
-			HsID.append("HS0");
-			HsID.append(to_string(IDNum4));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum4 >= 1000 && IDNum4 < 10000)
-		{
-			HsID.append("HS");
-			HsID.append(to_string(IDNum4));
-			break; // Break loop if valid input is received
-		}
-		else
-		{
-			cout << "Invalid Input! Non-negative Integer (0-9999) is used! Please try again!" << endl;
-			continue;
-		}
-
-	}
-	Hospital_ID = HsID;
 	bool valid = false;
 	// Clear the input buffer to discard the leftover newline character
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -475,7 +402,7 @@ void  InsertData::AddHospitalMenu()
 
 	string Availability = "Available";
 
-	string insert_query = "INSERT INTO hospital (Hospital_ID, Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, Availability) values('" + Hospital_ID + "', '" + Hospital_Name + "', '" + Hospital_Street + "', '" + Hospital_State + "', '" + Hospital_City + "', '" + Availability + "' )";
+	string insert_query = "INSERT INTO hospital ( Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, Availability) values( '" + Hospital_Name + "', '" + Hospital_Street + "', '" + Hospital_State + "', '" + Hospital_City + "', '" + Availability + "' )";
 
 	const char* q = insert_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -508,69 +435,22 @@ void  InsertData::AddDrugMenu()
 {
 
 	system("cls");
-	string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text;
+	string Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text;
 	char AddDrug;
-	int IDNum1;
-	string MdId;
+	double Price ;
 
 	cout << "Enter new records: " << endl;
 
-	while (true) // Loop until valid input is received
-	{
-		MdId.clear();  // Clear MdId to avoid appending to previous values
+	
 		system("cls");
 		SetConsoleColor(0, 9);
 		cout << "***********************" << endl;
 		cout << " ADD RECORDS - Drug    " << endl;
 		cout << "***********************" << endl;
 		SetConsoleColor(0, 11);
-		cout << "Enter new records: " << endl;
-		cout << "Medication ID (non-negative integer digit only): ";
-		cin >> IDNum1;
+		
 
-		// Check if the input failed (e.g., user entered a letter)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear error state
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
-			cout << "Invalid Input! Please enter a non-negative integer." << endl;
-			continue; // Re-prompt for input
-		}
 
-		// Valid input range checks
-		if (IDNum1 >= 0 && IDNum1 < 10)
-		{
-			MdId.append("MED000");
-			MdId.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 10 && IDNum1 < 100)
-		{
-			MdId.append("MED00");
-			MdId.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 100 && IDNum1 < 1000)
-		{
-			MdId.append("MED0");
-			MdId.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum1 >= 1000 && IDNum1 < 10000)
-		{
-			MdId.append("MED");
-			MdId.append(to_string(IDNum1));
-			break; // Break loop if valid input is received
-		}
-		else
-		{
-			cout << "Invalid Input! Non-negative Integer (0-9999) is used! Please try again!" << endl;
-			continue;
-		}
-
-	}
-
-	Medication_ID = MdId;
 	bool valid = false;
 
 	// Clear the input buffer to discard the leftover newline character
@@ -591,8 +471,7 @@ void  InsertData::AddDrugMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
-
-
+	
 	do
 	{
 
@@ -610,6 +489,7 @@ void  InsertData::AddDrugMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
+	
 	do {
 		cout << "Dosage Form: ";
 
@@ -625,8 +505,16 @@ void  InsertData::AddDrugMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
-	cout << "Strength: ";
-	getline(cin, Strength);
+
+
+	do {
+		cout << "Strength:  ";
+		getline(cin, Strength);
+
+		if (Strength.empty()) {
+			cerr << "Error: Address cannot be empty. Please try again." << endl;
+		}
+	} while (Strength.empty());
 
 
 	do {
@@ -643,7 +531,7 @@ void  InsertData::AddDrugMenu()
 			cout << "Invalid Input! Please enter a valid name containing only alphabetic characters." << endl;
 		}
 	} while (!valid); // Continue looping until valid input is received
-
+	
 	do {
 		cout << "Side Effect: ";
 
@@ -659,20 +547,53 @@ void  InsertData::AddDrugMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
-	cout << "Usage text ";
-	getline(cin, usage_text);
+
+	do
+	{
+		cout << "Usage text: ";
+		getline(cin, usage_text);
+
+		if (usage_text.empty()) {
+			cerr << "Input cannot be empty. Please try again." << endl;
+		}
+	} while (usage_text.empty());
+
+	do
+	{
+		cout << "Price: ";
+		cin >> Price;
+
+		// Check for invalid input
+		if (cin.fail())
+		{
+			// Clear the error flag and ignore the rest of the input
+			cin.clear();  // Clear the error flag
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Ignore the invalid input
+			cout << "Error: Please enter a valid number." << endl;
+		}
+		// Check if the price is negative
+		else if (Price < 0) {
+			cout << "Error: Price cannot be negative. Please try again." << endl;
+		}
+		// Check if the input is empty (for cases where user presses Enter without entering a value)
+		else if (Price == 0 && cin.peek() == '\n') {
+			cout << "Error: Price cannot be empty. Please try again." << endl;
+		}
+		else {
+			break;  // Exit the loop if the input is valid
+		}
+	} while (true);  // Continue until a valid price is entered
 
 
-
-	string insert_query = "INSERT INTO medication( Medication_ID, Medication_Name,  Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects,usage_text) VALUES ('"
-		+ Medication_ID + "', '"
+	string insert_query = "INSERT INTO medication( Medication_Name,  Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects,usage_text,Price) VALUES ('"
 		+ Medication_Name + "', '"
 		+ Medication_Type + "', '"
 		+ Dosage_Form + "', '"
 		+ Strength + "', '"
 		+ Description + "', '"
 		+ Side_Effect + "', '"
-		+ usage_text + "')";
+		+ usage_text + "', '"
+		+ to_string(Price )+ "')";
 
 	const char* q = insert_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -709,110 +630,47 @@ void  InsertData::AddDrugMenu()
 void  InsertData::AddMedicationTransactionMenu()
 {
 	system("cls");
-	string Transaction_ID, Transaction_Date, Medication1_ID, Patient_ID, MdId, status;
-	int IDNum, d_year, d_month, d_day, quantity;
-	string TxID;
+	string  Transaction_Date, status;
+	int  quantity, Medication1_ID, Hospital_ID;
 	string year, month, day, TD;
-
+	bool validInput = false;
 	cout << "Enter new records: " << endl;
 
-	while (true) // Loop until valid input is received
-	{
+	
 		system("cls");
 		SetConsoleColor(0, 9);
 		cout << "***************************************" << endl;
 		cout << " ADD RECORDS - Medication Transaction  " << endl;
 		cout << "***************************************" << endl;
 		SetConsoleColor(0, 11);
-		cout << "Medication Transaction ID (nonnegative integer digit only): ";
-		cin >> IDNum;
+		
 
-		// Check if the input failed (e.g., user entered a letter)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear error state
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
-			cout << "Invalid Input! Please enter a non-negative integer." << endl;
-			continue; // Re-prompt for input
-		}
-
-		// Valid input range checks
-		if (IDNum >= 0 && IDNum < 10)
-		{
-			TxID.append("TX000");
-			TxID.append(to_string(IDNum));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum >= 10 && IDNum < 100)
-		{
-			TxID.append("TX00");
-			TxID.append(to_string(IDNum));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum >= 100 && IDNum < 1000)
-		{
-			TxID.append("TX0");
-			TxID.append(to_string(IDNum));
-			break; // Break loop if valid input is received
-		}
-		else if (IDNum >= 1000 && IDNum < 10000)
-		{
-			TxID.append("TX");
-			TxID.append(to_string(IDNum));
-			break; // Break loop if valid input is received
-		}
-		else
-		{
-			cout << "Invalid Input! Non-negative Integer (0-9999) is used! Please try again!" << endl;
-			continue;
-		}
-	}
-
-	Transaction_ID = TxID;
-	bool valid = false;
-
-
+		cin.clear(); // Clear the error flags
+		cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
 
 	while (true)
 	{
-		cin.clear();
-		// Clear the input buffer to discard the leftover newline character
-		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		cout << "Transaction Date (YYYY MM DD): ";
-
-		// Try to get valid input
-		cin >> d_year >> d_month >> d_day;
-
-		// Check if the input is valid (no alphabetic characters) and non-negative
-		if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31)
+		// Prompt user for Medication ID with validation
+		do 
 		{
-			cout << "Invalid input! Please enter valid numerical values for year, month, and day.\n";
-			continue;
+			cout << "Medication ID (e.g. 1): ";
+			cin >> Medication1_ID;
 
-		}
-
-
-		// Construct the SQL query to check for a matching admin user in the database
-	   // Transaction date details: convert int to string and format as YYYY-MM-DD
-		year = to_string(d_year);
-		month = (d_month < 10 ? "0" : "") + to_string(d_month); // Add leading zero if needed
-		day = (d_day < 10 ? "0" : "") + to_string(d_day);        // Add leading zero if needed
-		TD = year + "-" + month + "-" + day;
-		Transaction_Date = TD;
-		break;
-
-
-	}
-	while (true)
-	{
-		// Prompt user for Medication ID
-		cout << "Medication ID (e.g., med0001): ";
-		cin >> Medication1_ID;
-
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Medication1_ID < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
 
 		// SQL query to check for the Medication ID in the database
 		// Construct the SQL query to check for a matching admin user in the database
-		string checkMedication1_query = "SELECT Medication_ID FROM medication WHERE Medication_ID = '" + Medication1_ID + "'";
+		string checkMedication1_query = "SELECT Medication_ID FROM medication WHERE Medication_ID = '" + to_string(Medication1_ID) + "'";
 
 		const char* cu = checkMedication1_query.c_str();  // Convert to C-style string
 
@@ -825,7 +683,8 @@ void  InsertData::AddMedicationTransactionMenu()
 			{
 				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
 				{
-					Medication1_ID = row[0]; // Assign the first column (Admin_ID) to the variable Admin_ID
+					Medication1_ID = atoi(row[0]); // Convert string to integer
+
 				}
 				cout << "Medication_ID successfully found in  database!!!" << endl;
 
@@ -849,8 +708,7 @@ void  InsertData::AddMedicationTransactionMenu()
 			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 	}
 
-	cin.clear(); // Clear the error flags
-	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+	
 	do
 	{
 		cout << "Quantity: ";
@@ -875,14 +733,29 @@ void  InsertData::AddMedicationTransactionMenu()
 
 	while (true)
 	{
-		// Prompt user for Medication ID
-		cout << "Patient ID (e.g:PT0001): ";
-		cin >> Patient_ID;
+		// Prompt user for Patient ID with validation
+		do
+		{
+			cout << "Patient_ID (e.g. 1): ";
+			cin >> Patient_ID;
+
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Patient_ID  < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
+		
 
 
 		// SQL query to check for the Medication ID in the database
 		// Construct the SQL query to check for a matching admin user in the database
-		string checkPatient_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + Patient_ID + "'";
+		string checkPatient_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + to_string(Patient_ID) + "'";
 
 		const char* cu = checkPatient_query.c_str();  // Convert to C-style string
 
@@ -895,7 +768,8 @@ void  InsertData::AddMedicationTransactionMenu()
 			{
 				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
 				{
-					Patient_ID = row[0]; // Assign the first column (Admin_ID) to the variable Admin_ID
+					Patient_ID = stoi(row[0]); // Convert the string (char*) in row[0] to an integer
+
 				}
 				cout << "Patient_ID successfully found in  database!!!" << endl;
 
@@ -917,10 +791,69 @@ void  InsertData::AddMedicationTransactionMenu()
 		else // If the query execution failed
 			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 	}
-	bool validInput = false;
 
-	cin.clear(); // Clear the error flags
-	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+	while (true)
+	{
+		// Prompt user for Medication ID with validation
+		do
+		{
+			cout << "Hospital_ID (e.g. 1): ";
+			cin >> Hospital_ID;
+
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Hospital_ID < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
+
+
+
+		// SQL query to check for the Medication ID in the database
+		// Construct the SQL query to check for a matching admin user in the database
+		string checkPatient_query = "SELECT Hospital_ID FROM hospital WHERE Hospital_ID= '" + to_string(Hospital_ID) + "'";
+
+		const char* cu = checkPatient_query.c_str();  // Convert to C-style string
+
+		qstate = mysql_query(conn, cu); // Execute the query and assign the result to qstate
+
+		if (!qstate) // If the query executed successfully
+		{
+			res = mysql_store_result(conn); // Store the result of the query
+			if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Patient_ID = stoi(row[0]); // Convert the string (char*) in row[0] to an integer
+
+				}
+				cout << "Hospital_ID successfully found in  database!!!" << endl;
+
+				break;
+			}
+			else // If no matching admin is found
+			{
+				char c;
+				cout << "\nInvalid Patient ID. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					continue;
+				else
+				{
+					break;
+				}
+			}
+		}
+		else // If the query execution failed
+			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+
+	
 	while (!validInput)
 	{
 		// Prompt user for Medication ID
@@ -928,45 +861,31 @@ void  InsertData::AddMedicationTransactionMenu()
 		cin >> status;
 
 		// Check if the input contains only alphabetic characters
-		validInput = true; // Assume the input is valid
+		validInput = false; // Assume the input is valid
 		for (char c : status)
 		{
 			if (!isalpha(c))
 			{
-				validInput = false;
+				validInput = true;
 				cout << "Invalid input. Please enter letters only." << endl;
 				break;
 			}
 		}
 	}
 
-	while (!validInput)
-	{
-		cin >> status;
+	// Declare Transaction_ID outside of the loop to make it accessible later
+	int Transaction_ID = -1;  // Initialize with a default value
 
-		// Check if the input contains only alphabetic characters
-		validInput = true; // Assume the input is valid
-		for (char c : status)
-		{
-			if (!isalpha(c)) {
-				validInput = false;
-				cout << "Invalid input. Please enter letters only." << endl;
-				break;
-			}
-		}
-
-	}
-
-	string insert_query = "INSERT INTO medication_transaction( Transaction_ID,Transaction_Date, Medication_ID,Quantity,Patient_ID, Status) VALUES ('"
-		+ Transaction_ID + "', '"
-		+ Transaction_Date + "', '"
-		+ Medication1_ID + "', '"
+// Insert the medication transaction
+	string insert_query = "INSERT INTO medication_transaction (Medication_ID, Quantity, Patient_ID, Hospital_ID, Status) VALUES ('"
+		+ to_string(Medication1_ID) + "', '"
 		+ to_string(quantity) + "', '"
-		+ Patient_ID + "', '"
+		+ to_string(Patient_ID) + "', '"
+		+ to_string(Hospital_ID) + "', '"
 		+ status + "')";
+	const char* q1 = insert_query.c_str();
+	qstate = mysql_query(conn, q1);
 
-	const char* q = insert_query.c_str();
-	qstate = mysql_query(conn, q);
 	if (!qstate)
 	{
 		cout << endl << "Medication transaction is successfully added in database." << endl;
@@ -975,7 +894,87 @@ void  InsertData::AddMedicationTransactionMenu()
 	{
 		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+		return; // Exit the function if the insertion fails
 	}
+
+	// Select the Transaction_ID of the last inserted transaction
+	string select_query = "SELECT Transaction_ID, Quantity FROM medication_transaction WHERE Transaction_ID = LAST_INSERT_ID();";
+	const char* q2 = select_query.c_str();
+	qstate = mysql_query(conn, q2);
+
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res && (row = mysql_fetch_row(res)))
+		{
+			Transaction_ID = atoi(row[0]);
+			quantity = atoi(row[1]);
+		}
+		else
+		{
+			cerr << "Failed to fetch Transaction_ID or Quantity. Check the database entry." << endl;
+			return;
+		}
+		mysql_free_result(res);
+	}
+	else
+	{
+		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+		cout << "Error Message: " << mysql_error(conn) << endl;
+		return;
+	}
+
+	// Fetch the price of the medication based on Medication_ID
+	string fetch_price_query = "SELECT Price FROM medication WHERE Medication_ID = (SELECT Medication_ID FROM medication_transaction WHERE Transaction_ID = "
+		+ to_string(Transaction_ID) + ");";
+	const char* fetch_price_q = fetch_price_query.c_str();
+	qstate = mysql_query(conn, fetch_price_q);
+
+	if (qstate != 0)
+	{
+		cerr << "Query failed to fetch price: " << mysql_error(conn) << endl;
+		return;
+	}
+
+	res = mysql_store_result(conn);
+	if (!res)
+	{
+		cerr << "Failed to store result set for fetching price. Check query execution." << endl;
+		return;
+	}
+
+	double price_per_unit = 0.0;
+	if ((row = mysql_fetch_row(res)))
+	{
+		price_per_unit = atof(row[0]); // Convert price to double
+		mysql_free_result(res);
+	}
+	else
+	{
+		cerr << "Medication ID not found for this transaction!" << endl;
+		mysql_free_result(res);
+		return;
+	}
+
+	// Calculate the total price
+	double total_price = price_per_unit * static_cast<double>(quantity);
+
+	// Update the total_price in the medication_transaction table
+	string update_price_query = "UPDATE medication_transaction SET total_price = " + to_string(total_price) + " WHERE Transaction_ID = "
+		+ to_string(Transaction_ID)+ ";";
+	const char* update_price_q = update_price_query.c_str();
+	qstate = mysql_query(conn, update_price_q);
+
+	if (qstate != 0)
+	{
+		cerr << "Total price update failed: " << mysql_error(conn) << endl;
+	}
+	else
+	{
+		cout << "Total price updated successfully!" << endl;
+	}
+
+
 	char AddMT;
 	do
 	{
@@ -993,8 +992,306 @@ void  InsertData::AddMedicationTransactionMenu()
 
 
 
+}
+
+
+void InsertData::AddStaffs()
+{
+	system("cls");
+	string name;
+	login lg;
+	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email,  Staff_Position, Active_Status;
+	int Staff_Age, Admin_ID, Hospital_ID;
+	bool validInput;
+	char AddStaff;
 
 
 
+	cout << "Enter new records: " << endl;
 
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "***********************" << endl;
+	cout << " ADD RECORDS - Staff   " << endl;
+	cout << "***********************" << endl;
+	SetConsoleColor(0, 11);
+
+
+
+	bool valid = false;
+
+	// Clear the input buffer to discard the leftover newline character
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+
+	do
+	{
+		cout << "Staff Name: ";
+
+		// Read the full line for the name
+		getline(cin, Staff_Name);
+
+		// Check if the name is alphabetic and not empty
+		valid = isAlphabetic(Staff_Name) && !Staff_Name.empty();
+
+		if (!valid)
+		{
+			cout << "Invalid Input! Please enter a valid name containing only alphabetic characters." << endl;
+		}
+
+	} while (!valid); // Continue looping until valid input is received
+
+	cout << "Enter Staff's Password: ";
+	char ch;
+
+	while ((ch = _getch()) != 13)
+	{ // Read each character of the password until Enter key (ASCII 13) is pressed
+		if (ch == 8)
+		{ // If the character is backspace (ASCII 8)
+			if (!Staff_Password.empty())
+			{
+				Staff_Password.pop_back(); // Remove last character from the password string
+				cout << "\b \b"; // Move the cursor back, print space to overwrite the asterisk, and move back again
+			}
+		}
+		else if (ch == ' ') { // Allow spaces in the password
+			Staff_Password += ch;
+			cout << " "; // Display a space
+		}
+		else
+		{
+			Staff_Password += ch; // Append each character to the password string
+			cout << "*"; // Display an asterisk for each character typed
+		}
+	}
+	cout << endl; // Move to the next line after pressing Enter
+
+	// Gender Input
+	do
+	{
+		cout << "Gender (M or F): ";
+		cin >> Staff_Gender;
+
+		// Convert each character in the string to uppercase
+		for (char& c : Staff_Gender) { // Iterate over each character in Staff_Gender
+			c = toupper(c); // Convert the character to uppercase
+		}
+
+		// Validate the gender input
+	} while (Staff_Gender != "F" && Staff_Gender != "M");  // Continue looping if the input is not "F" or "M"
+
+	do
+	{
+		cout << "Staff Age: ";
+		cin >> Staff_Age;
+
+		// Check if the input failed (non-integer input)
+		if (cin.fail())
+		{
+			cin.clear(); // Clear the error flag
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input. Please enter a non-negative integer." << endl;
+			Staff_Age = -1; // Set quantity to an invalid value to continue the loop
+		}
+		// Check if the value is negative
+		else if (Staff_Age < 0) {
+			cout << "Quantity cannot be negative. Please enter a non-negative integer." << endl;
+		}
+	} while (Staff_Age < 0); // Continue looping until valid input is received
+	
+
+
+	
+	// Clear any leftover characters in the input buffer just once before starting
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	do
+	{
+		cout << "Staff Address: ";
+		// Use getline for robust input handling
+
+		getline(cin, Staff_Address);
+
+		// Validate the input
+		if (Staff_Address.empty())
+		{
+			cerr << "Error: Address cannot be empty. Please try again." << endl;
+		}
+	} while (Staff_Address.empty());
+
+
+	
+	while (true)
+	{ // infinite loop until valid input is entered
+		cout << "Telephone Number: "; // prompt the user to enter their telephone number
+		cin >> Staff_TelNo; // read input from the user
+		bool isValid = true; // assume the input is valid until proven otherwise
+		bool hasDash = false; // flag to check if the input has a dash
+
+		// check if the input has a dash
+		for (int i = 0; i < Staff_TelNo.length(); i++)
+		{
+			if (Staff_TelNo[i] == '-')
+			{
+				hasDash = true;
+				break;
+			}
+		}
+
+		// if no dash, add it to the input
+		if (!hasDash)
+		{
+			if (Staff_TelNo.length() == 10)
+			{
+				Staff_TelNo.insert(3, "-"); // add dash after 3 characters
+			}
+			else if (Staff_TelNo.length() == 11)
+			{
+				Staff_TelNo.insert(3, "-"); // add dash after 3 characters
+			}
+			else {
+				isValid = false; // input length is not valid
+			}
+		}
+
+		// check if the input is in the format XXX-XXXXXXX or XXX-XXXXXXXX
+		if (Staff_TelNo.length() == 11 && Staff_TelNo[3] == '-')
+		{
+			for (int i = 0; i < 11; i++) {
+				if (i == 3) continue; // skip the dash character
+				if (!isdigit(Staff_TelNo[i])) { // check if the character is a digit
+					isValid = false; // if not a digit, input is invalid
+					break; // exit the loop
+				}
+			}
+		}
+		else if (Staff_TelNo.length() == 12 && Staff_TelNo[3] == '-')
+		{
+			for (int i = 0; i < 12; i++) {
+				if (i == 3) continue; // skip the dash character
+				if (!isdigit(Staff_TelNo[i])) { // check if the character is a digit
+					isValid = false; // if not a digit, input is invalid
+					break; // exit the loop
+				}
+			}
+		}
+		else
+		{
+			isValid = false; // if input doesn't match either format, it's invalid
+		}
+
+		if (isValid) {
+			break; // exit the loop if the input is valid
+		}
+		else {
+			cout << "Invalid input. Please enter a valid phone number in the format XXX-XXXXXXX or XXX-XXXXXXXX "<<endl; // prompt the user to enter a valid phone number
+			cin.clear(); // clear the input buffer
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore any remaining input
+		}
+
+
+	}
+	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore any remaining input
+
+	do 
+	{
+		cout << "Staff_Position: ";
+		getline(cin, Staff_Position);  // Read the entire line including spaces
+
+		// Check if the input is empty
+		if (Staff_Position.empty()) {
+			cout << "Input cannot be empty. Please enter a valid position." << endl;
+		}
+		// Check if the input contains any numeric characters
+		else if (any_of(Staff_Position.begin(), Staff_Position.end(), ::isdigit)) {
+			cout << "Input cannot contain numbers. Please enter a valid position." << endl;
+		}
+		else {
+			break;  // Valid input, exit the loop
+		}
+
+	} while (true);  // Keep looping until valid input is provided
+
+
+	do
+	{
+		cout << "Admin_ID (e.g. 1): ";
+		cin >> Admin_ID;
+
+		// Check if input is a valid integer and not negative
+		if (cin.fail() || Admin_ID < 0) {
+			// Clear the error flag and ignore the incorrect input
+			cin.clear();  // Clear the fail state
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input! Please enter a positive integer." << endl;
+			validInput = false;
+		}
+		else {
+			validInput = true; // Valid input, exit loop
+		}
+	} while (!validInput);
+
+	do
+	{
+		cout << "Hospital_ID (e.g. 1): ";
+		cin >> Hospital_ID;
+
+		// Check if input is a valid integer and not negative
+		if (cin.fail() || Hospital_ID < 0) {
+			// Clear the error flag and ignore the incorrect input
+			cin.clear();  // Clear the fail state
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input! Please enter a positive integer." << endl;
+			validInput = false;
+		}
+		else {
+			validInput = true; // Valid input, exit loop
+		}
+	} 
+	while (!validInput);
+
+	Active_Status = "Active";
+
+	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender, Staff_Age, Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
+		
+		+ Staff_Name + "', '"
+		+ Staff_Gender + "', '"
+		+ to_string(Staff_Age) + "', '"
+		+ Staff_Address + "', '"
+		+ Staff_TelNo + "', '"
+		+ Staff_Position + "', SHA1('" + Staff_Password + "'), '"
+		+ to_string(Admin_ID) + "', '"
+		+ Active_Status + "', '"
+		+ to_string(Hospital_ID) + "')";
+
+
+
+	const char* q = insert_query.c_str();
+	qstate = mysql_query(conn, q);
+
+
+	if (!qstate)
+	{
+		cout << endl << "Staff is successfully added in database." << endl;
+	}
+	else
+	{
+		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+		cout << "Hospital ID is  not exist in database" << endl;
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+
+	}
+
+	do
+	{
+		cout << "Do you want to continue adding records? [Y/N]: ";
+		cin >> AddStaff;
+		if (AddStaff == 'y' || AddStaff == 'Y')
+		{
+			AddStaffs();
+		}
+		else if (AddStaff == 'n' || AddStaff == 'N')
+		{
+			lg.AdminControlMenu(name);
+		}
+	} while (AddStaff == 'y' || AddStaff == 'Y' || AddStaff == 'n' || AddStaff == 'N');
 }
