@@ -14,6 +14,7 @@ public:
 	void getreport();
 	void GeneratePDFSalesReport(MYSQL* conn);
 	void ViewStaffAcount(int id);
+	void ViewStaff();
 
 
 };

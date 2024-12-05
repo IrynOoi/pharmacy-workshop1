@@ -90,8 +90,10 @@ void login::login_admin()
 {
 	string Staff_Password; // Variable to store the admin's password
 	string  Staff_Name;
-	system("color B0");
+	
+	// Assuming you have already defined necessary variables and connections
 
+	system("color B0");
 	system("cls"); // Clear the console screen
 	SetConsoleColor(0, 9);
 	cout << "****************" << endl;
@@ -105,17 +107,18 @@ void login::login_admin()
 
 	cout << "Enter Password: ";
 	char ch;
-	while ((ch = _getch()) != 13)
-	{ // Read each character of the password until Enter key (ASCII 13) is pressed
-		if (ch == 8)
-		{ // If the character is backspace (ASCII 8)
+	while ((ch = _getch()) != 13) // Read each character of the password until Enter key (ASCII 13) is pressed
+	{
+		if (ch == 8) // Backspace (ASCII 8)
+		{
 			if (!Staff_Password.empty())
 			{
-				Staff_Password.pop_back(); // Remove last character from the password string
-				cout << "\b \b"; // Move the cursor back, print space to overwrite the asterisk, and move back again
+				Staff_Password.pop_back(); // Remove the last character from the password string
+				cout << "\b \b"; // Overwrite the asterisk and move back again
 			}
 		}
-		else if (ch == ' ') { // Allow spaces in the password
+		else if (ch == ' ') // Allow spaces in the password
+		{
 			Staff_Password += ch;
 			cout << " "; // Display a space
 		}
@@ -128,37 +131,49 @@ void login::login_admin()
 	cout << endl; // Move to the next line after pressing Enter
 
 	// Construct the SQL query to check for a matching admin user in the database
-	string checkUser_query = "SELECT Admin_ID, Staff_Name FROM staff WHERE Admin_ID = '" + to_string(Admin_ID)  + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active'";
+	string checkUser_query = "SELECT Admin_ID, Staff_Name FROM staff WHERE Admin_ID = '" + to_string(Admin_ID) + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active'";
 	const char* cu = checkUser_query.c_str(); // Convert the C++ string to a C-style string
 	qstate = mysql_query(conn, cu); // Execute the SQL query
 
-	if (!qstate) // If the query executed successfully
+	if (qstate) // If the query failed
+	{
+		cout << "Query Execution Problem! Error code: " << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+	else // If the query executed successfully
 	{
 		res = mysql_store_result(conn); // Store the result of the query
-		if (res->row_count == 1) // If exactly one row is returned (one matching admin)
-		{
-			while (row = mysql_fetch_row(res)) // Fetch the row from the result set
-			{
-				Admin_ID = atoi(row[0]); 
-				Staff_Name = row[1]; // Assign the second column (Staff_Name) to the variable Staff_Name
-			}
 
-			system("cls"); // Clear the console screen
-			AdminMainMenu(Staff_Name); // Call the function to display the admin main menu, passing the Staff_Name
-		}
-		else // If no matching admin is found
+		if (res) // Check if there is any result
 		{
-			char c;
-			cout << "\nInvalid username or password. Want to try again? (Y/N): ";
-			cin >> c; // Ask the user if they want to try again
-			if (c == 'y' || c == 'Y')
-				login_admin(); // If yes, call the AdminLogin function to try again
-			else
-				mainlogin_pg(); // If no, call the MainLogin function to return to the main login menu
+			if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Admin_ID = atoi(row[0]);
+					Staff_Name = row[1]; // Assign the second column (Staff_Name) to the variable Staff_Name
+				}
+
+				system("cls"); // Clear the console screen
+				AdminMainMenu(Staff_Name); // Call the function to display the admin main menu, passing the Staff_Name
+			}
+			else // If no matching admin is found
+			{
+				char c;
+				cout << "\nInvalid username or password. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					login_admin(); // If yes, call the AdminLogin function to try again
+				else
+					mainlogin_pg(); // If no, call the MainLogin function to return to the main login menu
+			}
+		}
+		else
+		{
+			cout << "No results returned by the query. Error: " << mysql_errno(conn) << endl; // If there's no result from the query
 		}
 	}
-	else // If the query execution failed
-		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+
+
 }
 
 
@@ -183,7 +198,7 @@ void login::AdminMainMenu(string name)//light blue background
 	cout << "[2] Supplier menu" << endl;
 	cout << "[3] Report Generation For Patient" << endl;
 	cout << "[4] Back to main menu" << endl;
-	cout << "\nYour choice (1 - 5): ";
+	cout << "\nYour choice (1 - 4): ";
 	cin >> StaffMainChoice;
 
 	while (1)
@@ -270,7 +285,7 @@ void login::AdminControlMenu(string name)
 	case 'D':
 	case 'd':
 		system("cls");
-		vr.ViewRecord();
+		vr.ViewStaff();
 		break;
 
 
