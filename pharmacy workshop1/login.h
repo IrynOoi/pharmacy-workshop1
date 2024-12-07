@@ -16,7 +16,9 @@ public:
 	void PatientReport();
 	void StaffMainMenu( string name,int Staff_ID);
 	void AdminControlMenu(string name);
-	void UpdateRecord();
+	void PatientMainMenu(string name, int Staff_ID);
+
+
 	
 
 

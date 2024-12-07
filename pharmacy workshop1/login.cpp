@@ -391,11 +391,150 @@ void login::StaffControlMain(string Staff_Name)
 
 void login::login_patient()
 {
+	string Patient_Password; // Variable to store the Patient's password
+	string  Patient_Name;
+
+	// Assuming you have already defined necessary variables and connections
+
+	system("color B0");
+	system("cls"); // Clear the console screen
+	SetConsoleColor(0, 9);
+	cout << "******************" << endl;
+	cout << " LOGIN AS PATIENT " << endl;
+	cout << "******************" << endl;
+	cout << endl;
+
+	SetConsoleColor(0, 11);
+	cout << "Enter Patient ID: ";
+	cin >> Patient_ID; // Read the Patient ID from the user
+
+	cout << "Enter Password: ";
+	char ch;
+	while ((ch = _getch()) != 13) // Read each character of the password until Enter key (ASCII 13) is pressed
+	{
+		if (ch == 8) // Backspace (ASCII 8)
+		{
+			if (!Patient_Password.empty())
+			{
+				Patient_Password.pop_back(); // Remove the last character from the password string
+				cout << "\b \b"; // Overwrite the asterisk and move back again
+			}
+		}
+		else if (ch == ' ') // Allow spaces in the password
+		{
+			Patient_Password += ch;
+			cout << " "; // Display a space
+		}
+		else
+		{
+			Patient_Password += ch; // Append each character to the password string
+			cout << "*"; // Display an asterisk for each character typed
+		}
+	}
+	cout << endl; // Move to the next line after pressing Enter
+
+	// Construct the SQL query to check for a matching Patient user in the database
+	string checkUser_query = "SELECT Patient_ID, Patient_Name FROM Patient WHERE Patient_ID = '" + to_string(Patient_ID) + "' AND Patient_Password = sha1('" + Patient_Password + "') AND Active_Status = 'Active'";
+	const char* cu = checkUser_query.c_str(); // Convert the C++ string to a C-style string
+	qstate = mysql_query(conn, cu); // Execute the SQL query
+
+	if (qstate) // If the query failed
+	{
+		cout << "Query Execution Problem! Error code: " << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+	else // If the query executed successfully
+	{
+		res = mysql_store_result(conn); // Store the result of the query
+
+		if (res) // Check if there is any result
+		{
+			if (res->row_count == 1) // If exactly one row is returned (one matching Patient)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Patient_ID = atoi(row[0]);
+					Patient_Name = row[1]; // Assign the second column (Patient_Name) to the variable Patient_Name
+				}
+
+				system("cls"); // Clear the console screen
+				PatientMainMenu(Patient_Name,Patient_ID ); // Call the function to display the Patient main menu, passing the Patient_Name
+			}
+			else // If no matching Patient is found
+			{
+				char c;
+				cout << "\nInvalid username or password. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					login_patient(); // If yes, call the PatientLogin function to try again
+				else
+					mainlogin_pg(); // If no, call the MainLogin function to return to the main login menu
+			}
+		}
+		else
+		{
+			cout << "No results returned by the query. Error: " << mysql_errno(conn) << endl; // If there's no result from the query
+		}
+	}
 
 
 }
 
 
+void login:: PatientMainMenu(string name, int Staff_ID)
+{
+	char PatientControl;
+	ViewData vr;
+	system("cls");
+	SetConsoleColor(0, 9);
+
+	cout << "***********************" << endl;
+	cout << " PATIENT MAIN MENU     " << endl;
+	cout << "***********************" << endl;
+	SetConsoleColor(0, 11);
+
+	cout << "Welcome, " << name << "! What would you like to do?" << endl;
+	cout << endl;
+
+	cout << "[A] View Drugs list " << endl;
+	cout << "[B] View Patient Account Information" << endl;
+	cout << "[C] Print receipt" << endl;
+	cout << "[M] Back to Login Main Menu" << endl;
+
+	cout << "\nPlease enter your choice (A, B, C, D, M): ";
+	cin >> PatientControl;
+
+	switch (PatientControl)
+	{
+
+	case 'A':
+	case 'a':
+		vr.ViewDrug();
+		break;
+
+	case 'B':
+	case 'b':
+		vr.ViewPatient();
+		break;
+
+	case 'C':
+	case 'c':
+		vr.ViewPatientReport();
+		break;
+
+	case 'M':
+	case 'm':
+		mainlogin_pg();
+		break;
+
+
+	default:
+		cout << "Invalid choice!" << endl;
+		system("pause");
+		PatientMainMenu(name, Patient_ID);
+	}
+
+
+}
 
 void login::SupplierMenu()
 {}
@@ -410,7 +549,7 @@ void login::PatientReport()
 	cout << "********************" << endl;
 
 	SetConsoleColor(0, 11); // Cyan Text
-	cout << "All the table \n" << endl;
+	cout << " \n" << endl;
 
 	string viewPatientList_query = "SELECT Patient_ID, Patient_Name, Patient_Address, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status FROM patient";
 	const char* vtr = viewPatientList_query.c_str();

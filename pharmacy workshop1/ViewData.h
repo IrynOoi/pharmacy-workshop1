@@ -15,9 +15,11 @@ public:
 	void GeneratePDFSalesReport(MYSQL* conn);
 	void ViewStaffAccount(int id); // Corrected spellin
 	void ViewStaff();
-
+	void ViewDrug();
+	void ViewPatient();
+	void ViewPatientReport();
 
 };
 
-
 #endif
+

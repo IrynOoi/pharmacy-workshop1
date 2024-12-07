@@ -3797,3 +3797,17 @@ void  ViewData:: ViewStaff()
     }
 
 }
+
+
+void ViewData::ViewDrug()
+{
+
+}
+void ViewData::ViewPatient()
+{
+
+}
+void ViewData::ViewPatientReport()
+{
+
+}
