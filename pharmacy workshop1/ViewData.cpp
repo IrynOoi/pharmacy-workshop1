@@ -2747,7 +2747,7 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
     HPDF_Font font = nullptr;
     float y = 0.0f;
     try {
-       
+
         std::ofstream fileCheck(filename, ios::out | ios::trunc);
         if (!fileCheck) {
             cerr << "Error: Unable to overwrite file '" << filename << "'." << endl;
@@ -2835,7 +2835,7 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                 int stars = static_cast<int>(totalSales / 10);
                 stars = min(stars, 50); // Limit the number of stars to fit on the page
                 chart.append(stars, '*');
-                line += chart + string(50 - stars, ' ') + "|" ; // Align stars and fill space for consistent formatting
+                line += chart + string(50 - stars, ' ') + "|"; // Align stars and fill space for consistent formatting
 
                 y -= 15;
 
@@ -2987,11 +2987,11 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
     else {
         cout << "PDF generated: " << filename << endl;
     }
-  
+
     HPDF_Free(pdf);
 }
-   
-void ViewData::ViewStaffAcount(int id)
+
+void ViewData::ViewStaffAccount(int id)
 {
     system("cls");
     login lg;
@@ -3011,6 +3011,7 @@ void ViewData::ViewStaffAcount(int id)
         res = mysql_store_result(conn);
         while (row = mysql_fetch_row(res))
         {
+            SetConsoleColor(1, 11);
             cout << "Staff ID: " << row[0] << endl;
             cout << "Name: " << row[1] << endl;
             cout << "Gender: " << row[2] << endl;
@@ -3022,6 +3023,7 @@ void ViewData::ViewStaffAcount(int id)
             cout << "Admin ID: " << row[8] << endl;
             cout << "Active Status: " << row[9] << endl;
             cout << "Hospital ID: " << row[10] << endl;
+            SetConsoleColor(1, 11);
         }
         system("pause");
         system("cls");
@@ -3038,11 +3040,11 @@ void ViewData::ViewStaffAcount(int id)
 }
 void  ViewData:: ViewStaff()
 {
+
     login lg;
-    string  Staff_Name, Staff_Gender, Staff_DOB, Staff_Address, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Staff_Password, Active_Status, name;
-    string year, month, day, DOB, UpdChoice;
-    int Staff_Age, Staff_ID;
-    double Staff_Height, Staff_Weight;
+    string  Staff_Name, Staff_Gender, Staff_Position, Staff_Address, Staff_TelNo, Staff_Email, Staff_Password, Active_Status, name;
+    string  UpdChoice;
+    int Staff_Age, Staff_ID, Hospital_ID;
     string searchPChoice;
     bool valid = false;
 
@@ -3055,22 +3057,18 @@ void  ViewData:: ViewStaff()
     SetConsoleColor(0, 11);
     cout << "Please select the attribute you want to search: " << endl;
 
-    cout << "[1]    Staff ID: " << endl;
+    cout << "[1]    Staff ID" << endl;
     cout << "[2]    Staff Name" << endl;
     cout << "[3]    Staff Gender" << endl;
     cout << "[4]    Staff Age" << endl;
-    cout << "[5]    Date of Birth" << endl;
-    cout << "[6]    Staff Address" << endl;
-    cout << "[7]    Staff Height" << endl;
-    cout << "[8]    Staff Weight" << endl;
-    cout << "[9]    Staff Tel No" << endl;
-    cout << "[10]   Staff Email" << endl;
-    cout << "[11]   Medical History" << endl;
-    cout << "[12]   Diagnosed Symptoms" << endl;
-    cout << "[13]   Active Status" << endl;
-    cout << "[14]   Back to View Record Menu" << endl;
-
-
+    cout << "[5]    Staff Address" << endl;
+    cout << "[6]    Staff Telephone Number" << endl;
+    cout << "[7]    Staff Position" << endl;
+    cout << "[8]    Staff Password" << endl;
+    cout << "[9]    Admin ID" << endl;
+    cout << "[10]   Active Status" << endl;
+    cout << "[11]   Hospital ID" << endl;
+    cout << "[12]   Back to Administration Control" << endl;
 
 
 
@@ -3099,8 +3097,7 @@ void  ViewData:: ViewStaff()
                 valid = true; // Valid input
             }
         } while (!valid);
-
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_ID = '" + to_string(Staff_ID) + "';";
+        string search_query = "SELECT * FROM Staff  WHERE Staff_ID = '" + to_string(Staff_ID) + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3112,20 +3109,18 @@ void  ViewData:: ViewStaff()
                 SetConsoleColor(1, 11);
 
                 cout << "\nHere's the record found: \n" << endl;
+
                 cout << "Staff ID: " << row[0] << endl;
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3136,7 +3131,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3165,7 +3160,7 @@ void  ViewData:: ViewStaff()
             }
         } while (!valid); // Continue looping until valid input is received
 
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Name LIKE '%" + Staff_Name + "%';";
+        string search_query = "SELECT * FROM Staff  WHERE Staff_Name LIKE '%" + Staff_Name + "%';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3181,16 +3176,13 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3201,7 +3193,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3228,7 +3220,7 @@ void  ViewData:: ViewStaff()
             // Validate the gender input
         } while (Staff_Gender != "F" && Staff_Gender != "M");  // Continue looping if the input is not "F" or "M"
 
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Gender = '" + Staff_Gender + "';";
+        string search_query = "SELECT * FROM Staff WHERE Staff_Gender = '" + Staff_Gender + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3244,16 +3236,13 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3264,7 +3253,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3293,7 +3282,7 @@ void  ViewData:: ViewStaff()
             }
         } while (!valid);
 
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Age = '" + to_string(Staff_Age) + "';";
+        string search_query = "SELECT * FROM Staff  WHERE Staff_Age = '" + to_string(Staff_Age) + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3309,16 +3298,12 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Admin ID: " << row[7] << endl;
+                cout << "Active Status: " << row[8] << endl;
+                cout << "Hospital ID: " << row[9] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3329,7 +3314,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3346,80 +3331,23 @@ void  ViewData:: ViewStaff()
 
     else if (searchPChoice == "5")
     {
-        // Input validation for year, month, and day
-        while (true)
+        // Clear the input buffer before getting input again
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        do
         {
-            cout << "Staff's Date of Birth (YYYY-MM-DD): ";
-            cin >> Staff_DOB;
+            cout << "Staff Address: ";
+            // Use getline for robust input handling
 
-            // Validate the entered date
-            if (!isValidDate(Staff_DOB))
-            {
-                cout << "Invalid input. Please enter a valid date in the format: YYYY-MM-DD." << endl;
-            }
-            else
-            {
-                break; // Exit the loop if the date is valid
-            }
-        }
-
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE DATE(Staff_DOB) = '" + Staff_DOB + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-    }
-
-    else if (searchPChoice == "6")
-    {
-
-        while (true)
-        {
-            cout << "Address: ";
-            cin.ignore(1, '\n');// Ignore 1 character (likely the leftover newline) in the input buffer from previous input
             getline(cin, Staff_Address);
 
-        }
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Address LIKE '%" + Staff_Address + "%';";
+            // Validate the input
+            if (Staff_Address.empty())
+            {
+                cerr << "Error: Address cannot be empty. Please try again." << endl;
+            }
+        } while (Staff_Address.empty());
+
+        string search_query = "SELECT * FROM Staff WHERE Staff_Address LIKE '%" + Staff_Address + "%';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3435,16 +3363,13 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3455,7 +3380,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3466,117 +3391,7 @@ void  ViewData:: ViewStaff()
     }
 
 
-    else if (searchPChoice == "7")
-    {
-        cout << "Staff Height: ";
-        while (!(cin >> Staff_Height) || Staff_Height < 0)
-        {
-            cout << "Invalid input. Please enter a positive number: ";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Height = '" + to_string(Staff_Height) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-    }
-
-    else if (searchPChoice == "8")
-    {
-        cout << "Staff Weight: ";
-        while (!(cin >> Staff_Weight) || Staff_Weight < 0)
-        {
-            cout << "Invalid input. Please enter a positive number: ";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Weight = '" + to_string(Staff_Weight) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-    }
-
-    else if (searchPChoice == "9")
+    else if (searchPChoice == "6")
     {
         cout << "Staff Tel No: ";
         while (true)
@@ -3648,7 +3463,7 @@ void  ViewData:: ViewStaff()
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore any remaining input
             }
         }
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_TelNo = '" + Staff_TelNo + "';";
+        string search_query = "SELECT * FROM Staff WHERE Staff_TelNo = '" + Staff_TelNo + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3664,16 +3479,13 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3684,7 +3496,214 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.AdminControlMenu(name);
+        }
+    }
+
+    else if (searchPChoice == "7")
+    {
+        do
+        {
+            cout << "Staff Position: ";
+            getline(cin, Staff_Position);  // Read the entire line including spaces
+
+            // Check if the input is empty
+            if (Staff_Position.empty())
+            {
+                cout << "Input cannot be empty. Please enter a valid position." << endl;
+            }
+            // Check if the input contains any numeric characters
+            else if (any_of(Staff_Position.begin(), Staff_Position.end(), ::isdigit)) {
+                cout << "Input cannot contain numbers. Please enter a valid position." << endl;
+            }
+            else {
+                break;  // Valid input, exit the loop
+            }
+
+        } while (true);  // Keep looping until valid input is provided
+
+        string search_query = "SELECT * FROM Staff WHERE Staff_Position LIKE  = '" + Staff_Position + "%';";
+
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found: \n" << endl;
+                cout << "Staff ID: " << row[0] << endl;
+                cout << "Staff Name: " << row[1] << endl;
+                cout << "Staff Gender: " << row[2] << endl;
+                cout << "Staff Age: " << row[3] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
+
+                SetConsoleColor(0, 11);
+
+
+            }
+            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
+            cin >> searchPChoice;
+            if (searchPChoice == "y" || searchPChoice == "Y")
+                ViewStaff();
+            else if (searchPChoice == "n" || searchPChoice == "N")
+                lg.AdminControlMenu(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.AdminControlMenu(name);
+        }
+    }
+
+    else if (searchPChoice == "8")
+    {
+
+        {
+            cout << "Admin ID (e.g. 1): ";
+            cin >> Admin_ID;
+
+            // Check if input is a valid integer and not negative
+            if (cin.fail() || Admin_ID < 0) {
+                // Clear the error flag and ignore the incorrect input
+                cin.clear();  // Clear the fail state
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                cout << "Invalid input! Please enter a positive integer." << endl;
+            }
+            else {
+                valid = true; // Valid input, exit loop
+            }
+        } while (!valid);
+
+        string search_query = "SELECT *  FROM Staff WHERE Admin_ID  = '" + to_string(Admin_ID) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found: \n" << endl;
+                cout << "Staff ID: " << row[0] << endl;
+                cout << "Staff Name: " << row[1] << endl;
+                cout << "Staff Gender: " << row[2] << endl;
+                cout << "Staff Age: " << row[3] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
+
+                SetConsoleColor(0, 11);
+
+
+            }
+            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
+            cin >> searchPChoice;
+            if (searchPChoice == "y" || searchPChoice == "Y")
+                ViewStaff();
+            else if (searchPChoice == "n" || searchPChoice == "N")
+                lg.AdminControlMenu(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.AdminControlMenu(name);
+        }
+    }
+
+
+    else if (searchPChoice == "9")
+    {
+        cout << "Enter Active Status:\n";
+        cout << "[1] Active\n";
+        cout << "[2] Inactive\n";
+
+        while (true)
+        {
+
+            cout << "Your choice: ";
+
+            int choice;
+            cin >> choice;
+
+            // Check if the input failed (not an integer)
+            if (cin.fail()) {
+                cin.clear();  // Clear the error state
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Ignore the invalid input
+                cout << "Invalid input. Please enter 1 for Active or 2 for Inactive.\n";
+                continue;  // Ask for input again
+            }
+
+            // Validate the user's input and set the Active_Status
+            if (choice == 1) {
+                Active_Status = "Active";
+                break;  // Exit the loop if valid
+            }
+            else if (choice == 2) {
+                Active_Status = "Inactive";
+                break;  // Exit the loop if valid
+            }
+            else {
+                cout << "Invalid input. Please enter 1 for Active or 2 for Inactive.\n";
+            }
+        }
+        string search_query = "SELECT *  FROM Staff WHERE Active_Status = '" + Active_Status + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found: \n" << endl;
+                cout << "Staff ID: " << row[0] << endl;
+                cout << "Staff Name: " << row[1] << endl;
+                cout << "Staff Gender: " << row[2] << endl;
+                cout << "Staff Age: " << row[3] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
+
+                SetConsoleColor(0, 11);
+
+
+            }
+            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
+            cin >> searchPChoice;
+            if (searchPChoice == "y" || searchPChoice == "Y")
+                ViewStaff();
+            else if (searchPChoice == "n" || searchPChoice == "N")
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3696,14 +3715,27 @@ void  ViewData:: ViewStaff()
 
     else if (searchPChoice == "10")
     {
-        cout << "Staff 's Email Address: ";
 
+        // Prompt user for Medication ID with validation
+        do
+        {
+            cout << "Hospital_ID (e.g. 1): ";
+            cin >> Hospital_ID;
 
-        cin.ignore(1, '\n');// Ignore 1 character (likely the leftover newline) in the input buffer from previous input
-        getline(cin, Staff_Email);
+            // Check if input is a valid integer and not negative
+            if (cin.fail() || Hospital_ID < 0)
+            {
+                // Clear the error flag and ignore the incorrect input
+                cin.clear();  // Clear the fail state
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                cout << "Invalid input! Please enter a positive integer." << endl;
+            }
+            else {
+                valid = true; // Valid input, exit loop
+            }
+        } while (!valid);
 
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Staff_Email LIKE '%" + Staff_Email + "%';";
-
+        string search_query = "SELECT *  FROM Staff  WHERE Hospital_ID  = '" + to_string(Hospital_ID) + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3719,16 +3751,13 @@ void  ViewData:: ViewStaff()
                 cout << "Staff Name: " << row[1] << endl;
                 cout << "Staff Gender: " << row[2] << endl;
                 cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
+                cout << "Staff Address: " << row[4] << endl;
+                cout << "Staff Tel No: " << row[5] << endl;
+                cout << "Staff Position: " << row[6] << endl;
+                cout << "Staff Password: " << row[7] << endl;
+                cout << "Admin ID: " << row[8] << endl;
+                cout << "Active Status: " << row[9] << endl;
+                cout << "Hospital ID: " << row[10] << endl;
 
                 SetConsoleColor(0, 11);
 
@@ -3739,7 +3768,7 @@ void  ViewData:: ViewStaff()
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
             else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
+                lg.AdminControlMenu(name);
         }
         else
         {
@@ -3747,184 +3776,12 @@ void  ViewData:: ViewStaff()
             system("pause");
             lg.AdminControlMenu(name);
         }
+
     }
 
     else if (searchPChoice == "11")
     {
-        cout << "Medical History: ";
-
-        cin.ignore(); // Clear newline character from previous input
-        getline(cin, Medical_History);
-
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Medical_History LIKE '%" + Medical_History + "%';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-    }
-
-
-    else if (searchPChoice == "12")
-    {
-        cout << "Diagnosed Symptoms: ";
-        cin.ignore(); // Clear newline character from previous input
-        getline(cin, Diagnosed_Symptoms);
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Diagnosed_Symptoms LIKE '%" + Diagnosed_Symptoms + "%';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-    }
-
-    else if (searchPChoice == "13")
-    {
-        while (true)
-        {
-            cout << "Enter Active Status (Active/Inactive): ";
-            cin >> Active_Status;
-
-            // Convert the input to lowercase and capitalize the first letter
-            for (size_t i = 0; i < Active_Status.length(); ++i) {
-                Active_Status[i] = tolower(Active_Status[i]);  // Convert all characters to lowercase
-            }
-            Active_Status[0] = toupper(Active_Status[0]);  // Capitalize the first character
-
-            // Check if the input is valid
-            if (Active_Status == "Active" || Active_Status == "Inactive") {
-                break; // Exit the loop if valid
-            }
-            else {
-                cout << "Invalid input. Please enter 'Active' or 'Inactive': ";
-            }
-        }
-        string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_DOB, Staff_Address, Staff_Height, Staff_Weight, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Staff_Password FROM Staff WHERE Active_Status  = '" + Active_Status + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found: \n" << endl;
-                cout << "Staff ID: " << row[0] << endl;
-                cout << "Staff Name: " << row[1] << endl;
-                cout << "Staff Gender: " << row[2] << endl;
-                cout << "Staff Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Staff Address: " << row[5] << endl;
-                cout << "Staff Height: " << row[6] << endl;
-                cout << "Staff Weight: " << row[7] << endl;
-                cout << "Staff Tel No: " << row[8] << endl;
-                cout << "Staff Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Staff Password: " << row[13] << endl;
-
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
-            cin >> searchPChoice;
-            if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            lg.AdminControlMenu(name);
-        }
-
-    }
-
-    else if (searchPChoice == "14")
-    {
-        lg.StaffControlMain(name);
+        lg.AdminControlMenu(name);
     }
 
     else
@@ -3938,4 +3795,5 @@ void  ViewData:: ViewStaff()
         }
 
     }
+
 }

@@ -9,6 +9,7 @@
 #include <ctime> // Include this header for time-related functions
 #include "db_connection.h"
 #include "ui.h"
+#include <cstdlib> // For system() function
 #include "login.h"
 #include "main_function.h"
 #include <cctype> // for isalpha() and isspace()
@@ -20,7 +21,6 @@ using namespace std;
 void Loading(); // Declare the function if used
 
 int Admin_ID, Staff_ID, Patient_ID;
-
 
 int main()
 {
@@ -88,6 +88,7 @@ int main()
 
 	return 0;
 }
+
 
 // Function to set the console text and background color
 void SetConsoleColor(int textColor, int backgroundColor)

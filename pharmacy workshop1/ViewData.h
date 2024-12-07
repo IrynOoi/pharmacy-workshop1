@@ -13,7 +13,7 @@ public:
 	void ViewMedicationTransactionMenu();
 	void getreport();
 	void GeneratePDFSalesReport(MYSQL* conn);
-	void ViewStaffAcount(int id);
+	void ViewStaffAccount(int id); // Corrected spellin
 	void ViewStaff();
 
 

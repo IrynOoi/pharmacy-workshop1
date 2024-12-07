@@ -7,6 +7,11 @@
 #include <chrono> // For std::chrono::milliseconds
 #include <windows.h>
 #include "main_function.h"
+#include <conio.h> // Required for _getch()
+#include "login.h"
+#include "registration.h"
+#undef max     // Undefine the `max` macro
+#include <limits>// Include <limits> after undefining `max`
 using namespace std;
 
 
@@ -15,6 +20,8 @@ using namespace std;
 void ui::welcome()
 {
     SetConsoleColor(1, 14);
+	login lg;
+	registration rg;
     ifstream in("welcome.txt");
     string line;
 
@@ -40,14 +47,14 @@ void ui::welcome()
     cout << "\t\t|                                                         Pharmacy Management System                                                                      |\n";
     cout << "\t\t|_________________________________________________________________________________________________________________________________________________________|\n";
     cout << "\t\t|---------------------------------------------------------------------------------------------------------------------------------------------------------|\n";
-    cout << "\t\t|  XXXXXXXXX       XX       XX        XXXX         XXXXXXXXX          XXX       XXX                  XXXX       XXXXXXXXX        XXXXX    XX       XX;    |\n";
-    cout << "\t\t|  XX       XX     XX       XX       XX  XX        XX       XX       XX   XX   XX XX                XX  XX      XX       XX    XX     XX   XX     XX      |\n";
-    cout << "\t\t|  XX       XX     XX       XX      XX    XX       XX       XX      XX     XX XX   XX              XX    XX     XX       XX    XX           XX   XX       |\n";
-    cout << "\t\t|  XXXXXXXXX       XXXXXXXXXXX     XX      XX      XXXXXXXXX       XX       XX      XX            XX      XX    XXXXXXXXX      XX              XX         |\n";
-    cout << "\t\t|  XX              XX       XX    XXXXXXXXXXXX     XX             XX                 XX          XXXXXXXXXXXX   XX             XX              XX         |\n";
-    cout << "\t\t|  XX              XX       XX   XX         XX     XX XX         XX                   XX        XX         XX   XX XX          XX              XX         |\n";
-    cout << "\t\t|  XX              XX       XX  XX           XX    XX   XX      XX                     XX      XX           XX  XX   XX        XX     XX       XX         |\n";
-    cout << "\t\t|  XX              XX       XX XX             XX   XX     XX   XX                       XX    XX             XX XX     XX        XXXXX         XX         |\n";
+    cout << "\t\t|  XXXXXXXXX       XX       XX        XXXX         XXXXXXXXX          XXX       XXX                  XXXX              XXXXX     XX       XX              |\n";
+    cout << "\t\t|  XX       XX     XX       XX       XX  XX        XX       XX       XX   XX   XX XX                XX  XX            XX     XX   XX     XX               |\n";
+    cout << "\t\t|  XX       XX     XX       XX      XX    XX       XX       XX      XX     XX XX   XX              XX    XX           XX           XX   XX                |\n";
+    cout << "\t\t|  XXXXXXXXX       XXXXXXXXXXX     XX      XX      XXXXXXXXX       XX       XX      XX            XX      XX          XX              XX                  |\n";
+    cout << "\t\t|  XX              XX       XX    XXXXXXXXXXXX     XX             XX                 XX          XXXXXXXXXXXX         XX              XX                  |\n";
+    cout << "\t\t|  XX              XX       XX   XX         XX     XX XX         XX                   XX        XX          XX        XX              XX                  |\n";
+    cout << "\t\t|  XX              XX       XX  XX           XX    XX   XX      XX                     XX      XX           XX        XX     XX       XX                  |\n";
+    cout << "\t\t|  XX              XX       XX XX             XX   XX     XX   XX                       XX    XX             XX         XXXXX         XX                  |\n";
 
     cout << "\t\t|_________________________________________________________________________________________________________________________________________________________|\n";
     cout << "\t\t|---------------------------------------------------------------------------------------------------------------------------------------------------------|\n";
@@ -59,5 +66,8 @@ void ui::welcome()
     cout << "\t\t";
     showtime();
     cout<< endl;
+
+	
+
 
 }

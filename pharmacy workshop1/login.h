@@ -17,7 +17,6 @@ public:
 	void StaffMainMenu( string name,int Staff_ID);
 	void AdminControlMenu(string name);
 	void UpdateRecord();
-	void ViewRecord();
 	
 
 

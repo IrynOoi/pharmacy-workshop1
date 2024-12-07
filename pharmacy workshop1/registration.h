@@ -8,7 +8,8 @@ class registration
 public:
 
 	void Registration();
-
+	void registrationStaff();
+	void registrationPatient();
 };
 #endif // MAIN_FUNCTIONS_H
 

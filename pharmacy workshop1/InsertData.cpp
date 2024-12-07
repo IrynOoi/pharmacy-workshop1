@@ -1009,7 +1009,7 @@ void  InsertData::AddMedicationTransactionMenu()
 
 void InsertData::AddStaffs()
 {
-	system("cls");
+
 	string name;
 	login lg;
 	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email,  Staff_Position, Active_Status;
@@ -1018,15 +1018,15 @@ void InsertData::AddStaffs()
 	char AddStaff;
 
 
-
-	cout << "Enter new records: " << endl;
-
 	system("cls");
+
 	SetConsoleColor(0, 9);
 	cout << "***********************" << endl;
 	cout << " ADD RECORDS - Staff   " << endl;
 	cout << "***********************" << endl;
 	SetConsoleColor(0, 11);
+
+
 
 	bool valid = false;
 
@@ -1278,7 +1278,6 @@ void InsertData::AddStaffs()
 	const char* q = insert_query.c_str();
 	qstate = mysql_query(conn, q);
 
-
 	if (!qstate)
 	{
 		cout << endl << "Staff is successfully added in database." << endl;
@@ -1290,7 +1289,6 @@ void InsertData::AddStaffs()
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 
 	}
-
 	do
 	{
 		cout << "Do you want to continue adding records? [Y/N]: ";
@@ -1304,4 +1302,8 @@ void InsertData::AddStaffs()
 			lg.AdminControlMenu(name);
 		}
 	} while (AddStaff == 'y' || AddStaff == 'Y' || AddStaff == 'n' || AddStaff == 'N');
+
+
+
+	
 }

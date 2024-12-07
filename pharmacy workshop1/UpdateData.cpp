@@ -1854,7 +1854,7 @@ void UpdateData::UpdateStaff()
 
 				while (true)
 				{
-				;
+				
 					cout << "Your choice: ";
 
 					int choice;
