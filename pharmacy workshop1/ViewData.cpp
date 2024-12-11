@@ -12,6 +12,8 @@
 #include <algorithm> // For std::transform
 #include <sstream>
 #include "ViewData.h"
+#include <thread>
+#include <chrono>
 #include <fstream>
 #include <iomanip> // Required for setprecision
 #include <ctime>
@@ -2974,7 +2976,7 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         }
 
     }
-    catch (const std::exception& e) {
+    catch (const exception& e) {
         cerr << "An error occurred: " << e.what() << endl;
     }
     catch (...) {
@@ -3803,11 +3805,246 @@ void ViewData::ViewDrug()
 {
 
 }
-void ViewData::ViewPatient()
+void ViewData::ViewPatientAcc()
 {
 
 }
-void ViewData::ViewPatientReport()
+void ViewData::ViewPatientReceipt(int PatientID,string name)
 {
+   login lg;
+    char option;
+    double totalPrice_discount = 0;
+    string  email, address, medication_time;
+    // Get current date and time
+    time_t now = time(0);
+    struct tm ltm = {};
+    localtime_s(&ltm, &now);
+
+    // Fetch distinct transaction times for the patient
+    string search_query = "SELECT DISTINCT Transaction_Time FROM medication_transaction WHERE Patient_ID = '" + to_string(PatientID) + "';";
+    const char* q = search_query.c_str();
+    qstate = mysql_query(conn, q);
+    if (!qstate) {
+        res = mysql_store_result(conn);
+
+        while ((row = mysql_fetch_row(res))) {
+            medication_time = row[0];
+
+            // Display header for the receipt
+            cout << "\n\t\t\t\t\t\t";
+            cout << "- - - - O F F I C I A L    R E C E I P T - - - -" << endl;
+            cout << "\n";
+
+            struct tm ltm;
+            localtime_s(&ltm, &now);
+
+            cout << "\t               ";
+            cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+            cout << "\t               ";
+            cout << " Date  : " << ltm.tm_mday << "-" << (1 + ltm.tm_mon) << " " << (1900 + ltm.tm_year);
+            cout << "\t\t Time  : " << ltm.tm_hour << ":" << ltm.tm_min << ":" << ltm.tm_sec << endl;
+            cout << "\t               ";
+            cout << " Medication Time  : " << medication_time << endl;
+            cout << "\t               ";
+            cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+
+            // Query for medication details for this transaction time
+            string ordering_query = "SELECT m.Medication_Name, mt.Quantity, m.Price, mt.total_price "
+                "FROM medication_transaction mt "
+                "JOIN medication m ON mt.Medication_ID = m.Medication_ID "
+                "WHERE mt.Patient_ID = '" + to_string(PatientID) + "' "
+                "AND mt.Transaction_Time = '" + medication_time + "';";
+            const char* we = ordering_query.c_str();
+            qstate = mysql_query(conn, we);
+
+            if (!qstate) {
+                MYSQL_RES* res2 = mysql_store_result(conn);
+                MYSQL_ROW row2;
+
+                cout << "\t\t\t";
+                cout << setw(5) << "No. " << setw(30) << "Name" << setw(23) << "Quantity" << setw(20) << "Each Price (RM)" << setw(20) << "Price (RM)" << endl;
+                cout << "\t               ";
+                cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+
+                int k = 1;
+                double totalPrice = 0.0;
+
+                while ((row2 = mysql_fetch_row(res2))) {
+                    double row_price = stod(row2[3]);
+                    totalPrice += row_price;
+
+                    cout << "\t\t      " << setw(5) << k++ << ". " << setw(32) << row2[0]
+                        << setw(21) << row2[1] << setw(20) << row2[2] << setw(20) << row2[3] << endl;
+                }
+
+                cout << "\t               ";
+                cout << setfill('.') << setw(100) << "" << setfill(' ') << endl;
+                cout << "\t               ";
+                cout << "\t\t\t\t\t\t\t\t\t\t    Total    : RM " << totalPrice << endl;
+                cout << "\t               ";
+                cout << setfill('.') << setw(100) << "" << setfill(' ') << endl;
+
+                mysql_free_result(res2);
+            }
+            else {
+                cerr << "Error fetching medication details: " << mysql_error(conn) << endl;
+            }
+
+            cout << "\n\t\t\t\t\t\t";
+            cout << "- - - - T H A N K     Y O U - - - -" << endl;
+        }
+
+        mysql_free_result(res);
+    }
+    else {
+        cerr << "Error fetching transaction times: " << mysql_error(conn) << endl;
+    }
+
+        cout << "\t               ";
+        cout << " Do you want to save the receipt? (y/n) :";
+        cin >> option;
+        if (option == 'y' || option == 'Y')
+        {
+            // Create a new PDF document
+            HPDF_Doc pdf = HPDF_New(NULL, NULL);
+            if (!pdf) 
+            {
+                std::cerr << "Error creating PDF document." << std::endl;
+                return;
+            }
+
+            // Fetch distinct transaction times for the patient
+            string search_query = "SELECT DISTINCT Transaction_Time FROM medication_transaction WHERE Patient_ID = '" + std::to_string(PatientID) + "';";
+            const char* q = search_query.c_str();
+            int qstate = mysql_query(conn, q);
+
+            if (!qstate) {
+                MYSQL_RES* res = mysql_store_result(conn);
+                MYSQL_ROW row;
+
+                // Loop through each transaction time
+                while ((row = mysql_fetch_row(res)))
+                {
+                    string medication_time = row[0];
+
+                    // Create a new page in the PDF
+                    HPDF_Page page = HPDF_AddPage(pdf);
+                    HPDF_Page_SetFontAndSize(page, HPDF_GetFont(pdf, "Helvetica-Bold", NULL), 16);
+                    HPDF_Page_BeginText(page);
+
+                    // Print header for the receipt
+                    HPDF_Page_MoveTextPos(page, 160, 780); // Center-aligned for header
+                    HPDF_Page_ShowText(page, "- - - - O F F I C I A L    R E C E I P T - - - -");
+
+                    HPDF_Page_SetFontAndSize(page, HPDF_GetFont(pdf, "Helvetica", NULL), 12);
+                    HPDF_Page_MoveTextPos(page, -100, -30);
+
+                    // Current date and time
+                    time_t now = time(0);
+                    struct tm ltm;
+                    localtime_s(&ltm, &now);
+                    HPDF_Page_ShowText(page, "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                    HPDF_Page_MoveTextPos(page, 0, -20); // Move to the next line
+                    char dateTime[50];
+                    snprintf(dateTime, sizeof(dateTime), "Date  : %02d-%02d-%d    Time  : %02d:%02d:%02d",
+                        ltm.tm_mday, (1 + ltm.tm_mon), (1900 + ltm.tm_year), ltm.tm_hour, ltm.tm_min, ltm.tm_sec);
+
+                    HPDF_Page_ShowText(page, dateTime);
+                    HPDF_Page_MoveTextPos(page, 0, -20);
+
+                    // Medication Time
+                    HPDF_Page_ShowText(page, ("Medication Time  : " + medication_time).c_str());
+                    HPDF_Page_MoveTextPos(page, 0, -30);
+
+                    // Line separator
+                    HPDF_Page_ShowText(page, "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                    HPDF_Page_MoveTextPos(page, 0, -30);
+
+                    // Query for medication details for this transaction time
+                    std::string ordering_query = "SELECT m.Medication_Name, mt.Quantity, m.Price, mt.total_price "
+                        "FROM medication_transaction mt "
+                        "JOIN medication m ON mt.Medication_ID = m.Medication_ID "
+                        "WHERE mt.Patient_ID = '" + std::to_string(PatientID) + "' "
+                        "AND mt.Transaction_Time = '" + medication_time + "';";
+                    const char* we = ordering_query.c_str();
+                    qstate = mysql_query(conn, we);
+
+                    if (!qstate) {
+                        MYSQL_RES* res2 = mysql_store_result(conn);
+                        MYSQL_ROW row2;
+
+                        // Set font for medication details
+                        HPDF_Page_SetFontAndSize(page, HPDF_GetFont(pdf, "Helvetica", NULL), 10);
+
+                        // Print table headers
+                        HPDF_Page_ShowText(page, "No.    Name                             Quantity     Each Price (RM)     Price (RM)");
+                        HPDF_Page_MoveTextPos(page, 0, -20);
+                        HPDF_Page_ShowText(page, "-------------------------------------------------------------------------------------");
+
+                        int k = 1;
+                        double totalPrice = 0.0;
+                        // Loop through and print each medication
+                        while ((row2 = mysql_fetch_row(res2))) {
+                            double row_price = stod(row2[3]);
+                            totalPrice += row_price;
+
+                            char row_text[200];
+                            snprintf(row_text, sizeof(row_text), "%-6d%-35s%-20s%-20.2f%.2f",
+                                k++, row2[0], row2[1], std::stod(row2[2]), row_price);
+
+                            HPDF_Page_MoveTextPos(page, 0, -20);
+                            HPDF_Page_ShowText(page, row_text);
+                        }
+
+                        // Line separator and total
+                        HPDF_Page_MoveTextPos(page, 0, -20);
+                        HPDF_Page_ShowText(page, "-------------------------------------------------------------------------------------");
+                        HPDF_Page_MoveTextPos(page, 0, -20);
+                        char totalText[50];
+                        snprintf(totalText, sizeof(totalText), "Total    : RM %.2f", totalPrice);
+                        HPDF_Page_ShowText(page, totalText);
+
+                        // Thank you footer
+                        HPDF_Page_MoveTextPos(page, 0, -40);
+                        HPDF_Page_ShowText(page, "....................................................................................................");
+                        HPDF_Page_MoveTextPos(page, 0, -20);
+                        HPDF_Page_ShowText(page, "- - - - T H A N K     Y O U - - - -");
+
+                        HPDF_Page_EndText(page);
+                        mysql_free_result(res2);
+                    }
+                    else {
+                        std::cerr << "Error fetching medication details: " << mysql_error(conn) << std::endl;
+                    }
+                }
+                mysql_free_result(res);
+            }
+            else {
+                std::cerr << "Error fetching transaction times: " << mysql_error(conn) << std::endl;
+            }
+
+            // Save the PDF to a file
+            HPDF_SaveToFile(pdf, "receipt.pdf");
+
+            // Clean up
+            HPDF_Free(pdf);
+
+        }
+        else if (option == 'N' || option == 'n')
+            lg.PatientMainMenu(name, PatientID);
+        else {
+
+            cout << "Kindly enter either 'y' for yes or 'n' for no." << endl;
+            cout << "Hang on a moment.." << endl;
+            cout << "Loading to order page.." << endl;
+            this_thread::sleep_for(chrono::milliseconds(2000));
+            lg.PatientMainMenu(name, PatientID);
+        }
+
+
 
 }
+
+
+
+

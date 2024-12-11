@@ -480,7 +480,7 @@ void login::login_patient()
 }
 
 
-void login:: PatientMainMenu(string name, int Staff_ID)
+void login:: PatientMainMenu(string name, int Patient_ID)
 {
 	char PatientControl;
 	ViewData vr;
@@ -513,12 +513,12 @@ void login:: PatientMainMenu(string name, int Staff_ID)
 
 	case 'B':
 	case 'b':
-		vr.ViewPatient();
+		vr.ViewPatientAcc();
 		break;
 
 	case 'C':
 	case 'c':
-		vr.ViewPatientReport();
+		vr.ViewPatientReceipt(Patient_ID,  name);
 		break;
 
 	case 'M':

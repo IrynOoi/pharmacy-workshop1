@@ -13,11 +13,11 @@ public:
 	void ViewMedicationTransactionMenu();
 	void getreport();
 	void GeneratePDFSalesReport(MYSQL* conn);
-	void ViewStaffAccount(int id); // Corrected spellin
+	void ViewStaffAccount(int id); 
 	void ViewStaff();
 	void ViewDrug();
-	void ViewPatient();
-	void ViewPatientReport();
+	void ViewPatientAcc();
+	void ViewPatientReceipt(int PatientID,string name);
 
 };
 
