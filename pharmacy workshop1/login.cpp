@@ -198,7 +198,7 @@ void login::AdminMainMenu(string name)//light blue background
 	cout << "[1] Administration Control" << endl;
 	cout << "[2] Supplier menu" << endl;
 	cout << "[3] Report Generation For Patient" << endl;
-	cout << "[4] Back to main menu" << endl;
+	cout << "[4] Back to Main Menu" << endl;
 	cout << "\nYour choice (1 - 4): ";
 	cin >> StaffMainChoice;
 
@@ -350,8 +350,6 @@ void login::StaffControlMain(string Staff_Name)
 
 	case 'A':
 	case 'a':
-	
-
 		id.AddRecord();
 		break;
 
@@ -508,12 +506,12 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 
 	case 'A':
 	case 'a':
-		vr.ViewDrug();
+		vr.ViewDrugList();
 		break;
 
 	case 'B':
 	case 'b':
-		vr.ViewPatientAcc();
+		vr.ViewPatientAcc(Patient_ID);
 		break;
 
 	case 'C':
@@ -538,72 +536,6 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 
 void login::SupplierMenu()
 {}
-
-void login::PatientReport()
-{
-	string name;
-	system("cls");
-	SetConsoleColor(0, 9); // Light Blue Text
-	cout << "********************" << endl;
-	cout << " PATIENT REPORT     " << endl;
-	cout << "********************" << endl;
-
-	SetConsoleColor(0, 11); // Cyan Text
-	cout << " \n" << endl;
-
-	string viewPatientList_query = "SELECT Patient_ID, Patient_Name, Patient_Address, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status FROM patient";
-	const char* vtr = viewPatientList_query.c_str();
-	qstate = mysql_query(conn, vtr);
-
-	if (!qstate)
-	{
-		res = mysql_store_result(conn);
-		if (res->row_count >= 1)
-		{
-			SetConsoleColor(0, 14); // Yellow Text
-			cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-			printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
-				"Patient ID", "Name", "Address", "Tel. No", "Med. History", "Symptoms", "Status");
-			cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-
-			SetConsoleColor(0, 7); // White Text
-			while (row = mysql_fetch_row(res))
-			{
-				printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
-					row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
-			}
-
-			SetConsoleColor(0, 14); // Yellow Text
-			cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-
-			SetConsoleColor(0, 11); // Cyan Text
-			
-			system("pause");
-			system("cls");
-			AdminMainMenu(name); // Replace this if you have a different menu or return point
-		}
-		else
-		{
-			SetConsoleColor(0, 4); // Red Text
-			cout << "No patient records found!" << endl;
-			SetConsoleColor(0, 7); // Reset to White Text
-			system("pause");
-			AdminMainMenu(name); // Replace this if you have a different menu or return point
-		}
-	}
-	else
-	{
-		SetConsoleColor(0, 4); // Red Text
-		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
-		cout << "Error Message: " << mysql_error(conn) << endl;
-		SetConsoleColor(0, 7); // Reset to White Text
-		system("pause");
-		AdminMainMenu(name); // Replace this if you have a different menu or return point
-	}
-
-
-}
-
 
 
 
@@ -635,8 +567,11 @@ void login::StaffMainMenu(string name, int Staff_ID)//green background
 	cout << "[2] Sales report " << endl;
 	cout << "[3] Patient Report " << endl;
 	cout << "[4] Account Information" << endl;
-	cout << "[5] Back to main menu" << endl;
-	cout << "\nYour choice (1 - 4): ";
+	cout << "[5] Administration Control" << endl;
+	cout << "[6] Supplier menu" << endl;
+	cout << "[7] Report Generation For Patient" << endl;
+	cout << "[8] Back to main menu" << endl;
+	cout << "\nYour choice (1 - 8): ";
 	cin >> StaffMainChoice ;
 
 	while (1)
@@ -655,7 +590,7 @@ void login::StaffMainMenu(string name, int Staff_ID)//green background
 		}
 		else if (StaffMainChoice == '3')
 		{
-			PatientReport();
+			vd.PatientReport();
 			break;
 		}
 		
@@ -665,7 +600,7 @@ void login::StaffMainMenu(string name, int Staff_ID)//green background
 			break;
 		}
 
-		else if (StaffMainChoice == '5')
+		else if (StaffMainChoice == '8')
 		{
 			mainlogin_pg();
 			break;

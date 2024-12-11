@@ -720,7 +720,7 @@ void Delete:: DeleteStaff()
 				cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 				cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 				system("pause");
-				DeleteStaff();
+				lg.AdminControlMenu(name);
 
 			}
 

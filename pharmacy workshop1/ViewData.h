@@ -15,9 +15,10 @@ public:
 	void GeneratePDFSalesReport(MYSQL* conn);
 	void ViewStaffAccount(int id); 
 	void ViewStaff();
-	void ViewDrug();
-	void ViewPatientAcc();
+	void ViewDrugList();
+	void ViewPatientAcc(int id);
 	void ViewPatientReceipt(int PatientID,string name);
+	void PatientReport();
 
 };
 

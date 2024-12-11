@@ -3000,7 +3000,7 @@ void ViewData::ViewStaffAccount(int id)
     string Staff_Name;
     SetConsoleColor(0, 9);
     cout << "===================================" << endl;
-    cout << "       ACCOUNT INFORMATION         " << endl;
+    cout << "       STAFF ACCOUNT INFORMATION         " << endl;
     cout << "===================================" << endl;
 
     SetConsoleColor(0,11);
@@ -3799,22 +3799,196 @@ void  ViewData:: ViewStaff()
     }
 
 }
-
-
-void ViewData::ViewDrug()
+void  ViewData::PatientReport()
 {
+    login lg;
+    string name;
+    system("cls");
+    SetConsoleColor(0, 9); // Light Blue Text
+    cout << "********************" << endl;
+    cout << " PATIENT REPORT     " << endl;
+    cout << "********************" << endl;
+
+    SetConsoleColor(0, 11); // Cyan Text
+    cout << " \n" << endl;
+
+    string viewPatientList_query = "SELECT Patient_ID, Patient_Name, Patient_Address, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status FROM patient";
+    const char* vtr = viewPatientList_query.c_str();
+    qstate = mysql_query(conn, vtr);
+
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        if (res->row_count >= 1)
+        {
+            SetConsoleColor(0, 14); //Light Yellow background
+            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
+                "Patient ID", "Name", "Address", "Tel. No", "Med. History", "Symptoms", "Status");
+            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+
+            SetConsoleColor(0, 7); // White background
+            while (row = mysql_fetch_row(res))
+            {
+                printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
+                    row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
+            }
+
+            SetConsoleColor(0, 14); // Yellow background
+            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+
+            SetConsoleColor(0, 11); // Cyan background
+
+            system("pause");
+            system("cls");
+            lg.StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+        }
+        else
+        {
+            SetConsoleColor(0, 4); // Red Text
+            cout << "No patient records found!" << endl;
+            SetConsoleColor(0, 7); // Reset to White Text
+            system("pause");
+           lg. StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+        }
+    }
+    else
+    {
+        SetConsoleColor(0, 4); // Red Text
+        cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+        cout << "Error Message: " << mysql_error(conn) << endl;
+        SetConsoleColor(0, 7); // Reset to White Text
+        system("pause");
+        lg.StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+    }
+}
+
+void ViewData::ViewDrugList()
+{
+    login lg;
+    string name;
+    int Patient_ID=0;
+    system("cls");
+    SetConsoleColor(0, 9); // Light Blue Text
+    cout << "********************" << endl;
+    cout << "    DRUG LIST       " << endl;
+    cout << "********************" << endl;
+
+    SetConsoleColor(0, 11); // Cyan Text
+    cout << " \n" << endl;
+
+    string viewMedicationList_query = "SELECT Medication_ID, Medication_Name,Medication_Type,Dosage_Form,Price FROM medication";
+    const char* vtr = viewMedicationList_query.c_str();
+    qstate = mysql_query(conn, vtr);
+
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        if (res->row_count >= 1)
+        {
+            SetConsoleColor(0, 2); //Green background
+            cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            printf("| %-15s | %-60s | %-80s | %-15s | %-40s |\n",
+                "Medication ID", " Medication Name", "Medication Type", "Dosage_Form", "Price");
+            cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+
+            SetConsoleColor(0, 15); // White backgorund
+            while (row = mysql_fetch_row(res))
+            {
+                printf("| %-15s | %-60s | %-80s | %-15s | %-40s |\n",
+                    row[0], row[1], row[2], row[3], row[4]);
+            }
+
+            SetConsoleColor(0,2); //Green background
+            cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+
+            SetConsoleColor(0, 11); // Cyan Text
+
+            system("pause");
+            system("cls");
+            lg.PatientMainMenu(name, Patient_ID); // Replace this if you have a different menu or return point
+        }
+        else
+        {
+            SetConsoleColor(0, 4); // Red Text
+            cout << "No medication records found!" << endl;
+            SetConsoleColor(0, 7); // Reset to White Text
+            system("pause");
+            lg.PatientMainMenu(name, Patient_ID); // Replace this if you have a different menu or return point
+        }
+    }
+    else
+    {
+        SetConsoleColor(0, 4); // Red Text
+        cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+        cout << "Error Message: " << mysql_error(conn) << endl;
+        SetConsoleColor(0, 7); // Reset to White Text
+        system("pause");
+        lg.PatientMainMenu(name, Patient_ID);// Replace this if you have a different menu or return point
+    }
+
+
 
 }
-void ViewData::ViewPatientAcc()
+void ViewData::ViewPatientAcc(int id)
 {
+    system("cls");
+    login lg;
+    string Patient_Name;
+    SetConsoleColor(0, 9);
+    cout << "===================================" << endl;
+    cout << "   PATIENT ACCOUNT INFORMATION     " << endl;
+    cout << "===================================" << endl<<endl<<endl;
+
+    SetConsoleColor(0, 11);
+    showtime();
+    string search_query = "SELECT * FROM patient WHERE Patient_ID = '" + to_string(id) + "'";
+    const char* q = search_query.c_str();
+    qstate = mysql_query(conn, q);
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        while (row = mysql_fetch_row(res))
+        {
+            SetConsoleColor(1, 11);
+
+            cout << "\nHere's the record found: \n" << endl;
+            cout << "Patient ID: " << row[0] << endl;
+            cout << "Patient Name: " << row[1] << endl;
+            cout << "Patient Gender: " << row[2] << endl;
+            cout << "Date of Birth: " << row[3] << endl;
+            cout << "Patient Address: " << row[4] << endl;
+            cout << "Patient Height: " << row[5] << endl;
+            cout << "Patient Weight: " << row[6] << endl;
+            cout << "Patient Tel No: " << row[7] << endl;
+            cout << "Patient Email: " << row[8] << endl;
+            cout << "Medical History: " << row[9] << endl;
+            cout << "Diagnosed Symptoms: " << row[10] << endl;
+            cout << "Active Status: " << row[11] << endl;
+            cout << "Patient Password: " << row[12] << endl;
+
+            SetConsoleColor(0, 11);
+        }
+        system("pause");
+        system("cls");
+        lg.PatientMainMenu(Patient_Name, id);
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+        system("pause");
+        system("cls");
+        lg.PatientMainMenu(Patient_Name, id);
+    }
+
+
 
 }
 void ViewData::ViewPatientReceipt(int PatientID,string name)
 {
    login lg;
     char option;
-    double totalPrice_discount = 0;
-    string  email, address, medication_time;
+    string  medication_time;
     // Get current date and time
     time_t now = time(0);
     struct tm ltm = {};
@@ -4044,6 +4218,8 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
 
 
 }
+
+
 
 
 
