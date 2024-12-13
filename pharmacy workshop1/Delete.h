@@ -5,7 +5,7 @@
 class Delete
 {
 public:
-	void DeleteRecord();
+	/*void DeleteRecord();*/
 	void DeletePatientMenu();
 	void DeleteHospitalMenu();
 	void DeleteDrugMenu();

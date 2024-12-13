@@ -6,7 +6,7 @@ class InsertData
 {
 public:
 
-	void AddRecord();
+	/*void AddRecord();*/
 	void AddPatientMenu();
 	void AddHospitalMenu();
 	void AddDrugMenu();

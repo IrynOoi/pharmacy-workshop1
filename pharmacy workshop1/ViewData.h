@@ -6,7 +6,7 @@ class ViewData
 {
 public:
 
-	void ViewRecord();
+
 	void ViewPatientMenu();
 	void ViewHospitalMenu();
 	void ViewDrugMenu();
@@ -20,7 +20,8 @@ public:
 	void ViewPatientReceipt(int PatientID,string name);
 	void PatientReport();
 
-};
 
+};
+bool isValidDate(const string& date);
 #endif
 

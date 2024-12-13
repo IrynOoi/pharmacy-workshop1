@@ -5,7 +5,7 @@
 class UpdateData
 {
 public:
-	void UpdateRecord();
+	/*void UpdateRecord();*/
 	void UpdatePatientMenu();
 	void UpdateHospitalMenu();
 	void UpdateDrugMenu();

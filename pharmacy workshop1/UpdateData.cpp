@@ -11,69 +11,70 @@
 #include <algorithm> // For std::transform
 using namespace std;
 
-void UpdateData::UpdateRecord()
-{
-	login lg;
-	string name;
-	char UpdateRecord;
-
-	system("cls");
-	do
-	{
-		SetConsoleColor(0, 9);
-		cout << "********************" << endl;
-		cout << " UPDATE RECORD MENU " << endl;
-		cout << "********************" << endl;
-		SetConsoleColor(0, 11);
-
-		cout << "[P] Update Record of Patient" << endl;
-		cout << "[H] Update Record of Hospital" << endl;
-		cout << "[D] Update Record of Drug  " << endl;
-		cout << "[T] Update Record of Medication Transaction" << endl;
-		cout << "[M] Back to Main Menu" << endl;
-
-		cout << "\nPlease enter your choice (P, H, D, T, M): ";
-		cin >> UpdateRecord;
-
-		switch (UpdateRecord)
-		{
-		case 'P':
-		case 'p':
-			UpdatePatientMenu();
-			break;
-
-		case 'H':
-		case 'h':
-			UpdateHospitalMenu();
-			break;
-
-		case 'D':
-		case 'd':
-			UpdateDrugMenu();
-			break;
-
-		case 'T':
-		case 't':
-			UpdateMedicationTransactionMenu();
-			break;
-
-		case 'M':
-		case 'm':
-			lg.StaffControlMain(name);
-			break;
-
-		default:
-			cout << "Invalid choice!" << endl;
-			system("pause");
-			break;
-		}
-	} while (UpdateRecord != 'P'&& UpdateRecord != 'p' && UpdateRecord != 'H' || UpdateRecord != 'h' || UpdateRecord != 'D' || UpdateRecord != 'd' || UpdateRecord != 'T' || UpdateRecord != 't' || UpdateRecord != 'M' || UpdateRecord != 'm');
-}
+//void UpdateData::UpdateRecord()
+//{
+//	login lg;
+//	string name;
+//	char UpdateRecord;
+//
+//	system("cls");
+//	do
+//	{
+//		SetConsoleColor(0, 9);
+//		cout << "********************" << endl;
+//		cout << " UPDATE RECORD MENU " << endl;
+//		cout << "********************" << endl;
+//		SetConsoleColor(0, 11);
+//
+//		cout << "[P] Update Record of Patient" << endl;
+//		cout << "[H] Update Record of Hospital" << endl;
+//		cout << "[D] Update Record of Drug  " << endl;
+//		cout << "[T] Update Record of Medication Transaction" << endl;
+//		cout << "[M] Back to Main Menu" << endl;
+//
+//		cout << "\nPlease enter your choice (P, H, D, T, M): ";
+//		cin >> UpdateRecord;
+//
+//		switch (UpdateRecord)
+//		{
+//		case 'P':
+//		case 'p':
+//			UpdatePatientMenu();
+//			break;
+//
+//		case 'H':
+//		case 'h':
+//			UpdateHospitalMenu();
+//			break;
+//
+//		case 'D':
+//		case 'd':
+//			UpdateDrugMenu();
+//			break;
+//
+//		case 'T':
+//		case 't':
+//			UpdateMedicationTransactionMenu();
+//			break;
+//
+//		case 'M':
+//		case 'm':
+//			lg.StaffControlMain(name);
+//			break;
+//
+//		default:
+//			cout << "Invalid choice!" << endl;
+//			system("pause");
+//			break;
+//		}
+//	} while (UpdateRecord != 'P'&& UpdateRecord != 'p' && UpdateRecord != 'H' || UpdateRecord != 'h' || UpdateRecord != 'D' || UpdateRecord != 'd' || UpdateRecord != 'T' || UpdateRecord != 't' || UpdateRecord != 'M' || UpdateRecord != 'm');
+//}
 
 
 void UpdateData::UpdatePatientMenu()
 {
-	string Patient_ID, Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Patient_Password, Active_Status;
+	login lg;
+	string Patient_ID, Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Patient_Password, Active_Status, name;
 	char  confirmUpd, continueUpd;
 	string year, month, day, DOB, UpdChoice;
 	int d_year, d_month, d_day, Patient_Age;
@@ -90,7 +91,7 @@ void UpdateData::UpdatePatientMenu()
 	cin >> Patient_ID;
 
 	cout << "\nHere's the record found: \n" << endl;
-	string searchUpd_query = "SELECT Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Height, Patient_Weight, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password FROM patient WHERE Patient_ID = '" + Patient_ID + "';";
+	string searchUpd_query = "SELECT * FROM patient WHERE Patient_ID = '" + Patient_ID + "';";
 	const char* q = searchUpd_query.c_str();
 	qstate = mysql_query(conn, q);
 	if (!qstate)
@@ -103,17 +104,16 @@ void UpdateData::UpdatePatientMenu()
 			cout << "Patient ID: " << row[0] << endl;
 			cout << "Patient Name: " << row[1] << endl;
 			cout << "Patient Gender: " << row[2] << endl;
-			cout << "Patient Age: " << row[3] << endl;
-			cout << "Date of Birth: " << row[4] << endl;
-			cout << "Patient Address: " << row[5] << endl;
-			cout << "Patient Height: " << row[6] << endl;
-			cout << "Patient Weight: " << row[7] << endl;
-			cout << "Patient Tel No: " << row[8] << endl;
-			cout << "Patient Email: " << row[9] << endl;
-			cout << "Medical History: " << row[10] << endl;
-			cout << "Diagnosed Symptoms: " << row[11] << endl;
-			cout << "Active Status: " << row[12] << endl;
-			cout << "Patient Password: " << row[13] << endl;
+			cout << "Date of Birth: " << row[3] << endl;
+			cout << "Patient Address: " << row[4] << endl;
+			cout << "Patient Height: " << row[5] << endl;
+			cout << "Patient Weight: " << row[6] << endl;
+			cout << "Patient Tel No: " << row[7] << endl;
+			cout << "Patient Email: " << row[8] << endl;
+			cout << "Medical History: " << row[9] << endl;
+			cout << "Diagnosed Symptoms: " << row[10] << endl;
+			cout << "Active Status: " << row[11] << endl;
+			cout << "Patient Password: " << row[12] << endl;
 
 			SetConsoleColor(0, 11);
 		}
@@ -180,7 +180,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == "2")
@@ -211,7 +211,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == "3")
@@ -235,20 +235,12 @@ void UpdateData::UpdatePatientMenu()
 						break; // Exit loop if the input is valid
 					}
 				}
-				// DOB details: convert int to string and format as YYYY-MM-DD
-				year = to_string(d_year);
-				month = (d_month < 10 ? "0" : "") + to_string(d_month); // Add leading zero if needed
-				day = (d_day < 10 ? "0" : "") + to_string(d_day);        // Add leading zero if needed
-				DOB = year + "-" + month + "-" + day;
-				Patient_DOB = DOB;
-
-				// Calculate age
-				Patient_Age = calculateAge(d_year, d_month, d_day);
+				
 
 
 				string update_query = "UPDATE patient SET Patient_DOB = '" + Patient_DOB +
-					"', Patient_Age = " + to_string(Patient_Age) +
-					" WHERE Patient_ID = '" + Patient_ID + "';";
+					"' WHERE Patient_ID = '" + Patient_ID + "';";
+
 
 
 				const char* q = update_query.c_str();
@@ -260,7 +252,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 
@@ -291,7 +283,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == "5")
@@ -314,7 +306,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == "6")
@@ -338,7 +330,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 
 			}
@@ -426,7 +418,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 			else if (UpdChoice == "8")
@@ -448,7 +440,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 
@@ -468,7 +460,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 
@@ -488,7 +480,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 
@@ -527,7 +519,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 			else if (UpdChoice == "12")
@@ -546,7 +538,7 @@ void UpdateData::UpdatePatientMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdatePatientMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 
 			}
 
@@ -560,7 +552,7 @@ void UpdateData::UpdatePatientMenu()
 		}
 		else
 		{
-			UpdateRecord();
+			lg.StaffControlMain(name);
 		}
 	}
 	else
@@ -572,11 +564,13 @@ void UpdateData::UpdatePatientMenu()
 
 
 
+
 }
 
 void UpdateData::UpdateHospitalMenu()
 {
-	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availibility;
+	login lg;
+	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availibility, name;
 	char UpdChoice, confirmUpd, continueUpd;
 	bool valid = false;
 	system("cls");
@@ -660,7 +654,7 @@ void UpdateData::UpdateHospitalMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateHospitalMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == '2')
@@ -679,7 +673,7 @@ void UpdateData::UpdateHospitalMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateHospitalMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == '3')
@@ -709,12 +703,12 @@ void UpdateData::UpdateHospitalMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateHospitalMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 
 			else if (UpdChoice == '4') {
-			
+
 				while (true)
 				{
 					cout << "State: ";
@@ -730,9 +724,9 @@ void UpdateData::UpdateHospitalMenu()
 					}
 				}
 
-				
 
-				string update_query = "UPDATE hospital SET Hospital_State = '" + Hospital_State + "'WHERE Hospital_ID = '" + Hospital_ID + "';" ;
+
+				string update_query = "UPDATE hospital SET Hospital_State = '" + Hospital_State + "'WHERE Hospital_ID = '" + Hospital_ID + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
 				cout << "\n Successfully Updated!" << endl;
@@ -742,7 +736,7 @@ void UpdateData::UpdateHospitalMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateHospitalMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == '5')
@@ -781,7 +775,7 @@ void UpdateData::UpdateHospitalMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateHospitalMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else
@@ -793,22 +787,22 @@ void UpdateData::UpdateHospitalMenu()
 		}
 		else
 		{
-			UpdateRecord();
+			lg.StaffControlMain(name);
 		}
 	}
-	 else
+	else
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
 		UpdateHospitalMenu();
-	 }
-
+	}
 
 }
 
 void UpdateData::UpdateDrugMenu()
 {
-	string  Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text;
+	login lg;
+	string  Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name;
 	double Price;
 	int Medication_ID;
 	char UpdChoice, confirmUpd, continueUpd;
@@ -820,13 +814,16 @@ void UpdateData::UpdateDrugMenu()
 	cout << " UPDATE RECORD - DRUGS    " << endl;
 	cout << "**************************" << endl;
 
+
+
 	SetConsoleColor(0, 11);
-	do 
+	do
 	{
 		cout << "\nEnter Medication ID to search (positive numeric input): ";
 		cin >> Medication_ID;
 
-		if (cin.fail() || Medication_ID <= 0) { // Check for non-integer or non-positive input
+		if (cin.fail() || Medication_ID <= 0) 
+		{ // Check for non-integer or non-positive input
 			cout << "Invalid input. Please enter a positive integer." << endl;
 			cin.clear(); // Clear the error flag
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
@@ -840,227 +837,308 @@ void UpdateData::UpdateDrugMenu()
 	string searchUpd_query = "SELECT Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, Price FROM medication WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
 	const char* q = searchUpd_query.c_str();
 
-	cout << "Are you confirm to update information? [Y/N]: ";
-	cin >> confirmUpd;
-
-	if (confirmUpd == 'Y' || confirmUpd == 'y')
+	
+	if (!qstate)
 	{
-		cout << endl << endl;
-		cout << "========================================================================================================================" << endl;
-		cout << endl << endl << endl;
-		SetConsoleColor(0, 9);
-		cout << "****************************" << endl;
-		cout << "  Updation of Information   " << endl;
-		cout << "****************************" << endl;
-		SetConsoleColor(0, 11);
-		cout << "\nEnter information that you want to update: " << endl;
-		cout << "[1] Medication Name " << endl;
-		cout << "[2] Medication Type " << endl;
-		cout << "[3] Dosage Form " << endl;
-		cout << "[4] Strength " << endl;
-		cout << "[5] Description " << endl;
-		cout << "[6] Side Effects " << endl;
-		cout << "[7] Usage Instructions " << endl;
-		cout << "[8] Price " << endl;
-
-		cout << "\nYour choice >> ";
-		cin >> UpdChoice;
-
-		if (UpdChoice == '1')
+		res = mysql_store_result(conn);
+		while (row = mysql_fetch_row(res))
 		{
-			cin.ignore();
-			do
-			{
-				cout << "Medication Name: ";
-				getline(cin, Medication_Name);
-				// Check if the name is alphabetic and not empty
-				valid = isAlphabetic(Medication_Name) && ! Medication_Name.empty();
-
-
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter a non-empty name." << endl;
-				}
-			} while (!valid);
-
-			string update_query = "UPDATE medication SET Medication_Name = '" + Medication_Name + "' WHERE Medication_ID = '" +to_string( Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
+			SetConsoleColor(1, 11);
+			cout << "Medication ID: " << row[0] << endl;
+			cout << "Name: " << row[1] << endl;
+			cout << "Type: " << row[2] << endl;
+			cout << "Dosage Form: " << row[3] << endl;
+			cout << "Strength: " << row[4] << endl;
+			cout << "Description: " << row[5] << endl;
+			cout << "Side Effects: " << row[6] << endl;
+			cout << "Usage Instructions: " << row[7] << endl;
+			cout << "Price: " << row[8] << endl;
+			SetConsoleColor(0, 11);
 		}
-		else if (UpdChoice == '2')
+
+		cout << "Are you confirm to update information? [Y/N]: ";
+		cin >> confirmUpd;
+
+
+		if (confirmUpd == 'Y' || confirmUpd == 'y')
 		{
-			cin.ignore();
-			do
+			cout << endl << endl;
+			cout << "========================================================================================================================" << endl;
+			cout << endl << endl << endl;
+			SetConsoleColor(0, 9);
+			cout << "****************************" << endl;
+			cout << "  Updation of Information   " << endl;
+			cout << "****************************" << endl;
+			SetConsoleColor(0, 11);
+			cout << "\nEnter information that you want to update: " << endl;
+			cout << "[1] Medication Name " << endl;
+			cout << "[2] Medication Type " << endl;
+			cout << "[3] Dosage Form " << endl;
+			cout << "[4] Strength " << endl;
+			cout << "[5] Description " << endl;
+			cout << "[6] Side Effects " << endl;
+			cout << "[7] Usage Instructions " << endl;
+			cout << "[8] Price " << endl;
+
+			cout << "\nYour choice >> ";
+			cin >> UpdChoice;
+
+			if (UpdChoice == '1')
 			{
-				cout << "Medication Type: ";
-				getline(cin, Medication_Type);
-				valid = !isAlphabetic(Medication_Type) && !Medication_Type.empty();
-				if (!valid)
+				cin.ignore();
+				do
 				{
-					cout << "Invalid Input! Please enter a non-empty type." << endl;
-				}
-			} while (!valid);
+					cout << "Medication Name: ";
+					getline(cin, Medication_Name);
+					// Check if the name is alphabetic and not empty
+					valid = isAlphabetic(Medication_Name) && !Medication_Name.empty();
 
-			string update_query = "UPDATE medication SET Medication_Type = '" + Medication_Type + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-		}
-		else if (UpdChoice == '3')
-		{
-			cin.ignore();
-			do
-			{
-				cout << "Dosage Form : ";
-				getline(cin, Dosage_Form );
-				valid = !isAlphabetic(Dosage_Form) && !Dosage_Form.empty();
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter a non-empty type." << endl;
-				}
-			} while (!valid) ;
 
-			string update_query = "UPDATE medication SET Dosage_Form = '" + Dosage_Form + "' WHERE Medication_ID = '" + to_string(Medication_ID)+ "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-		}
-		else if (UpdChoice == '4')
-		{
-			cin.ignore();
-			do
-			{
-				cout << "Strength: ";
-				getline(cin, Strength);
-				valid = !isAlphabetic(Strength) && ! Strength.empty();
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter a non-empty strength." << endl;
-				}
-			} while (!valid);
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter a non-empty name." << endl;
+					}
+				} while (!valid);
 
-			string update_query = "UPDATE medication SET Strength = '" + Strength + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-		}
-		else if (UpdChoice == '5')
-		{
-			cin.ignore();
-			do
-			{
-				cout << "Description: ";
-				getline(cin, Description_text);
+				string update_query = "UPDATE medication SET Medication_Name = '" + Medication_Name + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
 
-				// Validation: Non-empty and contains alphabetic characters
-				valid = !isAlphabetic(Description_text) && !Description_text.empty();
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter a non-empty description." << endl;
-				}
-			} while (!valid);
-
-			string update_query = "UPDATE medication SET Description_text = '" + Description_text + "' WHERE Medication_ID = '" + to_string(Medication_ID)+ "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-
-		}
-		else if (UpdChoice == '6')
-		{
-			cin.ignore();
-			do
-			{
-				cout << "Side Effects: ";
-				getline(cin, Side_Effects);
-
-				// Validation: Non-empty and contains alphabetic characters
-				valid = !isAlphabetic(Description_text) && !Side_Effects.empty();
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter non-empty side effects." << endl;
-				}
-			} while (!valid);
-
-			string update_query = "UPDATE medication SET Side_Effects = '" + Side_Effects + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-
-		}
-		else if (UpdChoice == '7')
-		{
-			cin.ignore();
-			do
-			{
-				cout << "Usage Instructions: ";
-				getline(cin, usage_text);
-
-				// Validation: Non-empty and contains alphabetic characters
-				valid = !isAlphabetic(Description_text) && !usage_text.empty() ;
-				if (!valid)
-				{
-					cout << "Invalid Input! Please enter non-empty usage instructions." << endl;
-				}
-			} while (!valid);
-
-			string update_query = "UPDATE medication SET usage_text = '" + usage_text + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
-		}
-		else if (UpdChoice == '8')
-		{
-			do
-			{
-				cout << "Price: ";
-				cin >> Price;
-
-				// Check if the input is numeric and positive
-				if (cin.fail() || Price <= 0)
-				{
-					cin.clear();                  // Clear the error flag
-					cin.ignore(INT_MAX, '\n');    // Ignore invalid input
-					cout << "Invalid Input! Please enter a positive numeric value for the price." << endl;
-					valid = false;
-				}
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
 				else
+					lg.StaffControlMain(name);
+			}
+			else if (UpdChoice == '2')
+			{
+				cin.ignore();
+				do
 				{
-					valid = true;
-				}
-			} while (!valid);
+					cout << "Medication Type: ";
+					getline(cin, Medication_Type);
+					valid = !isAlphabetic(Medication_Type) && !Medication_Type.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter a non-empty type." << endl;
+					}
+				} while (!valid);
 
-			string update_query = "UPDATE medication SET Price = " + to_string(Price) + " WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-			const char* q = update_query.c_str();
-			qstate = mysql_query(conn, q);
-			cout << "\n Successfully Updated!" << endl;
+				string update_query = "UPDATE medication SET Medication_Type = '" + Medication_Type + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+			}
+			else if (UpdChoice == '3')
+			{
+				cin.ignore();
+				do
+				{
+					cout << "Dosage Form : ";
+					getline(cin, Dosage_Form);
+					valid = !isAlphabetic(Dosage_Form) && !Dosage_Form.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter a non-empty type." << endl;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET Dosage_Form = '" + Dosage_Form + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+			}
+			else if (UpdChoice == '4')
+			{
+				cin.ignore();
+				do
+				{
+					cout << "Strength: ";
+					getline(cin, Strength);
+					valid = !isAlphabetic(Strength) && !Strength.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter a non-empty strength." << endl;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET Strength = '" + Strength + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+			}
+			else if (UpdChoice == '5')
+			{
+				cin.ignore();
+				do
+				{
+					cout << "Description: ";
+					getline(cin, Description_text);
+
+					// Validation: Non-empty and contains alphabetic characters
+					valid = !isAlphabetic(Description_text) && !Description_text.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter a non-empty description." << endl;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET Description_text = '" + Description_text + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+
+			}
+			else if (UpdChoice == '6')
+			{
+				cin.ignore();
+				do
+				{
+					cout << "Side Effects: ";
+					getline(cin, Side_Effects);
+
+					// Validation: Non-empty and contains alphabetic characters
+					valid = !isAlphabetic(Description_text) && !Side_Effects.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter non-empty side effects." << endl;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET Side_Effects = '" + Side_Effects + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+
+			}
+			else if (UpdChoice == '7')
+			{
+				cin.ignore();
+				do
+				{
+					cout << "Usage Instructions: ";
+					getline(cin, usage_text);
+
+					// Validation: Non-empty and contains alphabetic characters
+					valid = !isAlphabetic(Description_text) && !usage_text.empty();
+					if (!valid)
+					{
+						cout << "Invalid Input! Please enter non-empty usage instructions." << endl;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET usage_text = '" + usage_text + "' WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+			}
+			else if (UpdChoice == '8')
+			{
+				do
+				{
+					cout << "Price: ";
+					cin >> Price;
+
+					// Check if the input is numeric and positive
+					if (cin.fail() || Price <= 0)
+					{
+						cin.clear();                  // Clear the error flag
+						cin.ignore(INT_MAX, '\n');    // Ignore invalid input
+						cout << "Invalid Input! Please enter a positive numeric value for the price." << endl;
+						valid = false;
+					}
+					else
+					{
+						valid = true;
+					}
+				} while (!valid);
+
+				string update_query = "UPDATE medication SET Price = " + to_string(Price) + " WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+				const char* q = update_query.c_str();
+				qstate = mysql_query(conn, q);
+				cout << "\n Successfully Updated!" << endl;
+				cout << "Do you want to continue update record? [Y/N]: ";
+				cin >> continueUpd;
+
+				if (continueUpd == 'Y' || continueUpd == 'y')
+					UpdateDrugMenu();
+				else
+					lg.StaffControlMain(name);
+			}
+			else
+			{
+				cout << "Error in updation! " << endl;
+				system("pause");
+				UpdateDrugMenu();
+			}
+
 		}
 		else
 		{
-			cout << "Invalid choice! Please select a valid option." << endl;
+			lg.StaffControlMain(name);
 		}
 
-		cout << "Do you want to continue updating another record? [Y/N]: ";
-		cin >> continueUpd;
-
-		if (continueUpd == 'Y' || continueUpd == 'y')
-			UpdateDrugMenu();
-		else
-			UpdateRecord();
 	}
 	else
 	{
-		UpdateRecord();
+		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+		system("pause");
+		UpdateDrugMenu();
 	}
+
+
 
 }
 
 void UpdateData::UpdateMedicationTransactionMenu()
 {
-
+	login lg;
 	system("cls");
-	string  Transaction_Date, MdId, UpdChoice, status;
+	string  Transaction_Date, MdId, UpdChoice, status, name;
 	int quantity = 0;
 	int Medication_ID, Patient_ID, Hospital_ID, Transaction_ID;
 
@@ -1215,7 +1293,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu(); // Recursive call to allow further updates
 				else
-					UpdateRecord(); // Exit or go back to the previous menu
+					lg.StaffControlMain(name); // Exit or go back to the previous menu
 			}
 
 
@@ -1294,7 +1372,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu(); // Recursive call to allow further updates
 				else
-					UpdateRecord(); // Exit or go back to the previous menu
+					lg.StaffControlMain(name); // Exit or go back to the previous menu
 			}
 
 
@@ -1328,9 +1406,9 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
-		
+
 
 			else if (UpdChoice == "4")
 			{
@@ -1373,7 +1451,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 						}
 					}
 				}
-				
+
 				string update_query = "UPDATE medication_transaction Status = '" + status + "'WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
@@ -1387,7 +1465,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 
 			else if (UpdChoice == "5")
@@ -1418,7 +1496,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu();
 				else
-					UpdateRecord();
+					lg.StaffControlMain(name);
 			}
 			else
 			{
@@ -1429,7 +1507,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 		}
 		else
 		{
-			UpdateRecord();
+			lg.StaffControlMain(name);
 		}
 	}
 	else
@@ -1439,11 +1517,6 @@ void UpdateData::UpdateMedicationTransactionMenu()
 		system("pause");
 		UpdateMedicationTransactionMenu();
 	}
-
-
-
-
-
 }
 
 void UpdateData::UpdateStaff()
@@ -1607,7 +1680,7 @@ void UpdateData::UpdateStaff()
 						cout << "Staff Age cannot be negative. Please enter a non-negative integer." << endl;
 					}
 				} while (Staff_Age < 0); // Continue looping until valid input is received
-				
+
 				string update_query = "UPDATE Staff SET Staff_Age = '" + to_string(Staff_Age) + "' WHERE Staff_ID = '" + Staff_ID + "';";
 
 
@@ -1728,7 +1801,7 @@ void UpdateData::UpdateStaff()
 
 
 				}
-				string update_query = "UPDATE Staff SET Staff_TelNo = '" + Staff_TelNo  + "'WHERE Staff_ID = '" + Staff_ID + "';";
+				string update_query = "UPDATE Staff SET Staff_TelNo = '" + Staff_TelNo + "'WHERE Staff_ID = '" + Staff_ID + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
 				cout << "\n Successfully Updated!" << endl;
@@ -1749,7 +1822,7 @@ void UpdateData::UpdateStaff()
 					getline(cin, Staff_Position);  // Read the entire line including spaces
 
 					// Check if the input is empty
-					if (Staff_Position.empty()) 
+					if (Staff_Position.empty())
 					{
 						cout << "Input cannot be empty. Please enter a valid position." << endl;
 					}
@@ -1788,12 +1861,12 @@ void UpdateData::UpdateStaff()
 					// Check if the input is empty
 					if (Staff_Password.empty()) {
 						cout << "Input cannot be empty. Please enter a valid position." << endl;
-					
+
 					}
 					else {
 						break;  // Valid input, exit the loop
 					}
-			
+
 				} while (true);  // Keep looping until valid input is provided
 
 				string update_query = "UPDATE Staff SET Staff_Password = SHA1('" + Staff_Password + "') WHERE Staff_ID = '" + Staff_ID + "';";
@@ -1812,24 +1885,24 @@ void UpdateData::UpdateStaff()
 			}
 			else if (UpdChoice == "8")
 			{
-						// Prompt user for Medication ID with validation
-						do
-						{
-							cout << "Admin ID (e.g. 1): ";
-							cin >> Admin_ID;
+				// Prompt user for Medication ID with validation
+				do
+				{
+					cout << "Admin ID (e.g. 1): ";
+					cin >> Admin_ID;
 
-							// Check if input is a valid integer and not negative
-							if (cin.fail() || Admin_ID < 0) {
-								// Clear the error flag and ignore the incorrect input
-								cin.clear();  // Clear the fail state
-								cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-								cout << "Invalid input! Please enter a positive integer." << endl;
-							}
-							else {
-								valid = true; // Valid input, exit loop
-							}
-						} while (!valid);
-		
+					// Check if input is a valid integer and not negative
+					if (cin.fail() || Admin_ID < 0) {
+						// Clear the error flag and ignore the incorrect input
+						cin.clear();  // Clear the fail state
+						cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+						cout << "Invalid input! Please enter a positive integer." << endl;
+					}
+					else {
+						valid = true; // Valid input, exit loop
+					}
+				} while (!valid);
+
 
 
 				string update_query = "UPDATE Staff SET Admin_ID = '" + to_string(Admin_ID) + "'WHERE Staff_ID = '" + Staff_ID + "';";
@@ -1854,7 +1927,7 @@ void UpdateData::UpdateStaff()
 
 				while (true)
 				{
-				
+
 					cout << "Your choice: ";
 
 					int choice;
@@ -1897,7 +1970,7 @@ void UpdateData::UpdateStaff()
 				else
 					lg.AdminControlMenu(name);
 
-					}
+			}
 
 			else if (UpdChoice == "10")
 			{
@@ -1919,7 +1992,7 @@ void UpdateData::UpdateStaff()
 						valid = true; // Valid input, exit loop
 					}
 				} while (!valid);
-			
+
 
 				string update_query = "UPDATE Staff SET Hospital_ID  = '" + to_string(Hospital_ID) + "'WHERE Staff_ID = '" + Staff_ID + "';";
 				const char* q = update_query.c_str();

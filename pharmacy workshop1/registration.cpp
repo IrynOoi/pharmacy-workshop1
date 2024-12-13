@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -70,7 +69,6 @@ void registration::registrationPatient()
 {
 	system("cls");
 	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
-	int Patient_Age;
 	double Patient_Height, Patient_Weight;
 
 	int d_year, d_month, d_day;
@@ -173,18 +171,6 @@ void registration::registrationPatient()
 		}
 	}
 
-
-	// DOB details: convert int to string and format as YYYY-MM-DD
-	year = to_string(d_year);
-	month = (d_month < 10 ? "0" : "") + to_string(d_month); // Add leading zero if needed
-	day = (d_day < 10 ? "0" : "") + to_string(d_day);        // Add leading zero if needed
-	DOB = year + "-" + month + "-" + day;
-	Patient_DOB = DOB;
-
-	// Calculate age
-	Patient_Age = calculateAge(d_year, d_month, d_day);
-	// Clear any leftover characters in the input buffer just once before starting
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	do
 	{
 		cout << "Address: ";
@@ -306,10 +292,9 @@ void registration::registrationPatient()
 	getline(cin, Diagnosed_Symptoms);
 
 	string Active_Status = "Active";
-	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
+	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
 		+ Patient_Name + "', '"
 		+ Patient_Gender + "', '"
-		+ to_string(Patient_Age) + "', '"
 		+ Patient_DOB + "', '"
 		+ Patient_Address + "', '"
 		+ Patient_Email + "', '"
@@ -356,7 +341,7 @@ void registration::registrationStaff()
 	login lg;
 	InsertData id;
 	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email, Staff_Position, Active_Status;
-	int Staff_Age, Admin_ID, Hospital_ID;
+	int Admin_ID, Hospital_ID;
 	bool validInput;
 	char AddStaff;
 
@@ -431,24 +416,7 @@ void registration::registrationStaff()
 		// Validate the gender input
 	} while (Staff_Gender != "F" && Staff_Gender != "M");  // Continue looping if the input is not "F" or "M"
 
-	do
-	{
-		cout << "Staff Age: ";
-		cin >> Staff_Age;
-
-		// Check if the input failed (non-integer input)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear the error flag
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-			cout << "Invalid input. Please enter a non-negative integer." << endl;
-			Staff_Age = -1; // Set quantity to an invalid value to continue the loop
-		}
-		// Check if the value is negative
-		else if (Staff_Age < 0) {
-			cout << "Staff Age cannot be negative. Please enter a non-negative integer." << endl;
-		}
-	} while (Staff_Age < 0); // Continue looping until valid input is received
+	
 
 
 
@@ -601,11 +569,10 @@ void registration::registrationStaff()
 
 	Active_Status = "Active";
 
-	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender, Staff_Age, Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
+	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
 
 		+ Staff_Name + "', '"
 		+ Staff_Gender + "', '"
-		+ to_string(Staff_Age) + "', '"
 		+ Staff_Address + "', '"
 		+ Staff_TelNo + "', '"
 		+ Staff_Position + "', SHA1('" + Staff_Password + "'), '"

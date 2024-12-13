@@ -7,67 +7,68 @@
 #include "Delete.h"
 #undef max     // Undefine the `max` macro
 
-void Delete ::DeleteRecord()
-{
-	login lg;
-	system("cls");
-	string name;
-	char DeleteChoice;
-	SetConsoleColor(0, 9);
-	cout << "****************" << endl;
-	cout << " DELETE RECORD  " << endl;
-	cout << "****************" << endl;
-
-	SetConsoleColor(0, 11);
-	cout << "[P] Delete / Inactive Patient Record" << endl;
-	cout << "[H] Delete Hospital Record" << endl;
-	cout << "[D] Delete Drug Record" << endl;
-	cout << "[T] Delete Medication Transaction Record" << endl;
-	cout << "[M] Back to main menu" << endl;
-	cout << "\nYour choice (P,H,D,T,M): ";
-	cin >> DeleteChoice;
-
-	switch (DeleteChoice)
-	{
-
-	case 'P':
-	case 'p':
-		DeletePatientMenu();
-		break;
-	case 'H':
-	case 'h':
-		DeleteHospitalMenu();
-		break;
-
-
-	case 'D':
-	case 'd':
-		DeleteDrugMenu();
-		break;
-
-	case 'T':
-	case 't':
-		DeleteMedicationTransactionMenu();
-		break;
-
-	case 'M':
-	case 'm':
-		lg.StaffControlMain(name);
-		break;
-
-	default:
-		cout << "Invalid choice!" << endl;
-		system("pause");
-		DeleteRecord();
-		break;
-	}
-}
+//void Delete ::DeleteRecord()
+//{
+//	login lg;
+//	system("cls");
+//	string name;
+//	char DeleteChoice;
+//	SetConsoleColor(0, 9);
+//	cout << "****************" << endl;
+//	cout << " DELETE RECORD  " << endl;
+//	cout << "****************" << endl;
+//
+//	SetConsoleColor(0, 11);
+//	cout << "[P] Delete / Inactive Patient Record" << endl;
+//	cout << "[H] Delete Hospital Record" << endl;
+//	cout << "[D] Delete Drug Record" << endl;
+//	cout << "[T] Delete Medication Transaction Record" << endl;
+//	cout << "[M] Back to main menu" << endl;
+//	cout << "\nYour choice (P,H,D,T,M): ";
+//	cin >> DeleteChoice;
+//
+//	switch (DeleteChoice)
+//	{
+//
+//	case 'P':
+//	case 'p':
+//		DeletePatientMenu();
+//		break;
+//	case 'H':
+//	case 'h':
+//		DeleteHospitalMenu();
+//		break;
+//
+//
+//	case 'D':
+//	case 'd':
+//		DeleteDrugMenu();
+//		break;
+//
+//	case 'T':
+//	case 't':
+//		DeleteMedicationTransactionMenu();
+//		break;
+//
+//	case 'M':
+//	case 'm':
+//		lg.StaffControlMain(name);
+//		break;
+//
+//	default:
+//		cout << "Invalid choice!" << endl;
+//		system("pause");
+//		DeleteRecord();
+//		break;
+//	}
+//}
 
 
 
 void Delete ::DeleteHospitalMenu()
 {
-	string Hospital_ID;
+	login lg;
+	string Hospital_ID,name;
 	char confirmDel, continueDel;
 	system("cls");
 	SetConsoleColor(0, 9);
@@ -112,7 +113,7 @@ void Delete ::DeleteHospitalMenu()
 			if (c == 'y' || c == 'Y')
 				DeleteHospitalMenu(); // If yes, call the AdminLogin function to try again
 			else
-				DeleteRecord(); // If no, call the MainLogin function to return to the main login menu
+				lg.StaffControlMain(name); // If no, call the MainLogin function to return to the main login menu
 		}
 	}
 	else
@@ -152,7 +153,7 @@ void Delete ::DeleteHospitalMenu()
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
-					DeleteRecord();
+					lg.StaffControlMain(name);
 					validInput = true;
 				}
 				else {
@@ -173,13 +174,15 @@ void Delete ::DeleteHospitalMenu()
 	{
 		cout << "Hospital record deletion cancelled." << endl;
 		system("pause");
-		DeleteRecord();
+		lg.StaffControlMain(name);
 	}
+
 
 }
 void Delete::DeleteDrugMenu()
 {
-	string Medication_ID;
+	login lg;
+	string Medication_ID, name;
 	char confirmDel, continueDel;
 	system("cls");
 	SetConsoleColor(0, 9);
@@ -226,7 +229,7 @@ void Delete::DeleteDrugMenu()
 			if (c == 'y' || c == 'Y')
 				DeleteDrugMenu(); // If yes, call the DeleteDrugMenu function to try again
 			else
-				DeleteRecord(); // If no, call the DeleteRecord  function to return to the main login menu
+				lg.StaffControlMain(name); // If no, call the DeleteRecord  function to return to the main login menu
 		}
 	}
 	else
@@ -266,7 +269,7 @@ void Delete::DeleteDrugMenu()
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
-					DeleteRecord();
+					lg.StaffControlMain(name);
 					validInput = true;
 				}
 				else {
@@ -287,17 +290,15 @@ void Delete::DeleteDrugMenu()
 	{
 		cout << "Drug record deletion cancelled." << endl;
 		system("pause");
-		DeleteRecord();
+		lg.StaffControlMain(name);
 	}
-
-
-
 
 }
 
 void Delete ::DeleteMedicationTransactionMenu()
 {
-	string Transaction_ID;
+	login lg;
+	string Transaction_ID, name;
 	char confirmDel, continueDel;
 	system("cls");
 	SetConsoleColor(0, 9);
@@ -342,7 +343,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 			if (c == 'y' || c == 'Y')
 				DeleteMedicationTransactionMenu(); // If yes, call the DeleteDrugMenu function to try again
 			else
-				DeleteRecord(); // If no, call the DeleteRecord  function to return to the main login menu
+				lg.StaffControlMain(name); // If no, call the DeleteRecord  function to return to the main login menu
 		}
 	}
 	else
@@ -382,7 +383,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
-					DeleteRecord();
+					lg.StaffControlMain(name);
 					validInput = true;
 				}
 				else {
@@ -403,13 +404,15 @@ void Delete ::DeleteMedicationTransactionMenu()
 	{
 		cout << "Drug record deletion cancelled." << endl;
 		system("pause");
-		DeleteRecord();
+		lg.StaffControlMain(name);
 	}
+
 }
 
 void Delete::DeletePatientMenu()
 {
-	string Patient_ID;
+	login lg;
+	string Patient_ID, name;
 	char choice, confirmDel;
 
 	do
@@ -472,9 +475,9 @@ void Delete::DeletePatientMenu()
 					cout << "\nInvalid Patient_ID . Want to try again? (Y/N): ";
 					cin >> c; // Ask the user if they want to try again
 					if (c == 'y' || c == 'Y')
-						DeletePatientMenu(); 
+						DeletePatientMenu();
 					else
-						DeleteRecord(); 
+						lg.StaffControlMain(name);
 				}
 			}
 			else
@@ -514,7 +517,7 @@ void Delete::DeletePatientMenu()
 							validInput = true;
 						}
 						else if (continueDel == 'n' || continueDel == 'N') {
-							DeleteRecord();
+							lg.StaffControlMain(name);
 							validInput = true;
 						}
 						else {
@@ -535,7 +538,7 @@ void Delete::DeletePatientMenu()
 			{
 				cout << "Patient record deletion cancelled." << endl;
 				system("pause");
-				DeleteRecord();
+				lg.StaffControlMain(name);
 			}
 
 
@@ -586,7 +589,7 @@ void Delete::DeletePatientMenu()
 					if (c == 'y' || c == 'Y')
 						DeletePatientMenu(); // If yes, call the AdminLogin function to try again
 					else
-						DeleteRecord(); // If no, call the MainLogin function to return to the main login menu
+						lg.StaffControlMain(name); // If no, call the MainLogin function to return to the main login menu
 				}
 			}
 			else
@@ -620,7 +623,7 @@ void Delete::DeletePatientMenu()
 						if (continueDel == 'y' || continueDel == 'Y')
 							DeletePatientMenu();
 						else if (continueDel == 'n' || continueDel == 'N')
-							DeleteRecord();  // Assuming this is the next menu or function after deletion
+							lg.StaffControlMain(name);  // Assuming this is the next menu or function after deletion
 					} while (continueDel == 'y' || continueDel == 'Y' || continueDel != 'n' || continueDel == 'N');
 				}
 				else
@@ -635,13 +638,14 @@ void Delete::DeletePatientMenu()
 			{
 				cout << "Patient record deletion cancelled." << endl;
 				system("pause");
-				DeleteRecord();
+				lg.StaffControlMain(name);
 			}
 
 
 
 		}
 	} while (choice != 'A' && choice != 'a' && choice != 'B' && choice != 'b');
+
 
 
 }

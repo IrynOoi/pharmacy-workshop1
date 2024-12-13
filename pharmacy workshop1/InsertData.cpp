@@ -11,69 +11,69 @@
 
 #undef max     // Undefine the `max` macro
 
-void  InsertData ::AddRecord()
-{
-	login lg;
-	char AdminAdd;
-	string name;
-	system("cls");
-	SetConsoleColor(0, 9);
-	cout << "******************" << endl;
-	cout << " ADD RECORD MENU  " << endl;
-	cout << "******************" << endl;
-	SetConsoleColor(0, 11);
-	cout << "[P] Add Record of Patient" << endl;
-	cout << "[H] Add Record of Hospital" << endl;
-	cout << "[D] Add Record of Drugs" << endl;
-	cout << "[T] Add Record of Medical Transaction" << endl;
-	cout << "[M] Main Menu" << endl;
-
-	cout << "\nPlease enter your choice (P, H, D, T, M): ";
-	cin >> AdminAdd;
-
-	switch (AdminAdd)
-	{
-
-	case 'P':
-	case 'p':
-		AddPatientMenu();
-		break;
-
-	case 'H':
-	case 'h':
-		AddHospitalMenu();
-		break;
-
-
-	case 'D':
-	case 'd':
-		AddDrugMenu();
-		break;
-
-	case 'T':
-	case 't':
-		AddMedicationTransactionMenu();
-		break;
-
-	case 'M':
-	case 'm':
-		lg.StaffControlMain(name);
-		break;
-
-	default:
-		cout << "Invalid choice!" << endl;
-		system("pause");
-		AddRecord();
-		break;
-	}
-}
+//void  InsertData ::AddRecord()
+//{
+//	login lg;
+//	char AdminAdd;
+//	string name;
+//	system("cls");
+//	SetConsoleColor(0, 9);
+//	cout << "******************" << endl;
+//	cout << " ADD RECORD MENU  " << endl;
+//	cout << "******************" << endl;
+//	SetConsoleColor(0, 11);
+//	cout << "[P] Add Record of Patient" << endl;
+//	cout << "[H] Add Record of Hospital" << endl;
+//	cout << "[D] Add Record of Drugs" << endl;
+//	cout << "[T] Add Record of Medical Transaction" << endl;
+//	cout << "[M] Main Menu" << endl;
+//
+//	cout << "\nPlease enter your choice (P, H, D, T, M): ";
+//	cin >> AdminAdd;
+//
+//	switch (AdminAdd)
+//	{
+//
+//	case 'P':
+//	case 'p':
+//		AddPatientMenu();
+//		break;
+//
+//	case 'H':
+//	case 'h':
+//		AddHospitalMenu();
+//		break;
+//
+//
+//	case 'D':
+//	case 'd':
+//		AddDrugMenu();
+//		break;
+//
+//	case 'T':
+//	case 't':
+//		AddMedicationTransactionMenu();
+//		break;
+//
+//	case 'M':
+//	case 'm':
+//		lg.StaffControlMain(name);
+//		break;
+//
+//	default:
+//		cout << "Invalid choice!" << endl;
+//		system("pause");
+//		AddRecord();
+//		break;
+//	}
+//}
 
 
 void  InsertData::AddPatientMenu()
 {
+	login lg;
 	system("cls");
-	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
-	int Patient_Age;
+	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms, name;
 	double Patient_Height, Patient_Weight;
 
 	int d_year, d_month, d_day;
@@ -81,13 +81,13 @@ void  InsertData::AddPatientMenu()
 	char AddPatient;
 	cout << "Enter new records: " << endl;
 
-		system("cls");
-		SetConsoleColor(0, 9);
-		cout << "***********************" << endl;
-		cout << " ADD RECORDS - Patient " << endl;
-		cout << "***********************" << endl;
-		SetConsoleColor(0, 11);
-		
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "***********************" << endl;
+	cout << " ADD RECORDS - Patient " << endl;
+	cout << "***********************" << endl;
+	SetConsoleColor(0, 11);
+
 
 
 	bool valid = false;
@@ -175,33 +175,23 @@ void  InsertData::AddPatientMenu()
 			break; // Exit loop if the input is valid
 		}
 	}
+	// Clear the input buffer to discard the leftover newline character
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-
-	// DOB details: convert int to string and format as YYYY-MM-DD
-	year = to_string(d_year);
-	month = (d_month < 10 ? "0" : "") + to_string(d_month); // Add leading zero if needed
-	day = (d_day < 10 ? "0" : "") + to_string(d_day);        // Add leading zero if needed
-	DOB = year + "-" + month + "-" + day;
-	Patient_DOB = DOB;
-
-	// Calculate age
-	Patient_Age = calculateAge(d_year, d_month, d_day);
-	  // Clear any leftover characters in the input buffer just once before starting
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	do
 	{
 		cout << "Address: ";
-	// Use getline for robust input handling
-	
+		// Use getline for robust input handling
+
 		getline(cin, Patient_Address);
 
 		// Validate the input
-		if (Patient_Address.empty()) 
+		if (Patient_Address.empty())
 		{
 			cerr << "Error: Address cannot be empty. Please try again." << endl;
 		}
 	} while (Patient_Address.empty());
-	
+
 	do
 	{
 		cout << "Email Address: ";
@@ -214,7 +204,7 @@ void  InsertData::AddPatientMenu()
 		}
 	} while (Patient_Email.empty());
 
-	
+
 	cout << "Height: ";
 	while (!(cin >> Patient_Height) || Patient_Height < 0)
 	{
@@ -307,12 +297,11 @@ void  InsertData::AddPatientMenu()
 	cout << "Diagnosed_Symptoms: ";
 	cin.ignore(); // Clear newline character from previous input
 	getline(cin, Diagnosed_Symptoms);
-	
+
 	string Active_Status = "Active";
-	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
+	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender,  Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
 		+ Patient_Name + "', '"
 		+ Patient_Gender + "', '"
-		+ to_string(Patient_Age) + "', '"
 		+ Patient_DOB + "', '"
 		+ Patient_Address + "', '"
 		+ Patient_Email + "', '"
@@ -348,30 +337,29 @@ void  InsertData::AddPatientMenu()
 		}
 		else if (AddPatient == 'n' || AddPatient == 'N')
 		{
-			AddRecord();
+			lg.StaffControlMain(name);
 		}
 	} while (AddPatient == 'y' || AddPatient == 'Y' || AddPatient == 'n' || AddPatient == 'N');
+
 }
-
-
-
 
 
 
 
 void  InsertData::AddHospitalMenu()
 {
-	string  Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, HsID;
+	login lg;
+	string  Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, name;
 	char AddHospital;
-	
-		system("cls");
-		SetConsoleColor(0, 9);// Set the console text color to blue (foreground) with black background (0 is for the background color, 9 is for the blue foreground color)
-		cout << "************************" << endl;
-		cout << " ADD RECORDS - HOSPITAL " << endl;
-		cout << "************************" << endl;
-		SetConsoleColor(0, 11);// Set the console text color to light cyan (foreground) with black background (0 is for the background color, 11 is for the light cyan foreground color)
 
-		
+	system("cls");
+	SetConsoleColor(0, 9);// Set the console text color to blue (foreground) with black background (0 is for the background color, 9 is for the blue foreground color)
+	cout << "************************" << endl;
+	cout << " ADD RECORDS - HOSPITAL " << endl;
+	cout << "************************" << endl;
+	SetConsoleColor(0, 11);// Set the console text color to light cyan (foreground) with black background (0 is for the background color, 11 is for the light cyan foreground color)
+
+
 
 	bool valid = false;
 	// Clear the input buffer to discard the leftover newline character
@@ -391,14 +379,30 @@ void  InsertData::AddHospitalMenu()
 		}
 	} while (!valid); // Continue looping until valid input is received
 
+	do {
+		cout << "Street (e.g., Jalan XXXXX): ";
+		getline(cin, Hospital_Street);
+		if (Hospital_Street.empty()) {
+			cout << "Invalid input. Street cannot be empty. Please try again.\n";
+		}
+	} while (Hospital_Street.empty());
 
-	cout << "Street:(eg:Jalan XXXXX) ";
-	getline(cin, Hospital_Street);
+	do {
+		cout << "City: ";
+		getline(cin, Hospital_City);
+		if (Hospital_City.empty()) {
+			cout << "Invalid input. City cannot be empty. Please try again.\n";
+		}
+	} while (Hospital_City.empty());
 
-	cout << "City: ";
-	getline(cin, Hospital_City);
-	cout << "State: ";
-	getline(cin, Hospital_State);
+	do {
+		cout << "State: ";
+		getline(cin, Hospital_State);
+		if (Hospital_State.empty()) {
+			cout << "Invalid input. State cannot be empty. Please try again.\n";
+		}
+	} while (Hospital_State.empty());
+
 
 	string Availability = "Available";
 
@@ -425,17 +429,18 @@ void  InsertData::AddHospitalMenu()
 		}
 		else if (AddHospital == 'n' || AddHospital == 'N')
 		{
-			AddRecord();
+			lg.StaffControlMain(name);
 		}
 	} while (AddHospital == 'y' || AddHospital == 'Y' || AddHospital == 'n' || AddHospital == 'N');
+
 }
 
 
 void  InsertData::AddDrugMenu()
 {
-
+	login lg;
 	system("cls");
-	string Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text;
+	string Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text, name;
 	char AddDrug;
 	double Price ;
 
@@ -617,22 +622,19 @@ void  InsertData::AddDrugMenu()
 		}
 		else if (AddDrug == 'n' || AddDrug == 'N')
 		{
-			AddRecord();
+			lg.StaffControlMain(name);
 		}
 	} while (AddDrug == 'y' || AddDrug == 'Y' || AddDrug == 'n' || AddDrug == 'N');
-
-
-
 
 
 }
 
 void  InsertData::AddMedicationTransactionMenu()
 {
+	login lg;
 	system("cls");
-	string  Transaction_Date, status;
 	int  quantity, Medication1_ID, Hospital_ID;
-	string year, month, day, TD;
+	string year, month, day, Transaction_Date, status, name;
 	bool validInput = false;
 	cout << "Enter new records: " << endl;
 
@@ -998,7 +1000,7 @@ void  InsertData::AddMedicationTransactionMenu()
 		}
 		else if (AddMT == 'n' || AddMT == 'N')
 		{
-			AddRecord();
+			lg.StaffControlMain(name);
 		}
 	} while (AddMT == 'y' || AddMT == 'Y' || AddMT == 'n' || AddMT == 'N');
 
@@ -1090,24 +1092,7 @@ void InsertData::AddStaffs()
 		// Validate the gender input
 	} while (Staff_Gender != "F" && Staff_Gender != "M");  // Continue looping if the input is not "F" or "M"
 
-	do
-	{
-		cout << "Staff Age: ";
-		cin >> Staff_Age;
-
-		// Check if the input failed (non-integer input)
-		if (cin.fail())
-		{
-			cin.clear(); // Clear the error flag
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-			cout << "Invalid input. Please enter a non-negative integer." << endl;
-			Staff_Age = -1; // Set quantity to an invalid value to continue the loop
-		}
-		// Check if the value is negative
-		else if (Staff_Age < 0) {
-			cout << "Staff Age cannot be negative. Please enter a non-negative integer." << endl;
-		}
-	} while (Staff_Age < 0); // Continue looping until valid input is received
+	
 	
 
 
@@ -1261,11 +1246,10 @@ void InsertData::AddStaffs()
 
 	Active_Status = "Active";
 
-	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender, Staff_Age, Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
+	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
 		
 		+ Staff_Name + "', '"
 		+ Staff_Gender + "', '"
-		+ to_string(Staff_Age) + "', '"
 		+ Staff_Address + "', '"
 		+ Staff_TelNo + "', '"
 		+ Staff_Position + "', SHA1('" + Staff_Password + "'), '"

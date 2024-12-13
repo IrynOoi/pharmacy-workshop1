@@ -61,67 +61,68 @@ bool isValidDate(const string& date)
 
     return true;
 }
-void ViewData::ViewRecord()
-{
-    char StaffSearch;
-    string name;
-    login lg;
-    system("cls");
-    SetConsoleColor(0, 9);
-    cout << "********************" << endl;
-    cout << " VIEW RECORD MENU   " << endl;
-    cout << "********************" << endl;
-    SetConsoleColor(0, 11);
-    cout << "[P] View Record of Patient" << endl;
-    cout << "[H] View Record of Hospital" << endl;
-    cout << "[D] View Record of Drug  " << endl;
-    cout << "[T] View Record of Medication Transaction" << endl;
-    cout << "[M] Back to Staff Control Main Menu" << endl;
-
-    cout << "\nPlease enter your choice (P, H, D, T, M): ";
-    cin >> StaffSearch;
-
-    switch (StaffSearch)
-    {
-    case 'P':
-    case 'p':
-        ViewPatientMenu();
-        break;
-
-    case 'H':
-    case 'h':
-        ViewHospitalMenu();
-        break;
-
-    case 'D':
-    case 'd':
-        ViewDrugMenu();
-        break;
-
-    case 'T':
-    case 't':
-        ViewMedicationTransactionMenu();
-        break;
-
-    case 'M':
-    case 'm':
-        lg.StaffControlMain(name);
-        break;
-
-    default:
-        cout << "Invalid choice!" << endl;
-        system("pause");
-        ViewRecord();
-
-    }
-
-}
+//void ViewData::ViewRecord()
+//{
+//    char StaffSearch;
+//    string name;
+//    login lg;
+//    system("cls");
+//    SetConsoleColor(0, 9);
+//    cout << "********************" << endl;
+//    cout << " VIEW RECORD MENU   " << endl;
+//    cout << "********************" << endl;
+//    SetConsoleColor(0, 11);
+//    cout << "[P] View Record of Patient" << endl;
+//    cout << "[H] View Record of Hospital" << endl;
+//    cout << "[D] View Record of Drug  " << endl;
+//    cout << "[T] View Record of Medication Transaction" << endl;
+//    cout << "[M] Back to Staff Control Main Menu" << endl;
+//
+//    cout << "\nPlease enter your choice (P, H, D, T, M): ";
+//    cin >> StaffSearch;
+//
+//    switch (StaffSearch)
+//    {
+//    case 'P':
+//    case 'p':
+//        ViewPatientMenu();
+//        break;
+//
+//    case 'H':
+//    case 'h':
+//        ViewHospitalMenu();
+//        break;
+//
+//    case 'D':
+//    case 'd':
+//        ViewDrugMenu();
+//        break;
+//
+//    case 'T':
+//    case 't':
+//        ViewMedicationTransactionMenu();
+//        break;
+//
+//    case 'M':
+//    case 'm':
+//        lg.StaffControlMain(name);
+//        break;
+//
+//    default:
+//        cout << "Invalid choice!" << endl;
+//        system("pause");
+//        ViewRecord();
+//
+//    }
+//
+//}
 
 
 void ViewData::ViewHospitalMenu()
 {
+
     login lg;
-    string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, name, Availability;
+    string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Staff_Name, Availability;
     char SearchHosp;
     int searchHospChoice;
     system("cls");
@@ -136,8 +137,8 @@ void ViewData::ViewHospitalMenu()
     cout << "[3] Hospital Street " << endl;
     cout << "[4] Hospital  City " << endl;
     cout << "[5] Hospital State " << endl;
-    cout << "[5] Availability   " << endl;
-    cout << "[7] Back to Main Menu " << endl;
+    cout << "[6] Availability   " << endl;
+    cout << "[7] Back to Staff Control Menu " << endl;
     cout << "\nYour Choice >> ";
     cin.ignore(1, '\n');
     cin >> searchHospChoice;
@@ -170,13 +171,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(Staff_Name);
         }
     }
     else if (searchHospChoice == 2)
@@ -208,13 +209,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(Staff_Name);
         }
     }
 
@@ -247,13 +248,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(Staff_Name);
         }
     }
 
@@ -285,13 +286,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(Staff_Name);
         }
     }
 
@@ -323,13 +324,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(name);
+            lg.StaffControlMain(Staff_Name);
         }
 
 
@@ -363,13 +364,13 @@ void ViewData::ViewHospitalMenu()
             if (SearchHosp == 'y' || SearchHosp == 'Y')
                 ViewHospitalMenu();
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
+                lg.StaffControlMain(Staff_Name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(name);
+            lg.StaffControlMain(Staff_Name);
         }
 
 
@@ -377,21 +378,24 @@ void ViewData::ViewHospitalMenu()
 
     else if (searchHospChoice == 7)
     {
-        lg.StaffControlMain(name);
+        lg.StaffControlMain(Staff_Name);
     }
 
     else
     {
         cout << "Error! Invalid input for searching!" << endl;
         system("pause");
-        ViewRecord();
+        lg.StaffControlMain(Staff_Name);
     }
+
+
+
+
 
 
 }
 void ViewData::ViewDrugMenu()
 {
-
     login lg;
     string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name, searchDChoice;
     double Price;
@@ -414,12 +418,14 @@ void ViewData::ViewDrugMenu()
     cout << "[7] Side Effects " << endl;
     cout << "[8] Usage Instructions " << endl;
     cout << "[9] Price " << endl;
-    cout << "[10] Back to View Record Menu " << endl;
+    cout << "[10] Back to Staff Control Menu " << endl;
 
 
     cout << "\nYour Choice >> ";
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     cin >> searchDChoice;
+
+
 
     if (searchDChoice == "1")
     {
@@ -463,7 +469,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
     else if (searchDChoice == "2")
@@ -521,7 +527,7 @@ void ViewData::ViewDrugMenu()
                 cin.clear(); // Clear the error flag
                 cin.ignore(INT_MAX, '\n'); // Ignore invalid input
                 cout << "Please enter a valid choice." << endl;
-                ViewRecord();
+                lg.StaffControlMain(name);
             }
 
         }
@@ -578,11 +584,11 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
-    else if (searchDChoice =="4" )
+    else if (searchDChoice == "4")
     {
         cin.ignore();
         do
@@ -632,7 +638,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -693,7 +699,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -754,7 +760,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -812,7 +818,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
 
@@ -869,7 +875,7 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
 
@@ -934,566 +940,13 @@ void ViewData::ViewDrugMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
-        }
-    }
-
-
-   
-        else if (searchDChoice == "10")
-        {
             lg.StaffControlMain(name);
         }
-
-        else
-        {
-            if (cin.fail())
-            {
-                cin.clear(); // Clear the error flag
-                cin.ignore(INT_MAX, '\n'); // Ignore invalid input
-                cout << "Please enter a valid choice." << endl;
-                ViewRecord();
-            }
-
-        }
-
-
-}
-
-
-void ViewData::ViewMedicationTransactionMenu()
-{
-    login lg;
-    string  Transaction_Date, MdId, UpdChoice, status, name, Transaction_Time;
-
-    int Medication_ID, Transaction_ID, searchHospChoice, Patient_ID, Hospital_ID, quantity, choicestatus;
-    char SearchHosp;
-    double total_price;
-    bool valid = false;
-
-
-    system("cls");
-    SetConsoleColor(0, 9);
-    cout << "*******************************************" << endl;
-    cout << " SEARCH RECORD - MEDICATION TRANSACTION    " << endl;
-    cout << "*******************************************" << endl;
-    SetConsoleColor(0, 11);
-    cout << "Please select the attribute you want to search: " << endl;
-    cout << "[1]  Transaction ID  " << endl;
-    cout << "[2]  Transaction_Time  " << endl;
-    cout << "[3]  Medication ID  " << endl;
-    cout << "[4]  Quantity  " << endl;
-    cout << "[5]  Patient ID  " << endl;
-    cout << "[6]  Hospital ID  " << endl;
-    cout << "[7]  Total_price  " << endl;
-    cout << "[8]  Status  " << endl;
-    cout << "[9]  Back to View Record Menu " << endl;
-
-    cout << "\nYour Choice >> ";
-    cin.ignore(1, '\n');
-    cin >> searchHospChoice;
-
-    if (searchHospChoice == 1)
-    {
-        do
-        {
-            cout << "\nEnter Medication ID to search (positive numeric input): ";
-            cin >> Transaction_ID;
-
-            if (cin.fail() || Transaction_ID <= 0)
-            { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-                SetConsoleColor(0, 11);
-
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-    }
-
-    if (searchHospChoice == 2)
-    {
-        do
-        {
-            cout << "\nEnter Transaction_Time to search (format: YYYY-MM-DD): ";
-            cin >> Transaction_Time;
-
-            if (!isValidDate(Transaction_Time))
-            {
-                cout << "Invalid input. Please enter a valid date in the format: YYYY-MM-DD." << endl;
-            }
-            else {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID, Quantity, Patient_ID, Status, Hospital_ID, total_price "
-            "FROM medication_transaction "
-            "WHERE DATE(Transaction_Time) = '" + Transaction_Time + "';";
-
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
     }
 
 
-    if (searchHospChoice == 3)
-    {
-        do
-        {
-            cout << "\nEnter Medication_ID to search (positive numeric input): ";
-            cin >> Medication_ID;
 
-            if (cin.fail() || Medication_ID <= 0) { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-
-
-    }
-
-    if (searchHospChoice == 4)
-    {
-        do
-        {
-            cout << "\nEnter quantity to search (positive numeric input): ";
-            cin >> quantity;
-
-            if (cin.fail() || quantity <= 0)
-            { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Quantity = '" + to_string(quantity) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-
-
-    }
-
-    if (searchHospChoice == 5)
-    {
-        do
-        {
-            cout << "\nEnter Patient ID to search (positive numeric input): ";
-            cin >> Patient_ID;
-
-            if (cin.fail() || Patient_ID <= 0) { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-    }
-
-    if (searchHospChoice == 6)
-    {
-        do
-        {
-            cout << "\nEnter Hospital_ID to search (positive numeric input): ";
-            cin >> Hospital_ID;
-
-            if (cin.fail() || Hospital_ID <= 0) { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Hospital_ID = '" + to_string(Hospital_ID) + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-
-
-
-    }
-
-    if (searchHospChoice == 7)
-    {
-        do
-        {
-            cout << "\nEnter Total price to search (positive numeric input): ";
-            cin >> total_price;
-
-            if (cin.fail() || total_price <= 0) { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-                valid = true; // Valid input
-            }
-        } while (!valid);
-        string search_query =
-            "SELECT Transaction_ID, Transaction_Time, Medication_ID, Quantity, Patient_ID, Status, Hospital_ID, total_price "
-            "FROM medication_transaction "
-            "WHERE total_price BETWEEN " + to_string(total_price) + " AND " + to_string(total_price + 10) + " "
-            "ORDER BY total_price ASC;";
-
-
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-
-
-
-    }
-
-    if (searchHospChoice == 8)
-    {
-        do
-        {
-            cout << "Please select the status you want to search: " << endl;
-            cout << "[1]  Completed  " << endl;
-            cout << "[2]  Pending  " << endl;
-            cout << "[3]  Cancelled  " << endl;
-            cout << "\nYour Choice >> ";
-
-            cin >> choicestatus;
-
-            if (cin.fail() || total_price <= 0) { // Check for non-integer or non-positive input
-                cout << "Invalid input. Please enter a positive integer." << endl;
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            }
-            else
-            {
-
-                valid = true; // Valid input
-
-            }
-        } while (!valid);
-
-        // Assign status based on validated input
-        if (choicestatus == 1)
-        {
-            status = "Completed";
-        }
-        else if (choicestatus == 2)
-        {
-            status = "Pending";
-        }
-        else if (choicestatus == 3)
-        {
-            status = "Cancelled";
-        }
-
-        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Status = '" + status + "';";
-
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
-        {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
-            {
-
-                SetConsoleColor(1, 11);
-
-
-                cout << "\nHere's the record found : \n" << endl;
-                cout << "Transaction ID  :" << row[0] << endl;
-                cout << "Transaction_Time :" << row[1] << endl;
-                cout << "Medication ID  :" << row[2] << endl;
-                cout << "Quantity  :" << row[3] << endl;
-                cout << "Patient ID  :" << row[4] << endl;
-                cout << "Status  :" << row[5] << endl;
-                cout << "Hospital ID  :" << row[6] << endl;
-                cout << "Total_price  :" << row[7] << endl;
-
-                SetConsoleColor(0, 11);
-
-            }
-            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(name);
-        }
-        else
-        {
-            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            system("pause");
-            ViewRecord();
-        }
-
-    }
-    else if (searchHospChoice == 9)
+    else if (searchDChoice == "10")
     {
         lg.StaffControlMain(name);
     }
@@ -1505,10 +958,11 @@ void ViewData::ViewMedicationTransactionMenu()
             cin.clear(); // Clear the error flag
             cin.ignore(INT_MAX, '\n'); // Ignore invalid input
             cout << "Please enter a valid choice." << endl;
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
     }
+
 
 }
 
@@ -1546,7 +1000,7 @@ void ViewData::ViewPatientMenu()
     cout << "[11]   Medical History" << endl;
     cout << "[12]   Diagnosed Symptoms" << endl;
     cout << "[13]   Active Status" << endl;
-    cout << "[14]   Back to View Record Menu" << endl;
+    cout << "[14s] Back to Staff Control Menu " << endl;
 
 
 
@@ -1620,7 +1074,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -1685,7 +1139,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
     }
@@ -1748,7 +1202,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
     }
@@ -1813,7 +1267,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
 
@@ -1883,7 +1337,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -1939,7 +1393,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -1995,7 +1449,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2050,7 +1504,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2168,7 +1622,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2223,7 +1677,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2276,7 +1730,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2328,7 +1782,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
     }
 
@@ -2395,7 +1849,7 @@ void ViewData::ViewPatientMenu()
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
     }
@@ -2412,12 +1866,565 @@ void ViewData::ViewPatientMenu()
             cin.clear(); // Clear the error flag
             cin.ignore(INT_MAX, '\n'); // Ignore invalid input
             cout << "Please enter a valid choice." << endl;
-            ViewRecord();
+            lg.StaffControlMain(name);
         }
 
     }
+
 }
 
+
+void ViewData::ViewMedicationTransactionMenu()
+{
+    login lg;
+    string  Transaction_Date, MdId, UpdChoice, status, name, Transaction_Time;
+
+    int Medication_ID, Transaction_ID, searchHospChoice, Patient_ID, Hospital_ID, quantity, choicestatus;
+    char SearchHosp;
+    double total_price;
+    bool valid = false;
+
+
+    system("cls");
+    SetConsoleColor(0, 9);
+    cout << "*******************************************" << endl;
+    cout << " SEARCH RECORD - MEDICATION TRANSACTION    " << endl;
+    cout << "*******************************************" << endl;
+    SetConsoleColor(0, 11);
+    cout << "Please select the attribute you want to search: " << endl;
+    cout << "[1]  Transaction ID  " << endl;
+    cout << "[2]  Transaction_Time  " << endl;
+    cout << "[3]  Medication ID  " << endl;
+    cout << "[4]  Quantity  " << endl;
+    cout << "[5]  Patient ID  " << endl;
+    cout << "[6]  Hospital ID  " << endl;
+    cout << "[7]  Total_price  " << endl;
+    cout << "[8]  Status  " << endl;
+    cout << "[9] Back to Staff Control Menu " << endl;
+
+    cout << "\nYour Choice >> ";
+    cin.ignore(1, '\n');
+    cin >> searchHospChoice;
+
+    if (searchHospChoice == 1)
+    {
+        do
+        {
+            cout << "\nEnter Medication ID to search (positive numeric input): ";
+            cin >> Transaction_ID;
+
+            if (cin.fail() || Transaction_ID <= 0)
+            { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+                SetConsoleColor(0, 11);
+
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+    }
+
+    if (searchHospChoice == 2)
+    {
+        do
+        {
+            cout << "\nEnter Transaction_Time to search (format: YYYY-MM-DD): ";
+            cin >> Transaction_Time;
+
+            if (!isValidDate(Transaction_Time))
+            {
+                cout << "Invalid input. Please enter a valid date in the format: YYYY-MM-DD." << endl;
+            }
+            else {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID, Quantity, Patient_ID, Status, Hospital_ID, total_price "
+            "FROM medication_transaction "
+            "WHERE DATE(Transaction_Time) = '" + Transaction_Time + "';";
+
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+    }
+
+
+    if (searchHospChoice == 3)
+    {
+        do
+        {
+            cout << "\nEnter Medication_ID to search (positive numeric input): ";
+            cin >> Medication_ID;
+
+            if (cin.fail() || Medication_ID <= 0) { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+
+
+    }
+
+    if (searchHospChoice == 4)
+    {
+        do
+        {
+            cout << "\nEnter quantity to search (positive numeric input): ";
+            cin >> quantity;
+
+            if (cin.fail() || quantity <= 0)
+            { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Quantity = '" + to_string(quantity) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+
+
+    }
+
+    if (searchHospChoice == 5)
+    {
+        do
+        {
+            cout << "\nEnter Patient ID to search (positive numeric input): ";
+            cin >> Patient_ID;
+
+            if (cin.fail() || Patient_ID <= 0) { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+    }
+
+    if (searchHospChoice == 6)
+    {
+        do
+        {
+            cout << "\nEnter Hospital_ID to search (positive numeric input): ";
+            cin >> Hospital_ID;
+
+            if (cin.fail() || Hospital_ID <= 0) { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Hospital_ID = '" + to_string(Hospital_ID) + "';";
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+
+
+
+    }
+
+    if (searchHospChoice == 7)
+    {
+        do
+        {
+            cout << "\nEnter Total price to search (positive numeric input): ";
+            cin >> total_price;
+
+            if (cin.fail() || total_price <= 0) { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+                valid = true; // Valid input
+            }
+        } while (!valid);
+        string search_query =
+            "SELECT Transaction_ID, Transaction_Time, Medication_ID, Quantity, Patient_ID, Status, Hospital_ID, total_price "
+            "FROM medication_transaction "
+            "WHERE total_price BETWEEN " + to_string(total_price) + " AND " + to_string(total_price + 10) + " "
+            "ORDER BY total_price ASC;";
+
+
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+
+
+
+    }
+
+    if (searchHospChoice == 8)
+    {
+        do
+        {
+            cout << "Please select the status you want to search: " << endl;
+            cout << "[1]  Completed  " << endl;
+            cout << "[2]  Pending  " << endl;
+            cout << "[3]  Cancelled  " << endl;
+            cout << "\nYour Choice >> ";
+
+            cin >> choicestatus;
+
+            if (cin.fail() || total_price <= 0) { // Check for non-integer or non-positive input
+                cout << "Invalid input. Please enter a positive integer." << endl;
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            }
+            else
+            {
+
+                valid = true; // Valid input
+
+            }
+        } while (!valid);
+
+        // Assign status based on validated input
+        if (choicestatus == 1)
+        {
+            status = "Completed";
+        }
+        else if (choicestatus == 2)
+        {
+            status = "Pending";
+        }
+        else if (choicestatus == 3)
+        {
+            status = "Cancelled";
+        }
+
+        string search_query = "SELECT Transaction_ID , Transaction_Time, Medication_ID,Quantity, Patient_ID,Status,Hospital_ID,total_price FROM medication_transaction WHERE Status = '" + status + "';";
+
+        const char* q = search_query.c_str();
+        qstate = mysql_query(conn, q);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            while (row = mysql_fetch_row(res))
+            {
+
+                SetConsoleColor(1, 11);
+
+
+                cout << "\nHere's the record found : \n" << endl;
+                cout << "Transaction ID  :" << row[0] << endl;
+                cout << "Transaction_Time :" << row[1] << endl;
+                cout << "Medication ID  :" << row[2] << endl;
+                cout << "Quantity  :" << row[3] << endl;
+                cout << "Patient ID  :" << row[4] << endl;
+                cout << "Status  :" << row[5] << endl;
+                cout << "Hospital ID  :" << row[6] << endl;
+                cout << "Total_price  :" << row[7] << endl;
+
+                SetConsoleColor(0, 11);
+
+            }
+            cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
+            cin >> SearchHosp;
+            if (SearchHosp == 'y' || SearchHosp == 'Y')
+                ViewMedicationTransactionMenu();
+            else if (SearchHosp == 'n' || SearchHosp == 'N')
+                lg.StaffControlMain(name);
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            system("pause");
+            lg.StaffControlMain(name);
+        }
+
+    }
+    else if (searchHospChoice == 9)
+    {
+        lg.StaffControlMain(name);
+    }
+
+    else
+    {
+        if (cin.fail())
+        {
+            cin.clear(); // Clear the error flag
+            cin.ignore(INT_MAX, '\n'); // Ignore invalid input
+            cout << "Please enter a valid choice." << endl;
+            lg.StaffControlMain(name);
+        }
+
+    }
+
+
+}
 
 
 void ViewData:: getreport()
