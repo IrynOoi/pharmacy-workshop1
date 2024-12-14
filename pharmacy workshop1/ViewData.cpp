@@ -1032,7 +1032,7 @@ void ViewData::ViewPatientMenu()
             }
         } while (!valid);
 
-        string search_query = "SELECT Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Height, Patient_Weight, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password FROM Patient WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
+        string search_query = "SELECT * FROM Patient WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -1047,17 +1047,17 @@ void ViewData::ViewPatientMenu()
                 cout << "Patient ID: " << row[0] << endl;
                 cout << "Patient Name: " << row[1] << endl;
                 cout << "Patient Gender: " << row[2] << endl;
-                cout << "Patient Age: " << row[3] << endl;
-                cout << "Date of Birth: " << row[4] << endl;
-                cout << "Patient Address: " << row[5] << endl;
-                cout << "Patient Height: " << row[6] << endl;
-                cout << "Patient Weight: " << row[7] << endl;
-                cout << "Patient Tel No: " << row[8] << endl;
-                cout << "Patient Email: " << row[9] << endl;
-                cout << "Medical History: " << row[10] << endl;
-                cout << "Diagnosed Symptoms: " << row[11] << endl;
-                cout << "Active Status: " << row[12] << endl;
-                cout << "Patient Password: " << row[13] << endl;
+                cout << "Date of Birth: " << row[3] << endl; // Corrected to match index order
+                cout << "Patient Address: " << row[4] << endl;
+                cout << "Patient Height: " << row[5] << endl;
+                cout << "Patient Weight: " << row[6] << endl;
+                cout << "Patient Tel No: " << row[7] << endl;
+                cout << "Patient Email: " << row[8] << endl;
+                cout << "Medical History: " << row[9] << endl;
+                cout << "Diagnosed Symptoms: " << row[10] << endl;
+                cout << "Active Status: " << row[11] << endl;
+                cout << "Patient Password: " << row[12] << endl;
+
 
                 SetConsoleColor(0, 11);
 
@@ -4228,6 +4228,9 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
 
 
 
+void StaffReport() 
+{
 
+}
 
 

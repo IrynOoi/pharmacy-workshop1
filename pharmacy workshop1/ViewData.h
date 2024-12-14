@@ -19,6 +19,7 @@ public:
 	void ViewPatientAcc(int id);
 	void ViewPatientReceipt(int PatientID,string name);
 	void PatientReport();
+	void StaffReport();
 
 
 };

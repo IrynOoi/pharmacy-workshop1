@@ -67,20 +67,40 @@
 
 void Delete ::DeleteHospitalMenu()
 {
+
 	login lg;
-	string Hospital_ID,name;
+	int Hospital_ID;
+	string name;
 	char confirmDel, continueDel;
+	bool validInput;
 	system("cls");
 	SetConsoleColor(0, 9);
 	cout << "**************************" << endl;
 	cout << " DELETE RECORD - HOSPITAL " << endl;
 	cout << "**************************" << endl;
 	SetConsoleColor(0, 11);
-	cout << "\nEnter Hospital ID to search: ";
-	cin >> Hospital_ID;
+
+	// Prompt user for Medication ID with validation
+	do
+	{
+		cout << "Hospital_ID (e.g. 1 or 2 or 3): ";
+		cin >> Hospital_ID;
+
+		// Check if input is a valid integer and not negative
+		if (cin.fail() || Hospital_ID < 0) {
+			// Clear the error flag and ignore the incorrect input
+			cin.clear();  // Clear the fail state
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input! Please enter a positive integer." << endl;
+		}
+		else {
+			validInput = true; // Valid input, exit loop
+		}
+	} while (!validInput);
+	
 
 	// Construct the SQL query to check for the matching hospital record 
-	string searchDel_query = "SELECT Hospital_ID, Hospital_Name, Hospital_Street,Hospital_City, Hospital_State,Availability FROM Hospital WHERE Hospital_ID = '" + Hospital_ID + "';";
+	string searchDel_query = "SELECT Hospital_ID, Hospital_Name, Hospital_Street,Hospital_City, Hospital_State,Availability FROM Hospital WHERE Hospital_ID = '" + to_string (Hospital_ID )+ "';";
 
 	const char* q = searchDel_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -105,15 +125,15 @@ void Delete ::DeleteHospitalMenu()
 
 			}
 		}
-		else // If no matching admin is found
+		else // If no matching Hospital_ID is found
 		{
 			char c;
-			cout << "\nInvalid Hospital_ID . Want to try again? (Y/N): ";
-			cin >> c; // Ask the user if they want to try again
+			cout << "\nHospital_ID  cannot be found. Want to try again? (Y/N): ";
+			cin >> c; 
 			if (c == 'y' || c == 'Y')
-				DeleteHospitalMenu(); // If yes, call the AdminLogin function to try again
+				DeleteHospitalMenu();
 			else
-				lg.StaffControlMain(name); // If no, call the MainLogin function to return to the main login menu
+				lg.StaffControlMain(name); 
 		}
 	}
 	else
@@ -121,6 +141,8 @@ void Delete ::DeleteHospitalMenu()
 		// If the query execution failed
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+		system("pause");
+		DeleteHospitalMenu();
 	}
 
 
@@ -130,7 +152,7 @@ void Delete ::DeleteHospitalMenu()
 	if (confirmDel == 'Y' || confirmDel == 'y')
 	{
 		// Modify to delete query instead of update
-		string delete_query = "DELETE FROM hospital WHERE Hospital_ID = '" + Hospital_ID + "'";
+		string delete_query = "DELETE FROM hospital WHERE Hospital_ID = '" + to_string(Hospital_ID) + "'";
 		const char* q = delete_query.c_str();
 		qstate = mysql_query(conn, q);
 
@@ -182,19 +204,37 @@ void Delete ::DeleteHospitalMenu()
 void Delete::DeleteDrugMenu()
 {
 	login lg;
-	string Medication_ID, name;
+	string  name;
+	int Medication_ID;
 	char confirmDel, continueDel;
+	bool validInput = false;
 	system("cls");
 	SetConsoleColor(0, 9);
 	cout << "**************************" << endl;
 	cout << " DELETE RECORD - DRUGS    " << endl;
 	cout << "**************************" << endl;
 	SetConsoleColor(0, 11);
-	cout << "\nEnter Medication ID to search: ";
-	cin >> Medication_ID;
+	// Prompt user for Medication ID with validation
+	do
+	{
+		cout << "Medication_ID (e.g. 1 or 2 or 3): ";
+		cin >> Medication_ID;
+
+		// Check if input is a valid integer and not negative
+		if (cin.fail() || Medication_ID < 0) {
+			// Clear the error flag and ignore the incorrect input
+			cin.clear();  // Clear the fail state
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input! Please enter a positive integer." << endl;
+		}
+		else {
+			validInput = true; // Valid input, exit loop
+		}
+	} while (!validInput);
+
 
 	// Construct the SQL query to check for the matching hospital record 
-	string searchDel_query = "SELECT Medication_ID, Medication_Name, Medication_Type,Dosage_Form,Strength ,Description_text,Side_Effects,usage_text FROM medication WHERE Medication_ID = '" + Medication_ID + "';";
+	string searchDel_query = "SELECT Medication_ID, Medication_Name, Medication_Type,Dosage_Form,Strength ,Description_text,Side_Effects,usage_text FROM medication WHERE Medication_ID = '" + to_string(Medication_ID) + "';";
 
 	const char* q = searchDel_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -246,7 +286,7 @@ void Delete::DeleteDrugMenu()
 	if (confirmDel == 'Y' || confirmDel == 'y')
 	{
 		// Modify to delete query instead of update
-		string delete_query = "DELETE FROM medication WHERE Medication_ID = '" + Medication_ID + "'";
+		string delete_query = "DELETE FROM medication WHERE Medication_ID = '" + to_string(Medication_ID) + "'";
 		const char* q = delete_query.c_str();
 		qstate = mysql_query(conn, q);
 
@@ -310,7 +350,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 	cin >> Transaction_ID;
 
 	// Construct the SQL query to check for the matching hospital record 
-	string searchDel_query = "SELECT Transaction_ID,Transaction_Date, Medication_ID,Quantity,Patient_ID ,Status FROM medication_transaction WHERE Transaction_ID = '" + Transaction_ID + "';";
+	string searchDel_query = "SELECT * FROM medication_transaction WHERE Transaction_ID = '" + Transaction_ID + "';";
 
 	const char* q = searchDel_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -324,14 +364,18 @@ void Delete ::DeleteMedicationTransactionMenu()
 			while (row = mysql_fetch_row(res))
 			{
 				SetConsoleColor(1, 11);
-				cout << "\nHere's the record found : \n" << endl;
-				cout << "Transaction ID : " << row[0] << endl;
-				cout << "Transaction Date " << row[1] << endl;
-				cout << "Medication ID : " << row[2] << endl;
-				cout << "Quantity : " << row[3] << endl;
-				cout << "Patient ID : " << row[4] << endl;
-
+				cout << "\nHere's the record found: \n" << endl;
+				cout << "Transaction ID: " << row[0] << endl;
+				cout << "Transaction Time: " << row[1] << endl;
+				cout << "Medication ID: " << row[2] << endl;
+				cout << "Quantity: " << row[3] << endl;
+				cout << "Patient ID: " << row[4] << endl;
+				cout << "Status: " << row[5] << endl;
+				cout << "Hospital ID: " << row[6] << endl;
+				cout << "Total Price: " << row[7] << endl;
 				SetConsoleColor(0, 11);
+
+
 
 			}
 		}
@@ -437,7 +481,7 @@ void Delete::DeletePatientMenu()
 			cin >> Patient_ID;
 
 			// Construct the SQL query to check for the matching patient record 
-			string searchDel_query = "SELECT Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Height, Patient_Weight, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password FROM patient WHERE Patient_ID = '" + Patient_ID + "';";
+			string searchDel_query = "SELECT * FROM patient WHERE Patient_ID = '" + Patient_ID + "';";
 
 			const char* q = searchDel_query.c_str();
 			qstate = mysql_query(conn, q);
@@ -455,24 +499,24 @@ void Delete::DeletePatientMenu()
 						cout << "Patient ID: " << row[0] << endl;
 						cout << "Patient Name: " << row[1] << endl;
 						cout << "Patient Gender: " << row[2] << endl;
-						cout << "Patient Age: " << row[3] << endl;
-						cout << "Date of Birth: " << row[4] << endl;
-						cout << "Patient Address: " << row[5] << endl;
-						cout << "Patient Height: " << row[6] << endl;
-						cout << "Patient Weight: " << row[7] << endl;
-						cout << "Patient Tel No: " << row[8] << endl;
-						cout << "Patient Email: " << row[9] << endl;
-						cout << "Medical History: " << row[10] << endl;
-						cout << "Diagnosed Symptoms: " << row[11] << endl;
-						cout << "Active Status: " << row[12] << endl;
-						cout << "Patient Password: " << row[13] << endl;
+						cout << "Date of Birth: " << row[3] << endl; // Corrected to match index order
+						cout << "Patient Address: " << row[4] << endl;
+						cout << "Patient Height: " << row[5] << endl;
+						cout << "Patient Weight: " << row[6] << endl;
+						cout << "Patient Tel No: " << row[7] << endl;
+						cout << "Patient Email: " << row[8] << endl;
+						cout << "Medical History: " << row[9] << endl;
+						cout << "Diagnosed Symptoms: " << row[10] << endl;
+						cout << "Active Status: " << row[11] << endl;
+						cout << "Patient Password: " << row[12] << endl;
+
 						SetConsoleColor(0, 11);
 					}
 				}
 				else // If no matching admin is found
 				{
 					char c;
-					cout << "\nInvalid Patient_ID . Want to try again? (Y/N): ";
+					cout << "\nPatient_ID cannot be found. Want to try again? (Y/N): ";
 					cin >> c; // Ask the user if they want to try again
 					if (c == 'y' || c == 'Y')
 						DeletePatientMenu();
@@ -484,6 +528,9 @@ void Delete::DeletePatientMenu()
 			{
 				// If the query execution failed
 				cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+				system("pause");
+				DeletePatientMenu();
+
 			}
 
 
@@ -552,7 +599,7 @@ void Delete::DeletePatientMenu()
 
 
 
-			string search_query = "SELECT Patient_ID, Patient_Name, Patient_Gender, Patient_Age, Patient_DOB, Patient_Address, Patient_Height, Patient_Weight, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password FROM patient WHERE Patient_ID = '" + Patient_ID + "'";
+			string search_query = "SELECT * FROM patient WHERE Patient_ID = '" + Patient_ID + "'";
 			const char* q = search_query.c_str();
 			qstate = mysql_query(conn, q);
 
@@ -564,21 +611,23 @@ void Delete::DeletePatientMenu()
 
 					while (row = mysql_fetch_row(res))
 					{
+						SetConsoleColor(1, 11);
 						cout << "\nHere's the record found: \n" << endl;
 						cout << "Patient ID: " << row[0] << endl;
 						cout << "Patient Name: " << row[1] << endl;
 						cout << "Patient Gender: " << row[2] << endl;
-						cout << "Patient Age: " << row[3] << endl;
-						cout << "Date of Birth: " << row[4] << endl;
-						cout << "Patient Address: " << row[5] << endl;
-						cout << "Patient Height: " << row[6] << endl;
-						cout << "Patient Weight: " << row[7] << endl;
-						cout << "Patient Tel No: " << row[8] << endl;
-						cout << "Patient Email: " << row[9] << endl;
-						cout << "Medical History: " << row[10] << endl;
-						cout << "Diagnosed Symptoms: " << row[11] << endl;
-						cout << "Active Status: " << row[12] << endl;
-						cout << "Patient Password: " << row[13] << endl;
+						cout << "Date of Birth: " << row[3] << endl; // Corrected to match index order
+						cout << "Patient Address: " << row[4] << endl;
+						cout << "Patient Height: " << row[5] << endl;
+						cout << "Patient Weight: " << row[6] << endl;
+						cout << "Patient Tel No: " << row[7] << endl;
+						cout << "Patient Email: " << row[8] << endl;
+						cout << "Medical History: " << row[9] << endl;
+						cout << "Diagnosed Symptoms: " << row[10] << endl;
+						cout << "Active Status: " << row[11] << endl;
+						cout << "Patient Password: " << row[12] << endl;
+
+						SetConsoleColor(0, 11);
 					}
 				}
 				else // If no matching admin is found
@@ -596,6 +645,8 @@ void Delete::DeletePatientMenu()
 			{
 				// If the query execution failed
 				cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+				system("pause");
+				DeletePatientMenu();
 			}
 
 			char confirminactive;
@@ -617,7 +668,7 @@ void Delete::DeletePatientMenu()
 
 					do
 					{
-						cout << "Do you want to continue inactive records? [Y/N]: ";
+						cout << "Do you want to continue  another inactive records? [Y/N]: ";
 						cin >> continueDel;
 
 						if (continueDel == 'y' || continueDel == 'Y')
@@ -695,14 +746,13 @@ void Delete:: DeleteStaff()
 						cout << "Staff ID: " << row[0] << endl;
 						cout << "Staff Name: " << row[1] << endl;
 						cout << "Staff Gender: " << row[2] << endl;
-						cout << "Staff Age: " << row[3] << endl;
-						cout << "Staff Address: " << row[4] << endl;
-						cout << "Staff Tel No: " << row[5] << endl;
-						cout << "Staff Position: " << row[6] << endl;
-						cout << "Staff Password: " << row[7] << endl;
-						cout << "Admin ID: " << row[8] << endl;
-						cout << "Active Status: " << row[9] << endl;
-						cout << "Hospital ID: " << row[10] << endl;
+						cout << "Staff Address: " << row[3] << endl;  // Corrected to match ascending order
+						cout << "Staff Tel No: " << row[4] << endl;
+						cout << "Staff Position: " << row[5] << endl;
+						cout << "Staff Password: " << row[6] << endl;
+						cout << "Active Status: " << row[7] << endl;
+						cout << "Hospital ID: " << row[8] << endl;  // Adjusted to fit ascending order
+
 						SetConsoleColor(0, 11);
 
 					}
@@ -811,14 +861,12 @@ void Delete:: DeleteStaff()
 						cout << "Staff ID: " << row[0] << endl;
 						cout << "Staff Name: " << row[1] << endl;
 						cout << "Staff Gender: " << row[2] << endl;
-						cout << "Staff Age: " << row[3] << endl;
-						cout << "Staff Address: " << row[4] << endl;
-						cout << "Staff Tel No: " << row[5] << endl;
-						cout << "Staff Position: " << row[6] << endl;
-						cout << "Staff Password: " << row[7] << endl;
-						cout << "Admin ID: " << row[8] << endl;
-						cout << "Active Status: " << row[9] << endl;
-						cout << "Hospital ID: " << row[10] << endl;
+						cout << "Staff Address: " << row[3] << endl;  // Corrected to match ascending order
+						cout << "Staff Tel No: " << row[4] << endl;
+						cout << "Staff Position: " << row[5] << endl;
+						cout << "Staff Password: " << row[6] << endl;
+						cout << "Active Status: " << row[7] << endl;
+						cout << "Hospital ID: " << row[8] << endl;  // Adjusted to fit ascending order
 						SetConsoleColor(0, 11);
 
 					}

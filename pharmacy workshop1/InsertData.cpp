@@ -166,7 +166,8 @@ void  InsertData::AddPatientMenu()
 		// Check if the input is valid (no alphabetic characters) and non-negative
 		if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31)
 		{
-			cout << "Invalid input! Please enter valid numerical values for year, month, and day.\n";
+			cout << "Invalid input!" <<endl;
+		    cout<< "Please enter valid numerical values for year, month, and day.\n";
 			cin.clear(); // Clear the error flags
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
 		}
@@ -628,13 +629,18 @@ void  InsertData::AddDrugMenu()
 
 
 }
+void  InsertData::AddMedicationTransactionMenuSameTimestamp()
+{
+
+}
+
 
 void  InsertData::AddMedicationTransactionMenu()
 {
 	login lg;
 	system("cls");
 	int  quantity, Medication1_ID, Hospital_ID;
-	string year, month, day, Transaction_Date, status, name;
+	string year, month, day, Transaction_Date, status, name, transaction_time;
 	bool validInput = false;
 	cout << "Enter new records: " << endl;
 
@@ -902,7 +908,28 @@ void  InsertData::AddMedicationTransactionMenu()
 
 	if (!qstate)
 	{
-		cout << endl << "Medication transaction is successfully added in database." << endl;
+		cout << endl << "Medication transaction is successfully added to the database." << endl;
+
+		// Retrieve the auto-generated Transaction_Time of the first record
+		string select_query = "SELECT Transaction_Time FROM medication_transaction WHERE Transaction_ID = LAST_INSERT_ID()";
+		const char* q2 = select_query.c_str();
+		qstate = mysql_query(conn, q2);
+
+		if (!qstate)
+		{
+			MYSQL_RES* res = mysql_store_result(conn);
+			MYSQL_ROW row = mysql_fetch_row(res);
+			if (row)
+			{
+				transaction_time = row[0]; // Store the retrieved Transaction_Time
+				cout << "Transaction Time retrieved: " << transaction_time << endl;
+			}
+			mysql_free_result(res);
+		}
+		else
+		{
+			cout << "Error retrieving Transaction_Time: " << mysql_error(conn) << endl;
+		}
 	}
 	else
 	{
@@ -1207,23 +1234,6 @@ void InsertData::AddStaffs()
 	} while (true);  // Keep looping until valid input is provided
 
 
-	do
-	{
-		cout << "Admin_ID (e.g. 1): ";
-		cin >> Admin_ID;
-
-		// Check if input is a valid integer and not negative
-		if (cin.fail() || Admin_ID < 0) {
-			// Clear the error flag and ignore the incorrect input
-			cin.clear();  // Clear the fail state
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-			cout << "Invalid input! Please enter a positive integer." << endl;
-			validInput = false;
-		}
-		else {
-			validInput = true; // Valid input, exit loop
-		}
-	} while (!validInput);
 
 	do
 	{
@@ -1246,14 +1256,13 @@ void InsertData::AddStaffs()
 
 	Active_Status = "Active";
 
-	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
+	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Active_Status, Hospital_ID) VALUES ('"
 		
 		+ Staff_Name + "', '"
 		+ Staff_Gender + "', '"
 		+ Staff_Address + "', '"
 		+ Staff_TelNo + "', '"
 		+ Staff_Position + "', SHA1('" + Staff_Password + "'), '"
-		+ to_string(Admin_ID) + "', '"
 		+ Active_Status + "', '"
 		+ to_string(Hospital_ID) + "')";
 

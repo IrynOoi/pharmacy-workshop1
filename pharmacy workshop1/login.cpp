@@ -452,7 +452,8 @@ void login::StaffControlMain(string Staff_Name)
 	default:
 		cout << "Invalid choice!" << endl;
 		system("pause");
-		StaffMainMenu(Staff_Name, Staff_ID);
+		StaffControlMain(Staff_Name);
+		
 	}
 }
 
@@ -636,10 +637,10 @@ void login::StaffMainMenu(string name, int Staff_ID)
 	cout << "[1] Staff Control Panel" << endl;
 	cout << "[2] Sales report " << endl;
 	cout << "[3] Patient Report " << endl;
-	cout << "[4] Account Information" << endl;
+	cout << "[4] Account Information Staff" << endl;
 	cout << "[5] Administration Control" << endl;
 	cout << "[6] Supplier menu" << endl;
-	cout << "[7] Report Generation For Patient" << endl;
+	cout << "[7] Staff Report" << endl;
 	cout << "[8] Back to  Login Main Menu" << endl;
 	cout << "\nYour choice (1 - 8): ";
 	cin >> StaffMainChoice ;
