@@ -3012,7 +3012,7 @@ void ViewData::ViewStaffAccount(int id)
 
     SetConsoleColor(0,11);
     showtime();
-    string search_query = "SELECT Staff_ID, Staff_Name, Staff_Gender, Staff_Age, Staff_Address, Staff_Telno, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID FROM staff WHERE Staff_ID = '" + to_string(id) + "'";
+    string search_query = "SELECT * FROM staff WHERE Staff_ID = '" + to_string(id) + "'";
     const char* q = search_query.c_str();
     qstate = mysql_query(conn, q);
     if (!qstate)
@@ -3024,15 +3024,14 @@ void ViewData::ViewStaffAccount(int id)
             cout << "Staff ID: " << row[0] << endl;
             cout << "Name: " << row[1] << endl;
             cout << "Gender: " << row[2] << endl;
-            cout << "Age: " << row[3] << endl;
-            cout << "Address: " << row[4] << endl;
-            cout << "Phone: " << row[5] << endl;
-            cout << "Position: " << row[6] << endl;
-            cout << "Password: " << row[7] << endl;
-            cout << "Admin ID: " << row[8] << endl;
-            cout << "Active Status: " << row[9] << endl;
-            cout << "Hospital ID: " << row[10] << endl;
+            cout << "Address: " << row[3] << endl;
+            cout << "Phone: " << row[4] << endl;
+            cout << "Position: " << row[5] << endl;
+            cout << "Password: " << row[6] << endl;
+            cout << "Active Status: " << row[7] << endl;
+            cout << "Hospital ID: " << row[8] << endl;
             SetConsoleColor(1, 11);
+
         }
         system("pause");
         system("cls");
@@ -3943,9 +3942,9 @@ void ViewData::ViewPatientAcc(int id)
     login lg;
     string Patient_Name;
     SetConsoleColor(0, 9);
-    cout << "===================================" << endl;
+    cout << "***********************************" << endl;
     cout << "   PATIENT ACCOUNT INFORMATION     " << endl;
-    cout << "===================================" << endl<<endl<<endl;
+    cout << "***********************************" << endl<<endl<<endl;
 
     SetConsoleColor(0, 11);
     showtime();
@@ -4227,9 +4226,328 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
 }
 
 
-
-void StaffReport() 
+void ViewData::StaffReport()
 {
+      login lg;
+    system("cls");
+    showtime();
+  
+    string nostaff, name;
+    int choice, Staff_ID = 0, gender1, gender2, StaffPosition1, StaffPosition2, StaffPosition3;
+    int StaffAge1=0, StaffAge2=0, StaffAge3=0, StaffAge4=0;
+    SetConsoleColor(0, 9);
+    cout << "*****************************" << endl;
+    cout << "         STAFF REPORT        " << endl;
+    cout << "*****************************" << endl;
+    SetConsoleColor(0, 11);
+    string countAct_query = "Select COUNT(Staff_ID) FROM staff WHERE Active_Status = 'Active'";
+    const char* staf = countAct_query.c_str();
+    qstate = mysql_query(conn, staf);
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        if (res->row_count == 1)
+        {
+            while (row = mysql_fetch_row(res))
+            {
+                nostaff = row[0];
+            }
+        }
+        else
+        {
+            cout << "Error" << endl;
+            system("pause");
+            lg.StaffMainMenu(name, Staff_ID);
+        }
+    }
+    else
+    {
+        cout << "error!" << endl;
+        system("pause");
+        lg.StaffMainMenu(name, Staff_ID);
+    }
+    // Set text color to Light Red and background color to Black
+    SetConsoleColor(0, 11); // 4 is Light Red, 0 is Black background
+    cout << "The default number of active staffs in the system: " << nostaff;
+
+    cout << "\nWhich attribute do you want to generate as report? " << endl;
+    cout << "[1] Gender" << endl;
+    cout << "[2] Position" << endl;
+    cout << "[3] Back to Main Menu" << endl;
+    cout << "Your choice: ";
+    cin >> choice;
+
+    if (choice == 1)
+    {
+
+
+
+        string countGender_query = "Select SUM(case when Staff_Gender = 'M' then 1 else 0 end), SUM(case when Staff_Gender = 'F' then 1 else 0 end) FROM staff WHERE Active_Status = 'Active'";
+        const char* cu1 = countGender_query.c_str();
+        qstate = mysql_query(conn, cu1);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            if (res->row_count == 1)
+            {
+                while (row = mysql_fetch_row(res))
+                {
+                    // Convert the strings to integers
+                    gender1 = stoi(row[0]);
+                    gender2 = stoi(row[1]);
+
+
+                }
+            }
+            else
+            {
+                cout << "Error" << endl;
+                system("pause");
+                lg.StaffMainMenu(name, Staff_ID);
+            }
+        }
+        else
+        {
+            cout << "error!" << endl;
+        }
+
+        system("cls");
+        showtime();
+
+
+        SetConsoleColor(0, 11); // Black text
+        cout << "Male = ";
+
+        SetConsoleColor(4, 11); // Red text
+        cout << gender1 << endl;
+
+        SetConsoleColor(0, 11); // Black text
+        cout << "Female = ";
+
+        SetConsoleColor(4, 11); // Red text
+        cout << gender2 << endl;
+
+        SetConsoleColor(0, 11);
+        cout << endl;
+
+
+
+        cout << "The following graph showing the number of staff based on gender: " << endl;
+
+        //array for int calculated number of staff based on gender
+        int arrayGender[2] = { gender1, gender2 };
+
+        //array used to print out the gender type
+        string arrayGenderType[2] = { "Male", "Female" };
+
+        //Display the graph
+        cout << "\n" << endl;
+        SetConsoleColor(0, 4);
+        cout << "****************************************************" << endl;
+        cout << "|         Graph (GENDER VS NUMBER OF STAFF)        |" << endl;
+        cout << "****************************************************" << endl;
+        SetConsoleColor(0, 11);
+        cout << endl;
+        cout << setw(6) << "Gender" << right << " Number of Staff" << endl;
+        cout << setw(8) << right << "/ \\" << endl;
+
+        for (int i = 0; i < 2; i++)
+        {
+            cout << setw(6) << left << arrayGenderType[i] << left << "|";
+
+            for (int j = 0; j < arrayGender[i]; j++)
+            {
+                cout << "*";
+            }
+            if (arrayGender[i] != 0) //showing the number of each gender in the graph
+            {
+                SetConsoleColor(14, 11); // Yellow text (14), Black background (0)
+                cout << " " << arrayGender[i];
+                SetConsoleColor(0, 11);  // Reset to default (White text, Black background)
+                cout << std::endl;
+            }
+            else
+            {
+                cout << endl;
+            }
+        }
+
+        cout << setw(7) << right;
+        int* maxNum;
+        maxNum = max_element(arrayGender, arrayGender + 1);
+        for (int i = 0; i < *maxNum + 5; i++)
+        {
+            cout << "-";
+        }
+        cout << ">" << endl;
+        cout << "\n" << endl;
+        goto confirmRpt1;
+
+    confirmRpt1:
+        char continueRpt;
+        cout << "Do you want to continue viewing report? [Y/N]: ";
+        cin >> continueRpt;
+
+        if (continueRpt == 'y' || continueRpt == 'Y')
+        {
+            StaffReport();
+        }
+        else if (continueRpt == 'n' || continueRpt == 'N')
+        {
+            lg.StaffMainMenu(name, Staff_ID);
+        }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+            goto confirmRpt1;
+        }
+    }
+
+    else if (choice == 2)
+    {
+        string countPos_query = "Select SUM(case when Staff_Position = 'Pharmacist' then 1 else 0 end), SUM(case when Staff_Position = 'Pharmacy Assistant' then 1 else 0 end), SUM(case when Staff_Position = 'Staff' then 1 else 0 end) FROM staff WHERE Active_Status = 'Active'";
+        const char* cu1 = countPos_query.c_str();
+        qstate = mysql_query(conn, cu1);
+        if (!qstate)
+        {
+            res = mysql_store_result(conn);
+            if (res->row_count == 1)
+            {
+                while (row = mysql_fetch_row(res))
+                {
+                    StaffPosition1 = atoi(row[0]);
+                    StaffPosition2 = atoi(row[1]);
+                    StaffPosition3 = atoi(row[2]);
+                }
+            }
+            else
+            {
+                cout << "Error" << endl;
+            }
+        }
+        else
+        {
+            cout << "error!" << endl;
+        }
+
+        system("cls");
+        showtime();
+
+        // Pharmacists
+        cout << "Pharmacist = ";
+        SetConsoleColor(4, 11); // Light Red text
+        cout << StaffPosition1;
+        SetConsoleColor(0, 11);  // Reset to White text
+        cout << endl;
+
+        // Pharmacy Assistants
+        cout << "Pharmacy Assistant = ";
+        SetConsoleColor(4, 11); // Light Red text
+        cout << StaffPosition2;
+        SetConsoleColor(0, 11);  // Reset to White text
+        cout << endl;
+
+        // Other Staff
+        cout << "Staff = ";
+        SetConsoleColor(4, 11); // Light Red text
+        cout << StaffPosition3;
+        SetConsoleColor(0, 11);  // Reset to White text
+        cout << endl << endl;
+
+
+        //convert the string data collected to integer data type
+
+
+        cout << "The following graph showing the number of staff based on gender: " << endl;
+
+        //array for int calculated number of staff based on gender
+        int arrayPosition[3] = { StaffPosition1, StaffPosition2,StaffPosition3 };
+
+        //array used to print out the gender type
+        string arrayPostType[3] = { "Pharmacist", "Pharmacy Assistant ", "Staff" };
+
+        //Display the graph
+        cout << "\n" << endl;
+        SetConsoleColor(0, 4);
+        cout << "******************************************************" << endl;
+        cout << "|         Graph (POSITION VS NUMBER OF STAFF)        |" << endl;
+        cout << "******************************************************" << endl;
+        SetConsoleColor(0, 11);
+        cout << endl;
+        cout << setw(10) << left << "Position" << setw(25) <<right << " Number of Staff" << endl;
+        cout << setw(21) << right << "^" << endl;
+
+        // Display the graph
+            for (int i = 0; i < 3; i++)
+            {
+                cout << setw(20) << left << arrayPostType[i] << "|";
+
+                for (int j = 0; j < arrayPosition[i]; j++)
+                {
+                    cout << "*";
+                }
+
+                if (arrayPosition[i] != 0)
+                {
+                    SetConsoleColor(4, 11); // Yellow text, Black background
+                    cout << " " << arrayPosition[i];
+                    SetConsoleColor(0,11); // Reset to default
+                }
+
+                cout << endl;
+            }
+
+        // Draw the horizontal line
+        int maxNum = *max_element(arrayPosition, arrayPosition + 3);
+        cout << setw(20) << right << " ";
+        for (int i = 0; i < maxNum + 5; i++)
+        {
+            cout << "-";
+        }
+        cout << ">" << endl;
+
+        // Prompt to continue
+        char continueRpt;
+    confirmRpt2:
+        cout << "\nDo you want to continue viewing report? [Y/N]: ";
+        cin >> continueRpt;
+
+        if (continueRpt == 'y' || continueRpt == 'Y')
+        {
+            StaffReport(); // Call the function again
+        }
+        else if (continueRpt == 'n' || continueRpt == 'N')
+        {
+            cout << "Exiting to the main menu..." << endl;
+            lg.StaffMainMenu(name, Staff_ID);
+         
+        }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+            goto confirmRpt2;
+        }
+    }
+
+    
+
+    else if (choice == 3)
+    {
+        system("cls");
+        lg.StaffMainMenu(name, Staff_ID);
+    }
+
+    else
+    {
+        cout << "Error in report generation!" << endl;
+        system("cls");
+        StaffReport();
+    }
+
+
+
+
+
 
 }
 

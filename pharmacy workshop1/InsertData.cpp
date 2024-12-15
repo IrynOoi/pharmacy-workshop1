@@ -629,9 +629,383 @@ void  InsertData::AddDrugMenu()
 
 
 }
-void  InsertData::AddMedicationTransactionMenuSameTimestamp()
+void  InsertData::AddMedicationTransactionMenuSameTimestamp(string timestamp)
 {
+	login lg;
+	system("cls");
+	int  quantity, Medication1_ID, Hospital_ID;
+	string year, month, day, Transaction_Date, status, name;
+	bool validInput = false;
+	cout << "Enter new records: " << endl;
 
+
+	system("cls");
+	SetConsoleColor(0, 9);
+	cout << "***************************************" << endl;
+	cout << " ADD RECORDS - Medication Transaction  " << endl;
+	cout << "***************************************" << endl;
+	SetConsoleColor(0, 11);
+
+
+	cin.clear(); // Clear the error flags
+	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+
+	while (true)
+	{
+		// Prompt user for Medication ID with validation
+		do
+		{
+			cout << "Medication ID (e.g. 1): ";
+			cin >> Medication1_ID;
+
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Medication1_ID < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
+
+		// SQL query to check for the Medication ID in the database
+		// Construct the SQL query to check for a matching admin user in the database
+		string checkMedication1_query = "SELECT Medication_ID FROM medication WHERE Medication_ID = '" + to_string(Medication1_ID) + "'";
+
+		const char* cu = checkMedication1_query.c_str();  // Convert to C-style string
+
+		qstate = mysql_query(conn, cu); // Execute the query and assign the result to qstate
+
+		if (!qstate) // If the query executed successfully
+		{
+			res = mysql_store_result(conn); // Store the result of the query
+			if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Medication1_ID = atoi(row[0]); // Convert string to integer
+
+				}
+				cout << "Medication_ID successfully found in  database!!!" << endl;
+
+				break;
+			}
+			else // If no matching admin is found
+			{
+				char c;
+				cout << "\nInvalid Medication ID. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					continue;
+				else
+				{
+					break;
+
+				}
+			}
+		}
+		else // If the query execution failed
+			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+
+
+	do
+	{
+		cout << "Quantity: ";
+		cin >> quantity;
+
+		// Check if the input failed (non-integer input)
+		if (cin.fail())
+		{
+			cin.clear(); // Clear the error flag
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+			cout << "Invalid input. Please enter a non-negative integer." << endl;
+			quantity = -1; // Set quantity to an invalid value to continue the loop
+		}
+		// Check if the value is negative
+		else if (quantity < 0) {
+			cout << "Quantity cannot be negative. Please enter a non-negative integer." << endl;
+		}
+	} while (quantity < 0); // Continue looping until valid input is received
+	cin.clear(); // Clear the error flags
+	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+
+
+	while (true)
+	{
+		// Prompt user for Patient ID with validation
+		do
+		{
+			cout << "Patient_ID (e.g. 1): ";
+			cin >> Patient_ID;
+
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Patient_ID < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
+
+
+
+		// SQL query to check for the Medication ID in the database
+		// Construct the SQL query to check for a matching admin user in the database
+		string checkPatient_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + to_string(Patient_ID) + "'";
+
+		const char* cu = checkPatient_query.c_str();  // Convert to C-style string
+
+		qstate = mysql_query(conn, cu); // Execute the query and assign the result to qstate
+
+		if (!qstate) // If the query executed successfully
+		{
+			res = mysql_store_result(conn); // Store the result of the query
+			if (res->row_count == 1) // If exactly one row is returned (one matching admin)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Patient_ID = stoi(row[0]); // Convert the string (char*) in row[0] to an integer
+
+				}
+				cout << "Patient_ID successfully found in  database!!!" << endl;
+
+				break;
+			}
+			else // If no matching admin is found
+			{
+				char c;
+				cout << "\nInvalid Patient ID. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					continue;
+				else
+				{
+					break;
+				}
+			}
+		}
+		else // If the query execution failed
+			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+	while (true)
+	{
+		do
+		{
+			cout << "Hospital_ID (e.g. 1): ";
+			cin >> Hospital_ID;
+
+			// Check if input is a valid integer and not negative
+			if (cin.fail() || Hospital_ID < 0) {
+				// Clear the error flag and ignore the incorrect input
+				cin.clear();  // Clear the fail state
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+				cout << "Invalid input! Please enter a positive integer." << endl;
+			}
+			else {
+				validInput = true; // Valid input, exit loop
+			}
+		} while (!validInput);
+
+		// SQL query to check for the Hospital ID in the database
+		string checkHospital_query = "SELECT Hospital_ID FROM hospital WHERE Hospital_ID= '" + to_string(Hospital_ID) + "'";
+
+		const char* cu = checkHospital_query.c_str();  // Convert to C-style string
+
+		qstate = mysql_query(conn, cu); // Execute the query and assign the result to qstate
+
+		if (!qstate) // If the query executed successfully
+		{
+			res = mysql_store_result(conn); // Store the result of the query
+			if (res->row_count == 1) // If exactly one row is returned (one matching Hospital ID)
+			{
+				while (row = mysql_fetch_row(res)) // Fetch the row from the result set
+				{
+					Hospital_ID = stoi(row[0]); // Convert the string (char*) in row[0] to an integer
+				}
+				cout << "Hospital_ID successfully found in the database!!!" << endl;
+				break;
+			}
+			else // If no matching Hospital ID is found
+			{
+				char c;
+				cout << "\nInvalid Hospital ID. Want to try again? (Y/N): ";
+				cin >> c; // Ask the user if they want to try again
+				if (c == 'y' || c == 'Y')
+					continue;
+				else
+					break;
+			}
+		}
+		else // If the query execution failed
+			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+	}
+	int statusChoice;  // Variable to store the status choice
+	validInput = false; // Reset validInput to false to ensure the loop runs
+
+
+	// Prompt the user to choose a status
+	while (!validInput)
+	{
+		cout << "Status:\n";
+		cout << "1. Completed\n";
+		cout << "2. Pending\n";
+		cout << "3. Cancelled\n";
+		cout << "Please choose a status (1, 2, or 3): ";
+		cin >> statusChoice;
+
+		// Validate the input to ensure it is a valid choice (1, 2, or 3)
+		if (cin.fail() || statusChoice < 1 || statusChoice > 3) {
+			// Clear the error flag and discard invalid input
+			cin.clear();  // Clear the fail state
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discard invalid input
+			cout << "Invalid input. Please enter a valid number (1, 2, or 3)." << endl;
+		}
+		else {
+			// Map the numeric input to a string value
+			switch (statusChoice) {
+			case 1:
+				status = "Completed";
+				validInput = true;  // Valid input, exit loop
+				break;
+			case 2:
+				status = "Pending";
+				validInput = true;  // Valid input, exit loop
+				break;
+			case 3:
+				status = "Cancelled";
+				validInput = true;  // Valid input, exit loop
+				break;
+			}
+		}
+	}
+
+
+
+	// Declare Transaction_ID outside of the loop to make it accessible later
+	int Transaction_ID = -1;  // Initialize with a default value
+
+	// Use the retrieved Transaction_Time for subsequent inserts
+	string subsequent_insert_query = "INSERT INTO medication_transaction (Medication_ID, Quantity, Patient_ID, Hospital_ID, Status, Transaction_Time) VALUES ('"
+		+ to_string(Medication1_ID) + "', '"
+		+ to_string(quantity) + "', '"
+		+ to_string(Patient_ID) + "', '"
+		+ to_string(Hospital_ID) + "', '"
+		+ status + "', '"
+		+ timestamp + "')";
+
+	const char* q3 = subsequent_insert_query.c_str();
+	qstate = mysql_query(conn, q3);
+
+	if (!qstate)
+	{
+		cout << endl << "Medication transaction is successfully added to the database." << endl;
+
+	}
+	else
+	{
+		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+		return; // Exit the function if the insertion fails
+	}
+
+	// Select the Transaction_ID of the last inserted transaction
+	string select_query = "SELECT Transaction_ID, Quantity FROM medication_transaction WHERE Transaction_ID = LAST_INSERT_ID();";
+	const char* q2 = select_query.c_str();
+	qstate = mysql_query(conn, q2);
+
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res && (row = mysql_fetch_row(res)))
+		{
+			Transaction_ID = atoi(row[0]);
+			quantity = atoi(row[1]);
+		}
+		else
+		{
+			cerr << "Failed to fetch Transaction_ID or Quantity. Check the database entry." << endl;
+			return;
+		}
+		mysql_free_result(res);
+	}
+	else
+	{
+		cout << "Query Execution Problem! Error Code: " << mysql_errno(conn) << endl;
+		cout << "Error Message: " << mysql_error(conn) << endl;
+		return;
+	}
+
+	// Fetch the price of the medication based on Medication_ID
+	string fetch_price_query = "SELECT Price FROM medication WHERE Medication_ID = (SELECT Medication_ID FROM medication_transaction WHERE Transaction_ID = "
+		+ to_string(Transaction_ID) + ");";
+	const char* fetch_price_q = fetch_price_query.c_str();
+	qstate = mysql_query(conn, fetch_price_q);
+
+	if (qstate != 0)
+	{
+		cerr << "Query failed to fetch price: " << mysql_error(conn) << endl;
+		return;
+	}
+
+	res = mysql_store_result(conn);
+	if (!res)
+	{
+		cerr << "Failed to store result set for fetching price. Check query execution." << endl;
+		return;
+	}
+
+	double price_per_unit = 0.0;
+	if ((row = mysql_fetch_row(res)))
+	{
+		price_per_unit = atof(row[0]); // Convert price to double
+		mysql_free_result(res);
+	}
+	else
+	{
+		cerr << "Medication ID not found for this transaction!" << endl;
+		mysql_free_result(res);
+		return;
+	}
+
+	// Calculate the total price
+	double total_price = price_per_unit * static_cast<double>(quantity);
+
+	// Update the total_price in the medication_transaction table
+	string update_price_query = "UPDATE medication_transaction SET total_price = " + to_string(total_price) + " WHERE Transaction_ID = "
+		+ to_string(Transaction_ID) + ";";
+	const char* update_price_q = update_price_query.c_str();
+	qstate = mysql_query(conn, update_price_q);
+
+	if (qstate != 0)
+	{
+		cerr << "Total price update failed: " << mysql_error(conn) << endl;
+	}
+	else
+	{
+		cout << "Total price updated successfully!" << endl;
+	}
+
+
+	char AddMT;
+	do
+	{
+		cout << "Do you want to continue adding records? [Y/N]: ";
+		cin >> AddMT;
+		if (AddMT == 'y' || AddMT == 'Y')
+		{
+			AddMedicationTransactionMenuSameTimestamp(timestamp);
+		}
+		else if (AddMT == 'n' || AddMT == 'N')
+		{
+			lg.StaffControlMain(name);
+		}
+	} while (AddMT == 'y' || AddMT == 'Y' || AddMT == 'n' || AddMT == 'N');
 }
 
 
@@ -1023,7 +1397,7 @@ void  InsertData::AddMedicationTransactionMenu()
 		cin >> AddMT;
 		if (AddMT == 'y' || AddMT == 'Y')
 		{
-			AddMedicationTransactionMenu();
+			AddMedicationTransactionMenuSameTimestamp(transaction_time);
 		}
 		else if (AddMT == 'n' || AddMT == 'N')
 		{

@@ -293,7 +293,7 @@ void login::AdminControlMenu(string name)
 	case 'M':
 	case 'm':
 		system("cls");
-		StaffMainMenu(name, Staff_ID);;
+		StaffMainMenu(name, Staff_ID);
 		break;
 
 
@@ -318,6 +318,7 @@ void login::StaffControlMain(string Staff_Name)
 	UpdateData ud;
 	int Staff_ID=0;
 	char StaffControl;
+	string timestamp;
 	Delete dl;
 	ViewData vd;
 	system("cls");
@@ -622,7 +623,7 @@ void login::StaffMainMenu(string name, int Staff_ID)
 {
 
 	char StaffMainChoice;
-
+	system("cls");
 	ViewData vd;
 	SetConsoleColor(0, 9);
 	cout << "******************" << endl;
@@ -685,7 +686,7 @@ void login::StaffMainMenu(string name, int Staff_ID)
 		}
 		else if (StaffMainChoice == '7')
 		{
-			vd.PatientReport();
+			vd.StaffReport();
 			break;
 		}
 

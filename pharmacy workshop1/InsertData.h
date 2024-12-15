@@ -11,7 +11,7 @@ public:
 	void AddHospitalMenu();
 	void AddDrugMenu();
 	void AddMedicationTransactionMenu();
-	void AddMedicationTransactionMenuSameTimestamp();
+	void AddMedicationTransactionMenuSameTimestamp(string timestamp);
 	void AddStaffs();
 
 

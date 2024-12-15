@@ -88,7 +88,17 @@ int main()
 
 	return 0;
 }
+int convertToInt(string str)
+{
+	int num = 0, size = str.size();
 
+	for (int i = 0, j = size; i < size; i++)
+	{
+		num += (str[--j] - '0') * pow(10, i); //converted integer
+	}
+
+	return num;
+}
 
 // Function to set the console text and background color
 void SetConsoleColor(int textColor, int backgroundColor)
