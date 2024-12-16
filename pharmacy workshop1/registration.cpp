@@ -24,6 +24,9 @@ void registration::Registration()
 	char AddStaff;
 	string name;
 	system("cls");
+
+
+
 	system("color 70"); // 'F' is white for background, '0' is black for text
 	SetConsoleColor(0, 8);
 	cout << "**********************" << endl;
@@ -65,8 +68,76 @@ void registration::Registration()
 	}
 }
 
+void registration::login_staff_register()
+{
+	string Staff_Password, Staff_Name;
+	system("cls");
+
+	SetConsoleColor(0, 8);
+	cout << "*****************" << endl;
+	cout << " LOGIN AS STAFF  " << endl;
+	cout << "*****************" << endl;
+	cout << endl;
+	SetConsoleColor(0, 7);
+	cout << "Enter Staff ID: ";
+	cin >> Staff_ID;
+	cout << "Enter Password: ";
+	char ch;
+	while ((ch = _getch()) != 13)
+	{ // Read each character of the password until Enter key (ASCII 13) is pressed
+		if (ch == 8)
+		{ // If the character is backspace (ASCII 8)
+			if (!Staff_Password.empty())
+			{
+				Staff_Password.pop_back(); // Remove last character from the password string
+				cout << "\b \b"; // Move the cursor back, print space to overwrite the asterisk, and move back again
+			}
+		}
+		else if (ch == ' ') { // Allow spaces in the password
+			Staff_Password += ch;
+			cout << " "; // Display a space
+		}
+		else
+		{
+			Staff_Password += ch; // Append each character to the password string
+			cout << "*"; // Display an asterisk for each character typed
+		}
+	}
+	cout << endl; // Move to the next line after pressing Enter
+	string checkUser_query = "SELECT Staff_ID, Staff_Name FROM staff WHERE Staff_ID = '" + to_string(Staff_ID) + "' AND Staff_Password = sha1('" + Staff_Password + "') AND Active_Status = 'Active' ";
+	const char* cu = checkUser_query.c_str();
+	qstate = mysql_query(conn, cu);
+	if (!qstate)
+	{
+		res = mysql_store_result(conn);
+		if (res->row_count == 1)
+		{
+			while (row = mysql_fetch_row(res))
+			{
+				Staff_ID = atoi(row[0]);
+				Staff_Name = row[1];
+			}
+			system("cls");
+			registrationStaff();
+		}
+		else
+		{
+			char c;
+			cout << "\nInvalid username or password. Want to try again? (Y/N): ";
+			cin >> c;
+			if (c == 'y' || c == 'Y')
+				login_staff_register();
+			else
+				Registration();
+		}
+	}
+	else
+		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+}
+
 void registration::registrationPatient()
 {
+	login lg ;
 	system("cls");
 	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
 	double Patient_Height, Patient_Weight;
@@ -82,8 +153,6 @@ void registration::registrationPatient()
 	cout << " NEW PATIENT REGISTRATION " << endl;
 	cout << "**************************" << endl;
 	SetConsoleColor(0, 7);
-
-
 
 	bool valid = false;
 
@@ -161,7 +230,8 @@ void registration::registrationPatient()
 		// Check if the input is valid (no alphabetic characters) and non-negative
 		if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31)
 		{
-			cout << "Invalid input! Please enter valid numerical values for year, month, and day.\n";
+			cout << "Invalid input!" << endl;
+			cout << "Please enter valid numerical values for year, month, and day.\n";
 			cin.clear(); // Clear the error flags
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
 		}
@@ -170,6 +240,8 @@ void registration::registrationPatient()
 			break; // Exit loop if the input is valid
 		}
 	}
+	// Clear the input buffer to discard the leftover newline character
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	do
 	{
@@ -292,7 +364,7 @@ void registration::registrationPatient()
 	getline(cin, Diagnosed_Symptoms);
 
 	string Active_Status = "Active";
-	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
+	string insert_query = "INSERT INTO patient ( Patient_Name, Patient_Gender,  Patient_DOB, Patient_Address, Patient_Email, Patient_Height, Patient_Weight, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status, Patient_Password) VALUES ('"
 		+ Patient_Name + "', '"
 		+ Patient_Gender + "', '"
 		+ Patient_DOB + "', '"
@@ -312,7 +384,7 @@ void registration::registrationPatient()
 
 	if (!qstate)
 	{
-		cout << endl << "Patient is successfully added in database." << endl;
+		cout << endl << "Patient is successfully registered." << endl;
 	}
 	else
 	{
@@ -322,7 +394,7 @@ void registration::registrationPatient()
 
 	do
 	{
-		cout << "Do you want to continue adding records? [Y/N]: ";
+		cout << "Do you want to do another new registration ? [Y/N]: ";
 		cin >> AddPatient;
 		if (AddPatient == 'y' || AddPatient == 'Y')
 		{
@@ -330,7 +402,7 @@ void registration::registrationPatient()
 		}
 		else if (AddPatient == 'n' || AddPatient == 'N')
 		{
-			Registration();
+			lg.mainlogin_pg() ;
 		}
 	} while (AddPatient == 'y' || AddPatient == 'Y' || AddPatient == 'n' || AddPatient == 'N');
 }
@@ -340,19 +412,28 @@ void registration::registrationStaff()
 	string name;
 	login lg;
 	InsertData id;
+	char option1;
 	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email, Staff_Position, Active_Status;
 	int Admin_ID, Hospital_ID;
 	bool validInput;
 	char AddStaff;
+	cout << "You need to proceed to login  first to verufy your identity before proceed to further registration.Do you want to proceed?(Y/N) " << endl;
+	cin >> option1;
+	if (option1 == 'Y' || option1 == 'y')
+		login_staff_register();
+	else
+		Registration();
 
 
 	system("cls");
 	SetConsoleColor(0, 8);
 	cout << "******************************" << endl;
-	cout << " NEW ADMIN/STAFF REGISTRATION " << endl;
+	cout << " NEW STAFF REGISTRATION " << endl;
 	cout << "******************************" << endl;
 	SetConsoleColor(0, 7);
 	cout << "Please fill in the following information: " << endl;
+
+
 
 	bool valid = false;
 
@@ -416,7 +497,7 @@ void registration::registrationStaff()
 		// Validate the gender input
 	} while (Staff_Gender != "F" && Staff_Gender != "M");  // Continue looping if the input is not "F" or "M"
 
-	
+
 
 
 
@@ -531,23 +612,6 @@ void registration::registrationStaff()
 	} while (true);  // Keep looping until valid input is provided
 
 
-	do
-	{
-		cout << "Admin_ID (e.g. 1): ";
-		cin >> Admin_ID;
-
-		// Check if input is a valid integer and not negative
-		if (cin.fail() || Admin_ID < 0) {
-			// Clear the error flag and ignore the incorrect input
-			cin.clear();  // Clear the fail state
-			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-			cout << "Invalid input! Please enter a positive integer." << endl;
-			validInput = false;
-		}
-		else {
-			validInput = true; // Valid input, exit loop
-		}
-	} while (!validInput);
 
 	do
 	{
@@ -569,14 +633,13 @@ void registration::registrationStaff()
 
 	Active_Status = "Active";
 
-	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Admin_ID, Active_Status, Hospital_ID) VALUES ('"
+	string insert_query = "INSERT INTO Staff ( Staff_Name, Staff_Gender,  Staff_Address, Staff_TelNo, Staff_Position, Staff_Password, Active_Status, Hospital_ID) VALUES ('"
 
 		+ Staff_Name + "', '"
 		+ Staff_Gender + "', '"
 		+ Staff_Address + "', '"
 		+ Staff_TelNo + "', '"
 		+ Staff_Position + "', SHA1('" + Staff_Password + "'), '"
-		+ to_string(Admin_ID) + "', '"
 		+ Active_Status + "', '"
 		+ to_string(Hospital_ID) + "')";
 
@@ -587,8 +650,7 @@ void registration::registrationStaff()
 
 	if (!qstate)
 	{
-		// Save or process patient details here
-		cout << "\nStaff registration successful!" << endl;
+		cout << endl << "Staff is successfully added in database." << endl;
 	}
 	else
 	{
@@ -599,7 +661,7 @@ void registration::registrationStaff()
 	}
 	do
 	{
-		cout << "Do you want to continue adding records? [Y/N]: ";
+		cout << "Do you want to continue to do another new registration? [Y/N]: ";
 		cin >> AddStaff;
 		if (AddStaff == 'y' || AddStaff == 'Y')
 		{
@@ -607,7 +669,7 @@ void registration::registrationStaff()
 		}
 		else if (AddStaff == 'n' || AddStaff == 'N')
 		{
-			Registration();
+			lg.mainlogin_pg();
 		}
 	} while (AddStaff == 'y' || AddStaff == 'Y' || AddStaff == 'n' || AddStaff == 'N');
 

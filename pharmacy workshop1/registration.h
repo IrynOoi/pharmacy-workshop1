@@ -9,6 +9,7 @@ public:
 
 	void Registration();
 	void registrationStaff();
+	void login_staff_register();
 	void registrationPatient();
 };
 #endif // MAIN_FUNCTIONS_H
