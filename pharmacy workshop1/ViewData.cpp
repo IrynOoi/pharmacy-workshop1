@@ -8,6 +8,7 @@
 #include <regex> // Required for regex
 #include <string>
 #include <hpdf.h>
+#include <sstream>
 #undef max    // Undefine the `max` macro
 #include <algorithm> // For std::transform
 #include <sstream>
@@ -2658,7 +2659,7 @@ void ViewData:: getreport()
     const char* q_date = select_query_date.c_str();
     qstate = mysql_query(conn, q_date);
 
-    if (!qstate) 
+    if (!qstate)
     {
         cout << "\n";
         cout << "\t\t                     ";
@@ -2669,8 +2670,8 @@ void ViewData:: getreport()
 
         // Output adjusted percentages
         mysql_data_seek(res, 0); // Reset the result set to the beginning
-        while ((row = mysql_fetch_row(res)) != NULL) 
-{
+        while ((row = mysql_fetch_row(res)) != NULL)
+        {
             cout << "\t                           ";
             cout << RED << setfill('*') << setw(80) << "" << setfill(' ') << RESET << endl;
 
@@ -2725,38 +2726,38 @@ void ViewData:: getreport()
         cout << "\t                           " << "GRAND TOTAL SALES " << setw(39) << right << fixed << setprecision(2) << BLUE << grandTotalSales << RESET << "\n";
 
     }
-    else 
+    else
     {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
     }
-    cout << "Do u want to print out the sales report in pdf?(Y/N)"<<endl;
-        cin >> option;
-        if (option == 'Y' || option == 'y')
-            GeneratePDFSalesReport(conn);
-        else
-            lg.StaffMainMenu(name, Staff_ID);
+    cout << "Do u want to print out the sales report in pdf?(Y/N)" << endl;
+    cin >> option;
+    if (option == 'Y' || option == 'y')
+        GeneratePDFSalesReport(conn);
+    else
+        lg.StaffMainMenu(name, Staff_ID);
 
     
 
 }
 
 void ViewData::GeneratePDFSalesReport(MYSQL* conn)
-{ // Step 1: Initialize the PDF
+{ 
+    // Step 1: Initialize the PDF
     HPDF_Doc pdf = HPDF_New(NULL, NULL);
-    if (!pdf)
-    {
+    if (!pdf) {
         cerr << "Error: Unable to create PDF object" << endl;
         return;
     }
 
-
     const char* filename = "sales_report.pdf";
+
     // Declare variables
     HPDF_Page page = nullptr;
     HPDF_Font font = nullptr;
     float y = 0.0f;
-    try {
 
+    try {
         std::ofstream fileCheck(filename, ios::out | ios::trunc);
         if (!fileCheck) {
             cerr << "Error: Unable to overwrite file '" << filename << "'." << endl;
@@ -2784,45 +2785,59 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         HPDF_Page_SetFontAndSize(page, font, 12);
         y = 800; // Initial y-coordinate for yearly report
 
-        // Add title for Yearly Report
+        // Begin the PDF text block
         HPDF_Page_BeginText(page);
+
+        // Title for the report
         HPDF_Page_TextOut(page, 50, y, "************* SALES YEAR REPORT *************");
         y -= 30;
         HPDF_Page_SetFontAndSize(page, font, 10);
         HPDF_Page_TextOut(page, 50, y, "Year-wise Income, Percentage, and Chart Representation");
         y -= 20;
-        HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------");
+
+        // Column headers for the report
+        HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "Year   | Income (RM)   | Percentage   | Chart   |");
+
+        // Print a top border line before table rows
+        HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------");
-        y -= 15;
+
         HPDF_Page_EndText(page);
 
+        // SQL Query and variables
         double totalIncome = 0.0;
         double totalSalesCount = 0.0;
 
-        // First pass to calculate totals for yearly report
-        string query = "SELECT YEAR(Transaction_time) AS sale_year, COUNT(*) AS total_sales, SUM(total_price) AS total_price FROM medication_transaction GROUP BY sale_year ORDER BY sale_year";
+        string query = "SELECT YEAR(Transaction_time) AS sale_year, COUNT(*) AS total_sales, SUM(total_price) AS total_price "
+            "FROM medication_transaction GROUP BY sale_year ORDER BY sale_year";
         const char* q = query.c_str();
 
         if (mysql_query(conn, q) == 0) {
             MYSQL_RES* res = mysql_store_result(conn);
             MYSQL_ROW row;
 
+            // Initialize variables for total income and total sales count
+            double totalIncome = 0.0;
+            double totalSalesCount = 0.0;
+            double totalPriceAll = 0.0;
+
+            // First pass: Calculate total income and total sales count
             while ((row = mysql_fetch_row(res)) != NULL) {
                 totalIncome += atof(row[2]);
                 totalSalesCount += atof(row[1]);
+                totalPriceAll += atof(row[2]); // Add to the total price
             }
 
             // Adjust percentages
             double scale = (totalSalesCount == 0) ? 0 : 100.0 / totalSalesCount;
 
-            // Reset result set for second pass
+            // Reset result set for the second pass
             mysql_data_seek(res, 0);
 
-            // Second pass to generate rows for yearly report
+            // Second pass: Generate rows for the yearly report
             HPDF_Page_BeginText(page);
+
             while ((row = mysql_fetch_row(res)) != NULL) {
                 string year = row[0];
                 double totalSales = atof(row[1]);
@@ -2831,22 +2846,29 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
 
                 // Format the numbers
                 ostringstream totalPriceStream, percentageStream;
-                totalPriceStream << fixed << setprecision(2) << totalPrice;
+                totalPriceStream << fixed << setprecision(2) << "RM " << totalPrice;  // Format totalPrice with RM
                 percentageStream << fixed << setprecision(2) << percentage;
 
-                // Format the row output
-                string line = year + "   | RM " + totalPriceStream.str() +
-                    "   | " + percentageStream.str() + "%   | ";
+                // Generate the chart representation
+                int stars = static_cast<int>(totalSales);
+                stars = min(stars, 20); // Limit stars to a maximum of 20 for consistent appearance
+                string chart(stars, '*');
+
+                // Add right padding to the chart for consistent alignment
+                chart += string(20 - chart.size(), ' ');
+
+                // Format the line using fixed-width columns
+                ostringstream lineStream;
+                lineStream << setw(15) << left << year               // YEAR column
+                    << setw(20) << left << totalPriceStream.str() // INCOME column
+                    << setw(35) << left << (percentageStream.str() + "%")   // PERCENTAGE column
+                    << setw(25) << left << chart;                            // CHART column
+
+                // Convert to string and print to PDF
+                string line = lineStream.str();
                 HPDF_Page_TextOut(page, 50, y, line.c_str());
 
-                // Add chart representation (stars scaled for better visualization)
-                string chart;
-                int stars = static_cast<int>(totalSales / 10);
-                stars = min(stars, 50); // Limit the number of stars to fit on the page
-                chart.append(stars, '*');
-                line += chart + string(50 - stars, ' ') + "|"; // Align stars and fill space for consistent formatting
-
-                y -= 15;
+                y -= 15; // Move down for the next line of text
 
                 // Check if we need a new page
                 if (y < 50) {
@@ -2854,17 +2876,40 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                     page = HPDF_AddPage(pdf);
                     HPDF_Page_SetFontAndSize(page, font, 10);
                     y = 800; // Reset y-coordinate for new page
-                    HPDF_Page_TextOut(page, 50, y, "Year    Income (RM)    Percentage    Chart               |");
+
+                    // Print column titles on the new page
+                    HPDF_Page_BeginText(page);
+                    HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
                     y -= 15;
-                    HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------");
+                    HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
                     y -= 15;
                 }
             }
             mysql_free_result(res);
 
-            // Add a bottom border line after the yearly report
-            HPDF_Page_TextOut(page, 50, y, "------------------------------------------------------------------------");
+            // Add a bottom border line after the table
+            HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
             y -= 15;
+
+            // Format the total sales and 100% columns with fixed-width formatting
+            ostringstream totalStream;
+            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;  // Format total sales with RM
+
+            ostringstream lineStream;
+            lineStream << setw(15) << left << "TOTAL "    //  Label "TOTAL SALES" with fixed width
+                << setw(20) << left << totalStream.str()  // Right-align the total sales value with fixed width
+                << setw(35) << left << "100.00 %";  // Right-align the 100% value with fixed width
+
+            // Print the formatted line to the PDF
+            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());  // Print the formatted line
+            y -= 15;  // Move to the next line
+            // Format the second line with "SALES" and "100.00 %"
+            ostringstream secondLineStream;
+            secondLineStream << setw(24) << left << "SALES";
+            // Print the second line to the PDF
+            HPDF_Page_TextOut(page, 50, y, secondLineStream.str().c_str());
+
+
             HPDF_Page_EndText(page);
         }
         else {
@@ -2884,11 +2929,11 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         HPDF_Page_SetFontAndSize(page, font, 10);
         HPDF_Page_TextOut(page, 50, y, "Month-wise Income, Percentage, and Chart Representation");
         y -= 20;
-        HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------");
+        HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------------------------------------");
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "Month     | Income (RM)   | Percentage   | Chart");
+        HPDF_Page_TextOut(page, 50, y, "Month      Income (RM)    Percentage               Chart");
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------");
+        HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------------------------------------");
         y -= 15;
         HPDF_Page_EndText(page);
 
