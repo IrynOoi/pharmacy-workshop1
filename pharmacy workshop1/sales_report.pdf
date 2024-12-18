@@ -100,31 +100,31 @@ BT
 (************* SALES MONTHLY REPORT *************) Tj
 /F1 10 Tf
 0 -30 Td
-(Month-wise Income, Percentage, and Chart Representation) Tj
+(Monthly Income, Percentage, and Chart Representation) Tj
 0 -20 Td
 (----------------------------------------------------------------------------------------------------) Tj
 0 -15 Td
-(Month      Income \050RM\051    Percentage               Chart) Tj
+(Month      Income \050RM\051       Percentage           Chart) Tj
 0 -15 Td
 (----------------------------------------------------------------------------------------------------) Tj
 ET
 BT
 50 705 Td
-(November    | RM 950.50    | 47.83\045   | ) Tj
-250 0 Td
-(*) Tj
--250 -15 Td
-(December    | RM 1088.00    | 52.17\045   | ) Tj
-250 0 Td
-(*) Tj
--250 -15 Td
-(----------------------------------------------------------) Tj
+(November       RM 950.50           47.83\045         ***********         ) Tj
+0 -15 Td
+(December       RM 1088.00          52.17\045         ************        ) Tj
+0 -15 Td
+(-------------------------------------------------------------------------------------------------------------) Tj
+0 -15 Td
+(TOTAL          RM 2038.50          100.00 \045                           ) Tj
+0 -15 Td
+(SALES                   ) Tj
 ET
 
 endstream
 endobj
 10 0 obj
-702
+897
 endobj
 xref
 0 11
@@ -138,7 +138,7 @@ xref
 0000001298 00000 n
 0000001396 00000 n
 0000001582 00000 n
-0000002339 00000 n
+0000002534 00000 n
 trailer
 <<
 /Root 1 0 R
@@ -146,5 +146,5 @@ trailer
 /Size 11
 >>
 startxref
-2359
+2554
 %%EOF

@@ -2758,7 +2758,7 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
     float y = 0.0f;
 
     try {
-        std::ofstream fileCheck(filename, ios::out | ios::trunc);
+        ofstream fileCheck(filename, ios::out | ios::trunc);
         if (!fileCheck) {
             cerr << "Error: Unable to overwrite file '" << filename << "'." << endl;
             HPDF_Free(pdf);
@@ -2927,11 +2927,10 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         HPDF_Page_TextOut(page, 50, y, "************* SALES MONTHLY REPORT *************");
         y -= 30;
         HPDF_Page_SetFontAndSize(page, font, 10);
-        HPDF_Page_TextOut(page, 50, y, "Month-wise Income, Percentage, and Chart Representation");
-        y -= 20;
-        HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------------------------------------");
+        HPDF_Page_TextOut(page, 50, y, "Monthly Income, Percentage, and Chart Representation");
+
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "Month      Income (RM)    Percentage               Chart");
+        HPDF_Page_TextOut(page, 50, y, "Month      Income (RM)       Percentage           Chart");
         y -= 15;
         HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------------------------------------");
         y -= 15;
@@ -2946,6 +2945,8 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
             // First pass to calculate totals for monthly report
             double totalIncome = 0.0;
             double totalSalesCount = 0.0;
+            double totalPriceAll = 0.0;
+
 
             while ((row = mysql_fetch_row(res)) != NULL) {
                 totalIncome += atof(row[2]);
@@ -2962,6 +2963,7 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                 double totalSales = atof(row[1]);
                 double totalPrice = atof(row[2]);
                 double percentage = totalSales * scale;
+                totalPriceAll += totalPrice;
 
                 // Convert month to name
                 string monthName;
@@ -2980,19 +2982,29 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                 case 12: monthName = "December"; break;
                 }
 
-                ostringstream priceStream, percentageStream;
-                priceStream << fixed << setprecision(2) << totalPrice;
+                // Format the numbers with precision and labels
+                ostringstream totalPriceStream, percentageStream;
+                totalPriceStream << fixed << setprecision(2) <<  "RM " << totalPrice; // Include "RM"
                 percentageStream << fixed << setprecision(2) << percentage;
 
-                string line = monthName + "    | RM " + priceStream.str() + "    | " + percentageStream.str() + "%   | ";
+                // Generate the chart representation with a maximum width of 20 stars
+                int stars = static_cast<int>(totalSales );
+                stars = min(stars, 20);
+                string chart(stars, '*');
+                chart += string(20 - chart.size(), ' '); // Add right padding for alignment
+
+                // Format the line using fixed-width columns
+                ostringstream lineStream;
+                lineStream << setw(15) << left << monthName                   // MONTH column
+                    << setw(20) << left << totalPriceStream.str()      // PRICE column
+                    << setw(15) << left << (percentageStream.str() + "%") // PERCENTAGE column
+                    << setw(20) << left << chart;                     // CHART column
+
+                // Convert the formatted line to string and output it to the PDF
+                string line = lineStream.str();
                 HPDF_Page_TextOut(page, 50, y, line.c_str());
 
-                string chart;
-                int stars = static_cast<int>(totalSales / 10);
-                stars = min(stars, 50); // Limit chart width
-                chart.append(stars, '*');
-                HPDF_Page_TextOut(page, 300, y, chart.c_str());
-                y -= 15;
+                y -= 15; // Move down for the next line of text
 
                 // Check if we need a new page
                 if (y < 50) {
@@ -3001,18 +3013,36 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                     HPDF_Page_SetFontAndSize(page, font, 10);
                     y = 800; // Reset y-coordinate for new page
                     HPDF_Page_BeginText(page);
-                    HPDF_Page_TextOut(page, 50, y, "Month     | Income (RM)   | Percentage   | Chart");
+                    HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
                     y -= 15;
-                    HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------");
+                    HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
                     y -= 15;
                 }
             }
 
             mysql_free_result(res);
 
-            // Add a bottom border line after the monthly report
-            HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------");
+            // Add a bottom border line after the table
+            HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
             y -= 15;
+
+            // Format the total sales and 100% columns with fixed-width formatting
+            ostringstream totalStream;
+            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;  // Format total sales with RM
+
+            ostringstream lineStream;
+            lineStream << setw(15) << left << "TOTAL "    //  Label "TOTAL SALES" with fixed width
+                << setw(20) << left << totalStream.str()  // Right-align the total sales value with fixed width
+                << setw(35) << left << "100.00 %";  // Right-align the 100% value with fixed width
+
+            // Print the formatted line to the PDF
+            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());  // Print the formatted line
+            y -= 15;  // Move to the next line
+            // Format the second line with "SALES" and "100.00 %"
+            ostringstream secondLineStream;
+            secondLineStream << setw(24) << left << "SALES";
+            // Print the second line to the PDF
+            HPDF_Page_TextOut(page, 50, y, secondLineStream.str().c_str());
             HPDF_Page_EndText(page);
         }
         else {
@@ -3026,6 +3056,8 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         else {
             cout << "PDF generated: " << filename << endl;
         }
+
+
 
     }
     catch (const exception& e) {
@@ -3041,6 +3073,11 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
     else {
         cout << "PDF generated: " << filename << endl;
     }
+
+
+    
+
+
 
     HPDF_Free(pdf);
 }
@@ -4044,6 +4081,7 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
     time_t now = time(0);
     struct tm ltm = {};
     localtime_s(&ltm, &now);
+    system("cls");
 
     // Fetch distinct transaction times for the patient
     string search_query = "SELECT DISTINCT Transaction_Time FROM medication_transaction WHERE Patient_ID = '" + to_string(PatientID) + "';";

@@ -57,16 +57,19 @@ void login::mainlogin_pg()
 		else if (choiceLogin == '2')
 		{
 			login_patient();
+			break;
 		}
 
 		else if (choiceLogin == '3')
 		{
 			ForgetPassword();
+			break;
 		}
 		else if (choiceLogin == '4')
 		{
 			system("cls");
 			main();
+			break;
 		}
 		else
 		{
