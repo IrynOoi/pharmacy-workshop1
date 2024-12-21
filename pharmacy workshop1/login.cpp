@@ -20,7 +20,6 @@ using namespace std;
 
 void login::mainlogin_pg()
 {
-	ui  ui;
 	char choiceLogin;
 	system("color E0");
 
@@ -530,7 +529,7 @@ void login::login_patient()
 				}
 
 				system("cls"); // Clear the console screen
-				PatientMainMenu(Patient_Name,Patient_ID ); // Call the function to display the Patient main menu, passing the Patient_Name
+				PatientMainMenu(Patient_Name,Patient_ID); // Call the function to display the Patient main menu, passing the Patient_Name
 			}
 			else // If no matching Patient is found
 			{
@@ -557,20 +556,26 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 {
 	char PatientControl;
 	ViewData vr;
-	system("cls");
-	SetConsoleColor(0, 9);
+	UpdateData ud;
+	string patientInfo[2]; // Index 0 will store Patient_ID and Index 1 will store Patient_Name
 
+	system("cls");
+	patientInfo[0] = to_string(Patient_ID);  // Store Patient_ID as string
+	patientInfo[1] = name;
+
+	SetConsoleColor(0, 9);
 	cout << "***********************" << endl;
 	cout << " PATIENT MAIN MENU     " << endl;
 	cout << "***********************" << endl;
 	SetConsoleColor(0, 11);
 
-	cout << "Welcome, " << name << "! What would you like to do?" << endl;
+	cout << "Welcome, " << patientInfo[1] << "! What would you like to do?" << endl;
 	cout << endl;
 
 	cout << "[A] View Drugs list " << endl;
 	cout << "[B] View Patient Account Information" << endl;
 	cout << "[C] Print receipt" << endl;
+	cout << "[D] Update your own Account detail" << endl;
 	cout << "[M] Back to Login Main Menu" << endl;
 
 	cout << "\nPlease enter your choice (A, B, C, D, M): ";
@@ -581,17 +586,21 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 
 	case 'A':
 	case 'a':
-		vr.ViewDrugList();
+		vr.ViewDrugList(patientInfo[1]);
 		break;
 
 	case 'B':
 	case 'b':
-		vr.ViewPatientAcc(Patient_ID);
+		vr.ViewPatientAcc(stoi(patientInfo[0]), patientInfo[1]);
 		break;
 
 	case 'C':
 	case 'c':
-		vr.ViewPatientReceipt(Patient_ID,  name);
+		vr.ViewPatientReceipt(stoi(patientInfo[0]), patientInfo[1]);
+		break;
+	case 'D':
+	case 'd':
+		ud.UpdatePatientOwnDetail(stoi(patientInfo[0]), patientInfo[1]);
 		break;
 
 	case 'M':

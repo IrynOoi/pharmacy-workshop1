@@ -3870,10 +3870,9 @@ void  ViewData::PatientReport()
     }
 }
 
-void ViewData::ViewDrugList()
+void ViewData::ViewDrugList(string name)
 {
     login lg;
-    string name;
     int Patient_ID=0;
     system("cls");
     SetConsoleColor(0, 9); // Light Blue Text
@@ -3937,11 +3936,10 @@ void ViewData::ViewDrugList()
 
 
 }
-void ViewData::ViewPatientAcc(int id)
+void ViewData::ViewPatientAcc(int id,string name)
 {
     system("cls");
     login lg;
-    string Patient_Name;
     SetConsoleColor(0, 9);
     cout << "***********************************" << endl;
     cout << "   PATIENT ACCOUNT INFORMATION     " << endl;
@@ -3978,14 +3976,14 @@ void ViewData::ViewPatientAcc(int id)
         }
         system("pause");
         system("cls");
-        lg.PatientMainMenu(Patient_Name, id);
+        lg.PatientMainMenu(name, id);
     }
     else
     {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
         system("pause");
         system("cls");
-        lg.PatientMainMenu(Patient_Name, id);
+        lg.PatientMainMenu(name, id);
     }
 
 

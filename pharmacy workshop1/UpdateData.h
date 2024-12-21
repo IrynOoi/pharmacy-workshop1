@@ -11,6 +11,7 @@ public:
 	void UpdateDrugMenu();
 	void UpdateMedicationTransactionMenu();
 	void UpdateStaff();
+	void UpdatePatientOwnDetail(int PatientID,string name);
 
 
 };
