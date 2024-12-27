@@ -11,6 +11,7 @@ public:
 	void registrationStaff();
 	void login_staff_register();
 	void registrationPatient();
+	void verify_identity();
 };
 #endif // MAIN_FUNCTIONS_H
 

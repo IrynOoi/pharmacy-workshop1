@@ -17,6 +17,8 @@ char  confirmUpd, continueUpd;
 string year, month, day, DOB, UpdChoice;
 int d_year, d_month, d_day, Patient_Age;
 double Patient_Height, Patient_Weight;
+
+
 //void UpdateData::UpdateRecord()
 //{
 //	login lg;

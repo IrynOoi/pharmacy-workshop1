@@ -135,7 +135,7 @@ void Loading()
 		printf("%c", b); // Print filled part of the bar
 
 		// Sleep for 60 milliseconds to simulate loading
-		Sleep(80);
+		Sleep(50);
 	}
 }
 

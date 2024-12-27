@@ -44,7 +44,7 @@ void registration::Registration()
 	switch (userRole)
 	{
 	case 1:
-
+		verify_identity();
 		registrationStaff();
 		break;
 
@@ -66,6 +66,16 @@ void registration::Registration()
 		Registration();
 		break;
 	}
+}
+void registration::verify_identity()
+{
+	char option1;
+	cout << "You need to proceed to login  first to verufy \n your identity before proceed to further registration.Do you want to proceed?(Y/N) " << endl;
+	cin >> option1;
+	if (option1 == 'Y' || option1 == 'y')
+		login_staff_register();
+	else
+		Registration();
 }
 
 void registration::login_staff_register()
@@ -412,23 +422,17 @@ void registration::registrationStaff()
 	string name;
 	login lg;
 	InsertData id;
-	char option1;
 	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email, Staff_Position, Active_Status;
 	int Admin_ID, Hospital_ID;
 	bool validInput;
 	char AddStaff;
-	cout << "You need to proceed to login  first to verufy your identity before proceed to further registration.Do you want to proceed?(Y/N) " << endl;
-	cin >> option1;
-	if (option1 == 'Y' || option1 == 'y')
-		login_staff_register();
-	else
-		Registration();
+	
 
 
 	system("cls");
 	SetConsoleColor(0, 8);
 	cout << "******************************" << endl;
-	cout << " NEW STAFF REGISTRATION " << endl;
+	cout << " NEW STAFF REGISTRATION       " << endl;
 	cout << "******************************" << endl;
 	SetConsoleColor(0, 7);
 	cout << "Please fill in the following information: " << endl;
