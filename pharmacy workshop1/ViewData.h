@@ -20,6 +20,7 @@ public:
 	void ViewPatientReceipt(int PatientID,string name);
 	void PatientReport();
 	void StaffReport();
+	
 
 
 };

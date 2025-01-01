@@ -1,4 +1,4 @@
-//ViewData.cpp
+﻿//ViewData.cpp
 #include "login.h"
 #include <iostream>
 #include "ui.h"
@@ -2358,82 +2358,80 @@ void ViewData::ViewMedicationTransactionMenu()
 }
 
 
+
+
 void ViewData:: getreport()
 {
     system("cls");
     login lg;
     char option;
     string name;
-    int Staff_ID=0;
+    int Staff_ID = 0, maxSales = 0;
 
     cout << "\n";
     cout << "\t\t\t\t\t\t\t";
 
     cout << "*************" << MAGENTA << " SALES YEAR REPORT " << RESET << "*************" << endl;
     cout << "\n";
-    string select_queryqq = "SELECT YEAR(Transaction_time)  AS sale_year, COUNT(*) AS total_sales, SUM( total_price) AS total_price  FROM medication_transaction GROUP BY sale_year ORDER BY sale_year ";
-    //cout << select_query<<endl;
+    string select_queryqq = "SELECT YEAR(Transaction_time) AS sale_year, COUNT(*) AS total_sales, SUM(total_price) AS total_price FROM medication_transaction GROUP BY sale_year ORDER BY sale_year";
     const char* q23 = select_queryqq.c_str();
     qstate = mysql_query(conn, q23);
 
-
-
-    if (!qstate)
-    {
-
+    if (!qstate) {
         cout << "\t\t\t";
-
-        cout << "YEAR" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << setw(16) << "CHART" << endl;
+        cout << "YEAR" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << endl;
         cout << "\t               ";
         cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
         res = mysql_store_result(conn);
+
         double totalPercentage = 0.0;
         double totalpriceall = 0.0;
+        int maxSales = 0;
 
-        string namemonth;
-        while ((row = mysql_fetch_row(res)) != NULL)
-        {
-            string  date = row[0];
-            int totalSales = atoi(row[1]);//the number of transactions for that year
+        // Array to store years and their total sales
+        string yearLabels[100];
+        int yearSales[100];
+        int numYears = 0; // Counter for years
+
+        // First pass: Calculate total percentage and populate data
+        while ((row = mysql_fetch_row(res)) != NULL) {
+            string date = row[0];
+            int totalSales = atoi(row[1]); // the number of transactions for that year
             double totalPrice = atof(row[2]);
+            maxSales = max(maxSales, totalSales);
 
-            // Calculate percentage
-            double percentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) );
+            // Store year and sales
+            yearLabels[numYears] = date;
+            yearSales[numYears] = totalSales;
+            numYears++;
 
             // Update total percentage
+            double percentage = (totalSales == 0) ? 0.0 : static_cast<double>(totalSales);
             totalPercentage += percentage;
         }
 
         // Adjust percentages proportionally to ensure the total is 100%
-        if (totalPercentage != 100.0)
-        {
-            //cout << "Adjusting percentages to ensure total is 100%" << endl;
+        if (totalPercentage != 100.0) {
             double scale = 100.0 / totalPercentage;
 
             // Output adjusted percentages
             mysql_data_seek(res, 0); // Reset the result set to the beginning
-            while ((row = mysql_fetch_row(res)) != NULL) 
-            {
-                string  date = row[0];
-                int totalSales = atoi(row[1]);
+            int yearIndex = 0;
+            while ((row = mysql_fetch_row(res)) != NULL) {
+                string date = row[0];
                 double totalPrice = atof(row[2]);
                 totalpriceall += totalPrice;
 
+                // Calculate adjusted percentage
+                double adjustedPercentage = static_cast<double>(yearSales[yearIndex]) * scale;
 
-                // Calculate and output adjusted percentage
-                double adjustedPercentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) ) * scale;
-                //cout << fixed  << setprecision(2)  << setw(5) << left << namemonth  <<setw(27) << right << totalPrice << setw(22) << right << adjustedPercentage << "%" << setw(20);
                 cout << fixed << setprecision(2);
                 cout << "\t\t        " << setw(15) << date
                     << setw(20) << right << totalPrice
-                    << setw(20) << right << adjustedPercentage << "%" << setw(20);
-
-                for (int i = 0; i < totalSales; ++i) 
-                {
-                    cout << BLUE << "*" << RESET;
-                }
-
+                    << setw(20) << right << adjustedPercentage << "%";
                 cout << endl;
+
+                yearIndex++;
             }
         }
 
@@ -2441,13 +2439,42 @@ void ViewData:: getreport()
         cout << "\t               ";
         cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
         cout << "\t               ";
-        cout << "TOTAL SALES " << setw(24) << BLUE << totalpriceall << RESET << setw(23) << "100.00 % " << endl;
+        cout << "TOTAL SALES " << setw(24) << BLUE << totalpriceall << RESET << setw(23) << "100.00 % " << endl << endl << endl;
+
         mysql_free_result(res);
+
+        cout << "\t\t\t\t" << "^" << endl;
+        // Draw vertical bars
+        for (int row = maxSales; row > 0; --row) {
+            cout << "\t\t\t\t" << "|";
+            for (int i = 0; i < numYears; ++i) {
+                if (yearSales[i] >= row) {
+                    cout << "   " << BLUE << "*" << RESET << "   ";
+                }
+                else {
+                    cout << "       ";
+                }
+            }
+            cout << endl;
+        }
+
+        // X-axis
+        cout << "\t\t\t\t" << "+";
+        for (int i = 0; i < numYears; ++i) {
+            cout << "------";
+        }
+        cout << ">" << endl;
+
+        // Year labels 
+        cout << "\t\t\t\t" << " ";
+        for (int i = 0; i < numYears; ++i) {
+            cout << "   " << yearLabels[i] << "  ";
+        }
     }
-    else
-    {
-        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    else {
+        cout << "Query failed: " << mysql_error(conn) << endl;
     }
+
 
 
     cout << endl;

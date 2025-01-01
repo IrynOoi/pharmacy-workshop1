@@ -29,7 +29,7 @@ int main()
 	login lg;
 	registration rg;
 
-
+	cout << "hallo";
 	// Declare variable
 	int choice1;
 
