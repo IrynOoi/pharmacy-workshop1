@@ -28,8 +28,6 @@ int main()
 	ui ui;
 	login lg;
 	registration rg;
-
-	cout << "hallo";
 	// Declare variable
 	int choice1;
 
@@ -210,8 +208,8 @@ void ForgetPassword()
 	char recover;
 
 	cout << "\nAre you a ?" << endl;
-	cout << " Admin/Staff or Patient ?" << endl;
-	cout << "[1] Admin/Staff" << endl;
+	cout << " Staff or Patient ?" << endl;
+	cout << "[1] Staff" << endl;
 	cout << "[2] Patient " << endl;
 	cout << "[M] Main Menu" << endl;
 

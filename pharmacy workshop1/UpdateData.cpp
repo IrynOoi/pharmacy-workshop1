@@ -577,7 +577,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 		while (row = mysql_fetch_row(res))
 		{
 			SetConsoleColor(1, 11);
-			cout << "\nHere's the record found: \n" << endl;
+		
 			cout << "Patient ID: " << row[0] << endl;
 			cout << "Patient Name: " << row[1] << endl;
 			cout << "Patient Gender: " << row[2] << endl;
@@ -608,7 +608,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 			cout << "  Updation of Information   " << endl;
 			cout << "****************************" << endl;
 			SetConsoleColor(0, 11);
-			cout << "\nEnter information that you want to upd2ate: " << endl;
+			cout << "\nEnter information that you want to update: " << endl;
 			cout << "[1] Patient Name" << endl;
 			cout << "[2] Patient Gender" << endl;
 			cout << "[3] Date of Birth" << endl;
@@ -623,7 +623,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 
 
 
-			cout << "\nYour choice (eg. 1)>> ";
+			cout << "\nYour choice (choose 1 number from 1-10)>> ";
 			cin >> UpdChoice;
 
 			if (UpdChoice == "1")

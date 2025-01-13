@@ -11,11 +11,11 @@ public:
 	void ViewHospitalMenu();
 	void ViewDrugMenu();
 	void ViewMedicationTransactionMenu();
-	void getreport();
+	void SalesReport();
 	void GeneratePDFSalesReport(MYSQL* conn);
 	void ViewStaffAccount(int id); 
 	void ViewStaff();
-	void ViewDrugList(string name);
+	void ViewDrugList(int id,string name);
 	void ViewPatientAcc(int id,string name);
 	void ViewPatientReceipt(int PatientID,string name);
 	void PatientReport();

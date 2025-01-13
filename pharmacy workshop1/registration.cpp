@@ -34,9 +34,9 @@ void registration::Registration()
 	cout << "**********************" << endl;
 	SetConsoleColor(0, 7);
 	cout << "Please choose which role do you want to register?" << endl;
-	cout << "[1] As Admin / Staff" << endl;
+	cout << "[1] As Staff" << endl;
 	cout << "[2] As Patient" << endl;
-	cout << "[3] Main Menu" << endl;
+	cout << "[3] Back to Main Menu" << endl;
 	cout << "\nYour choice (1 - 3): ";
 	cin >> userRole;
 
@@ -70,7 +70,7 @@ void registration::Registration()
 void registration::verify_identity()
 {
 	char option1;
-	cout << "You need to proceed to login  first to verufy \n your identity before proceed to further registration.Do you want to proceed?(Y/N) " << endl;
+	cout << "You need to proceed to login  first to verify  your identity before proceed to further registration.\nDo you want to proceed?(Y/N) " << endl;
 	cin >> option1;
 	if (option1 == 'Y' || option1 == 'y')
 		login_staff_register();

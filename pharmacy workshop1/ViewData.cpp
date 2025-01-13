@@ -2360,13 +2360,16 @@ void ViewData::ViewMedicationTransactionMenu()
 
 
 
-void ViewData:: getreport()
+void ViewData::SalesReport()
 {
     system("cls");
     login lg;
     char option;
     string name;
     int Staff_ID = 0, maxSales = 0;
+    int month ;
+    int totalSales;
+    double totalPrice;
 
     cout << "\n";
     cout << "\t\t\t\t\t\t\t";
@@ -2442,12 +2445,13 @@ void ViewData:: getreport()
         cout << "TOTAL SALES " << setw(24) << BLUE << totalpriceall << RESET << setw(23) << "100.00 % " << endl << endl << endl;
 
         mysql_free_result(res);
-
+        cout << "\t\t\t" << "Percentage(%)" << endl;
         cout << "\t\t\t\t" << "^" << endl;
         // Draw vertical bars
         for (int row = maxSales; row > 0; --row) {
             cout << "\t\t\t\t" << "|";
-            for (int i = 0; i < numYears; ++i) {
+            for (int i = 0; i < numYears; ++i)
+            {
                 if (yearSales[i] >= row) {
                     cout << "   " << BLUE << "*" << RESET << "   ";
                 }
@@ -2461,20 +2465,21 @@ void ViewData:: getreport()
         // X-axis
         cout << "\t\t\t\t" << "+";
         for (int i = 0; i < numYears; ++i) {
-            cout << "------";
+            cout << "------------";
         }
-        cout << ">" << endl;
+        cout << "> Year" << endl;
 
         // Year labels 
         cout << "\t\t\t\t" << " ";
-        for (int i = 0; i < numYears; ++i) {
+        for (int i = 0; i < numYears; ++i) 
+        {
             cout << "   " << yearLabels[i] << "  ";
         }
     }
-    else {
+    else 
+    {
         cout << "Query failed: " << mysql_error(conn) << endl;
     }
-
 
 
     cout << endl;
@@ -2482,107 +2487,59 @@ void ViewData:: getreport()
     cout << endl;
     cout << "\n";
     cout << "\t\t\t\t\t\t\t";
-    std::cout << "*************" << MAGENTA << " SALES MONTHLY REPORT " << RESET << "*************" << endl;
+    cout << "*************" << MAGENTA << " SALES MONTHLY REPORT " << RESET << "*************" << endl;
     cout << "\n";
+
     // Execute the query
-    string select_query = "SELECT MONTH(Transaction_time) AS sales_month, COUNT(*) AS total_sales, SUM(total_price)   FROM medication_transaction GROUP BY sales_month ORDER BY sales_month ";
+    string select_query = "SELECT MONTH(Transaction_time) AS sales_month, COUNT(*) AS total_sales, SUM(total_price) AS total_price FROM medication_transaction GROUP BY sales_month ORDER BY sales_month";
     const char* q = select_query.c_str();
     qstate = mysql_query(conn, q);
 
-
     if (!qstate)
     {
-
         cout << "\t\t\t";
-        cout << "MONTH" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << setw(15) << "CHART" << endl;
+        cout << "MONTH" << setw(30) << "INCOME (RM)" << setw(25) << "PERCENTAGE" << endl;
         cout << "\t               ";
-        cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
+        cout << setw(100) << setfill('-') << "" << setfill(' ') << endl;
+
         res = mysql_store_result(conn);
         double totalPercentage = 0.0;
         double totalpriceall = 0.0;
+        int maxSales = 0;
 
+        // Array to store months and their total sales
+        string monthLabels[12] = {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+        int monthSales[12] = { 0 };
 
-
-        string namemonth;
+        // First pass: Calculate total percentage and populate data
         while ((row = mysql_fetch_row(res)) != NULL) {
             int month = atoi(row[0]);
             int totalSales = atoi(row[1]);
             double totalPrice = atof(row[2]);
-
-            // Calculate percentage
-            double percentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) );
-
-
-            // Update total percentage
+            maxSales = max(maxSales, totalSales);
+            monthSales[month - 1] = totalSales;
+            totalpriceall += totalPrice;
+            double percentage = (totalSales == 0) ? 0.0 : static_cast<double>(totalSales);
             totalPercentage += percentage;
         }
 
-        // Adjust percentages proportionally to ensure the total is 100%
+        // Adjust percentages and display data
         if (totalPercentage != 100.0) {
-            //cout << "Adjusting percentages to ensure total is 100%" << endl;
             double scale = 100.0 / totalPercentage;
+            mysql_data_seek(res, 0);
 
-            // Output adjusted percentages
-            mysql_data_seek(res, 0); // Reset the result set to the beginning
             while ((row = mysql_fetch_row(res)) != NULL) {
-
                 int month = atoi(row[0]);
-                int totalSales = atoi(row[1]);
                 double totalPrice = atof(row[2]);
-                totalpriceall += totalPrice;
-                if (month == 1)
-                {
-                    namemonth = "January";
-                }
-                else if (month == 2) {
-                    namemonth = "February";
-                }
-                else if (month == 3) 
-                {
-                    namemonth = "March";
-                }
-                else if (month == 4) {
-                    namemonth = "April";
-                }
-                else if (month == 5) {
-                    namemonth = "May";
-                }
-                else if (month == 6) {
-                    namemonth = "June";
-                }
-                else if (month == 7) {
-                    namemonth = "July";
-                }
-                else if (month == 8) {
-                    namemonth = "August";
-                }
-                else if (month == 9) {
-                    namemonth = "September";
-                }
-                else if (month == 10) {
-                    namemonth = "October";
-                }
-                else if (month == 11) {
-                    namemonth = "November";
-                }
-                else if (month == 12) {
-                    namemonth = "December";
-                }
+                double adjustedPercentage = static_cast<double>(monthSales[month - 1]) * scale;
 
-
-                // Calculate and output adjusted percentage
-                double adjustedPercentage = (totalSales == 0) ? 0.0 : (static_cast<double>(totalSales) )  * scale;
-                //cout << fixed  << setprecision(2)  << setw(5) << left << namemonth  <<setw(27) << right << totalPrice << setw(22) << right << adjustedPercentage << "%" << setw(20);
                 cout << fixed << setprecision(2);
-                cout << "\t\t        " << setw(15) << left << namemonth
+                cout << "\t\t        " << setw(15) << monthLabels[month - 1]
                     << setw(20) << right << totalPrice
-                    << setw(20) << right << adjustedPercentage << "%" << setw(20);
-
-                for (int i = 0; i < totalSales; ++i) {
-                    cout << BLUE << "*" << RESET;
-                }
-
-                cout << endl;
+                    << setw(20) << right << adjustedPercentage << "%" << endl;
             }
         }
 
@@ -2590,19 +2547,44 @@ void ViewData:: getreport()
         cout << "\t               ";
         cout << setfill('-') << setw(100) << "" << setfill(' ') << endl;
         cout << "\t               ";
-        cout << "TOTAL SALES " << setw(23) << BLUE << totalpriceall << RESET << setw(24) << "100.00 % " << endl;
-
-
-
+        cout << "TOTAL SALES " << setw(22) << BLUE << totalpriceall << RESET << setw(23) << "100.00 % " << endl << endl << endl;
 
 
         mysql_free_result(res);
 
+       
 
+        // Y-axis arrow
+        cout << string(35, ' ') << "Percentage(%)" << endl;  // Label for 100% at the top
+        cout << string(39, ' ') << "^" << endl;
+
+        // Draw vertical bars with adjusted spacing
+        for (int row = maxSales; row > 0; row -= max(1, maxSales / 10)) {
+            cout << setw(40) << right  << "|";
+            for (int i = 0; i < 12; ++i) {
+                if (monthSales[i] >= row) {
+                    cout << " " << BLUE << "*" << RESET << "  ";
+                }
+                else {
+                    cout << "    ";
+                }
+            }
+            cout << endl;
+        }
+
+        // X-axis
+        cout << string(39, ' ') << "+";
+        cout << string(50, '-') << "> Months" << endl;
+
+        // Month labels with adjusted spacing
+        cout << string(40, ' ');
+        for (int i = 0; i < 12; ++i) {
+            cout << left << setw(4) << monthLabels[i].substr(0, 3);
+        }
+        cout << endl;
     }
-    else
-    {
-        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    else {
+        cout << "Query failed: " << mysql_error(conn) << endl;
     }
 
     cout << endl;
@@ -2753,11 +2735,11 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         y -= 20;
 
         // Column headers for the report
-        HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
+        HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE");
         y -= 15;
 
         // Print a top border line before table rows
-        HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
+        HPDF_Page_TextOut(page, 50, y, "--------------------------------------------------------------------------------");
         y -= 15;
 
         HPDF_Page_EndText(page);
@@ -2774,100 +2756,149 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
             MYSQL_RES* res = mysql_store_result(conn);
             MYSQL_ROW row;
 
-            // Initialize variables for total income and total sales count
-            double totalIncome = 0.0;
-            double totalSalesCount = 0.0;
+            // Initialize variables
+            vector<string> years;
+            vector<double> sales;
+            double maxSales = 0;
             double totalPriceAll = 0.0;
 
-            // First pass: Calculate total income and total sales count
+            // First pass: Calculate totals and store data
             while ((row = mysql_fetch_row(res)) != NULL) {
-                totalIncome += atof(row[2]);
-                totalSalesCount += atof(row[1]);
-                totalPriceAll += atof(row[2]); // Add to the total price
+                years.push_back(row[0]);
+                double totalSales = atof(row[1]);
+                sales.push_back(totalSales);
+                maxSales = max(maxSales, totalSales);
+                totalSalesCount += totalSales;
+                totalPriceAll += atof(row[2]);
             }
-
-            // Adjust percentages
-            double scale = (totalSalesCount == 0) ? 0 : 100.0 / totalSalesCount;
 
             // Reset result set for the second pass
             mysql_data_seek(res, 0);
 
-            // Second pass: Generate rows for the yearly report
+            // Second pass: Generate table rows and prepare for chart
             HPDF_Page_BeginText(page);
+            float tableEndY = y;  // Store where table ends for chart placement
 
             while ((row = mysql_fetch_row(res)) != NULL) {
                 string year = row[0];
-                double totalSales = atof(row[1]);
                 double totalPrice = atof(row[2]);
-                double percentage = totalSales * scale;
+                double percentage = (totalSalesCount > 0) ? (atof(row[1]) / totalSalesCount * 100) : 0;
 
                 // Format the numbers
                 ostringstream totalPriceStream, percentageStream;
-                totalPriceStream << fixed << setprecision(2) << "RM " << totalPrice;  // Format totalPrice with RM
+                totalPriceStream << fixed << setprecision(2) << "RM " << totalPrice;
                 percentageStream << fixed << setprecision(2) << percentage;
-
-                // Generate the chart representation
-                int stars = static_cast<int>(totalSales);
-                stars = min(stars, 20); // Limit stars to a maximum of 20 for consistent appearance
-                string chart(stars, '*');
-
-                // Add right padding to the chart for consistent alignment
-                chart += string(20 - chart.size(), ' ');
 
                 // Format the line using fixed-width columns
                 ostringstream lineStream;
-                lineStream << setw(15) << left << year               // YEAR column
-                    << setw(20) << left << totalPriceStream.str() // INCOME column
-                    << setw(35) << left << (percentageStream.str() + "%")   // PERCENTAGE column
-                    << setw(25) << left << chart;                            // CHART column
+                lineStream << setw(15) << left << year
+                    << setw(20) << left << totalPriceStream.str()
+                    << setw(20) << left << (percentageStream.str() + "%");
 
-                // Convert to string and print to PDF
-                string line = lineStream.str();
-                HPDF_Page_TextOut(page, 50, y, line.c_str());
-
-                y -= 15; // Move down for the next line of text
-
-                // Check if we need a new page
-                if (y < 50) {
-                    HPDF_Page_EndText(page);
-                    page = HPDF_AddPage(pdf);
-                    HPDF_Page_SetFontAndSize(page, font, 10);
-                    y = 800; // Reset y-coordinate for new page
-
-                    // Print column titles on the new page
-                    HPDF_Page_BeginText(page);
-                    HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
-                    y -= 15;
-                    HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
-                    y -= 15;
-                }
+                // Print to PDF
+                HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());
+                y -= 15;
             }
-            mysql_free_result(res);
 
-            // Add a bottom border line after the table
-            HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
+            // Add bottom border and totals
+            HPDF_Page_TextOut(page, 50, y, "--------------------------------------------------------------------------------");
             y -= 15;
 
-            // Format the total sales and 100% columns with fixed-width formatting
             ostringstream totalStream;
-            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;  // Format total sales with RM
+            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;
 
             ostringstream lineStream;
-            lineStream << setw(15) << left << "TOTAL "    //  Label "TOTAL SALES" with fixed width
-                << setw(20) << left << totalStream.str()  // Right-align the total sales value with fixed width
-                << setw(35) << left << "100.00 %";  // Right-align the 100% value with fixed width
+            lineStream << setw(15) << left << "TOTAL"
+                << setw(20) << left << totalStream.str()
+                << setw(20) << left << "100.00%";
 
-            // Print the formatted line to the PDF
-            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());  // Print the formatted line
-            y -= 15;  // Move to the next line
-            // Format the second line with "SALES" and "100.00 %"
-            ostringstream secondLineStream;
-            secondLineStream << setw(24) << left << "SALES";
-            // Print the second line to the PDF
-            HPDF_Page_TextOut(page, 50, y, secondLineStream.str().c_str());
-
-
+            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());
             HPDF_Page_EndText(page);
+
+            // Draw vertical bar chart
+            float chartStartX = 50;
+            float chartStartY = y - 200;  // Leave space below totals
+            float chartWidth = 400;
+            float chartHeight = 150;
+            float barSpacing = chartWidth / (years.size() * 2);
+            float barWidth = barSpacing * 0.8;
+            // Define constants for arrowhead size
+            const float arrowSize = 10.0; // Adjust this to control the size of the arrowhead
+
+            // Draw the Y-axis
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY);
+            HPDF_Page_LineTo(page, chartStartX, chartStartY + chartHeight);
+            HPDF_Page_Stroke(page);
+
+          
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY + chartHeight); // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX - arrowSize / 2, chartStartY + chartHeight - arrowSize);
+            HPDF_Page_Stroke(page);
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY + chartHeight); // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + arrowSize / 2, chartStartY + chartHeight - arrowSize);
+            HPDF_Page_Stroke(page);
+
+            // Add label "Percentage" above the Y-axis
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); // Black color for text
+            HPDF_Page_TextOut(page, chartStartX - 25, chartStartY + chartHeight + 20, "Percentage");
+            HPDF_Page_EndText(page);
+
+            // Draw the X-axis
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY);
+            HPDF_Page_LineTo(page, chartStartX + chartWidth, chartStartY);
+            HPDF_Page_Stroke(page);
+
+            // Add arrowhead for the X-axis
+            HPDF_Page_MoveTo(page, chartStartX + chartWidth, chartStartY); // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + chartWidth - arrowSize, chartStartY + arrowSize / 2);
+            HPDF_Page_Stroke(page);
+            HPDF_Page_MoveTo(page, chartStartX + chartWidth, chartStartY); // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + chartWidth - arrowSize, chartStartY - arrowSize / 2);
+            HPDF_Page_Stroke(page);
+
+            // Add label "Year" beside the X-axis arrowhead
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); // Black color for text
+            HPDF_Page_TextOut(page, chartStartX + chartWidth + 15, chartStartY - 5, "Year");
+            HPDF_Page_EndText(page);
+
+
+
+
+
+            // Draw bars
+            for (size_t i = 0; i < years.size(); i++) {
+                float barHeight = (sales[i] / maxSales) * chartHeight;
+                float barX = chartStartX + (i * barSpacing * 2) + barSpacing;
+
+                // Draw bar
+                HPDF_Page_SetRGBFill(page, 0.4, 0.6, 0.8);  // Set blue color for bars
+                HPDF_Page_Rectangle(page,
+                    barX,
+                    chartStartY,
+                    barWidth,
+                    barHeight);
+                HPDF_Page_FillStroke(page);
+                // Set text color to black
+                HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); 
+                // Add year label
+                HPDF_Page_BeginText(page);
+                HPDF_Page_SetFontAndSize(page, font, 8);
+                HPDF_Page_TextOut(page,
+                    barX,
+                    chartStartY - 15,
+                    years[i].c_str());
+                HPDF_Page_EndText(page);
+            }
+            // Add title for graph
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_TextOut(page, chartStartX, chartStartY + chartHeight + 30, "Yearly Sales Bar Chart");
+            HPDF_Page_EndText(page);
+
         }
         else {
             cerr << "Query Execution Problem for Yearly Report: " << mysql_error(conn) << endl;
@@ -2884,10 +2915,11 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
         HPDF_Page_TextOut(page, 50, y, "************* SALES MONTHLY REPORT *************");
         y -= 30;
         HPDF_Page_SetFontAndSize(page, font, 10);
+        
         HPDF_Page_TextOut(page, 50, y, "Monthly Income, Percentage, and Chart Representation");
 
         y -= 15;
-        HPDF_Page_TextOut(page, 50, y, "Month      Income (RM)       Percentage           Chart");
+        HPDF_Page_TextOut(page, 50, y, "Month      Income (RM)       Percentage        ");
         y -= 15;
         HPDF_Page_TextOut(page, 50, y, "----------------------------------------------------------------------------------------------------");
         y -= 15;
@@ -2900,17 +2932,19 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
             MYSQL_ROW row;
 
             // First pass to calculate totals for monthly report
-            double totalIncome = 0.0;
-            double totalSalesCount = 0.0;
+            vector<string> months;
+            vector<double> sales;
+            double maxSales = 0.0;
             double totalPriceAll = 0.0;
 
-
             while ((row = mysql_fetch_row(res)) != NULL) {
-                totalIncome += atof(row[2]);
-                totalSalesCount += atof(row[1]);
+                months.push_back(row[0]); // Month as integer
+                double totalSales = atof(row[1]);
+                sales.push_back(totalSales);
+                maxSales = max(maxSales, totalSales);
+                totalPriceAll += atof(row[2]);
             }
 
-            double scale = (totalSalesCount == 0) ? 0 : 100.0 / totalSalesCount;
             mysql_data_seek(res, 0); // Reset result set for second pass
 
             // Second pass to render monthly rows
@@ -2919,10 +2953,9 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                 int month = atoi(row[0]);
                 double totalSales = atof(row[1]);
                 double totalPrice = atof(row[2]);
-                double percentage = totalSales * scale;
-                totalPriceAll += totalPrice;
+                double percentage = (totalSalesCount > 0) ? (atof(row[1]) / totalSalesCount * 100) : 0;
 
-                // Convert month to name
+                // Convert month number to name
                 string monthName;
                 switch (month) {
                 case 1: monthName = "January"; break;
@@ -2939,68 +2972,148 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
                 case 12: monthName = "December"; break;
                 }
 
-                // Format the numbers with precision and labels
+                // Format the numbers
                 ostringstream totalPriceStream, percentageStream;
-                totalPriceStream << fixed << setprecision(2) <<  "RM " << totalPrice; // Include "RM"
-                percentageStream << fixed << setprecision(2) << percentage;
+                totalPriceStream << fixed << setprecision(2) << "RM " << totalPrice;
+                percentageStream << fixed << setprecision(2) << percentage << "%";
 
-                // Generate the chart representation with a maximum width of 20 stars
-                int stars = static_cast<int>(totalSales );
-                stars = min(stars, 20);
-                string chart(stars, '*');
-                chart += string(20 - chart.size(), ' '); // Add right padding for alignment
 
-                // Format the line using fixed-width columns
+                // Print the formatted line to the PDF
                 ostringstream lineStream;
-                lineStream << setw(15) << left << monthName                   // MONTH column
-                    << setw(20) << left << totalPriceStream.str()      // PRICE column
-                    << setw(15) << left << (percentageStream.str() + "%") // PERCENTAGE column
-                    << setw(20) << left << chart;                     // CHART column
+                lineStream << setw(15) << left << monthName
+                    << setw(20) << left << totalPriceStream.str()
+                    << setw(15) << left << percentageStream.str();
+                HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());
 
-                // Convert the formatted line to string and output it to the PDF
-                string line = lineStream.str();
-                HPDF_Page_TextOut(page, 50, y, line.c_str());
 
-                y -= 15; // Move down for the next line of text
-
-                // Check if we need a new page
+                // Check for page break
                 if (y < 50) {
                     HPDF_Page_EndText(page);
                     page = HPDF_AddPage(pdf);
                     HPDF_Page_SetFontAndSize(page, font, 10);
-                    y = 800; // Reset y-coordinate for new page
+                    y = 800; // Reset y-coordinate
                     HPDF_Page_BeginText(page);
-                    HPDF_Page_TextOut(page, 50, y, "YEAR            INCOME (RM)       PERCENTAGE               CHART");
-                    y -= 15;
-                    HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
-                    y -= 15;
                 }
+				y -= 15;
+                
             }
 
-            mysql_free_result(res);
-
-            // Add a bottom border line after the table
-            HPDF_Page_TextOut(page, 50, y, "-------------------------------------------------------------------------------------------------------------");
+            // Add bottom border and totals
+            HPDF_Page_TextOut(page, 50, y, "--------------------------------------------------------------------------------");
             y -= 15;
 
-            // Format the total sales and 100% columns with fixed-width formatting
             ostringstream totalStream;
-            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;  // Format total sales with RM
+            totalStream << fixed << setprecision(2) << "RM " << totalPriceAll;
 
             ostringstream lineStream;
-            lineStream << setw(15) << left << "TOTAL "    //  Label "TOTAL SALES" with fixed width
-                << setw(20) << left << totalStream.str()  // Right-align the total sales value with fixed width
-                << setw(35) << left << "100.00 %";  // Right-align the 100% value with fixed width
+            lineStream << setw(15) << left << "TOTAL"
+                << setw(20) << left << totalStream.str()
+                << setw(20) << left << "100.00%";
 
-            // Print the formatted line to the PDF
-            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());  // Print the formatted line
-            y -= 15;  // Move to the next line
-            // Format the second line with "SALES" and "100.00 %"
-            ostringstream secondLineStream;
-            secondLineStream << setw(24) << left << "SALES";
-            // Print the second line to the PDF
-            HPDF_Page_TextOut(page, 50, y, secondLineStream.str().c_str());
+            HPDF_Page_TextOut(page, 50, y, lineStream.str().c_str());
+
+            y -= 15;
+
+
+            mysql_free_result(res);
             HPDF_Page_EndText(page);
+            // Draw the graph for monthly sales
+            float chartStartX = 50;
+            float chartStartY = y - 200; // Leave space below totals
+            float chartWidth = 400;
+            float chartHeight = 150;
+            float barSpacing = chartWidth / (months.size() * 2);
+            float barWidth = barSpacing * 0.8;
+
+            // Draw the Y-axis
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY);
+            HPDF_Page_LineTo(page, chartStartX, chartStartY + chartHeight);
+            HPDF_Page_Stroke(page);
+            // Define constants for arrowhead size
+            const float arrowSize = 10.0; // Adjust this to control the size of the arrowhead
+
+            // Add arrowhead for the Y-axis
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY + chartHeight);  // Half of Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX - arrowSize / 2, chartStartY + chartHeight - arrowSize);
+            HPDF_Page_Stroke(page);
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY + chartHeight);  // Half of Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + arrowSize / 2, chartStartY + chartHeight - arrowSize);
+            HPDF_Page_Stroke(page);
+
+
+            // Add Y-axis label "Percentage"
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); // Black color for text
+            HPDF_Page_TextOut(page, chartStartX - 25, chartStartY + chartHeight + 10, "Percentage");
+            HPDF_Page_EndText(page);
+            // Draw the X-axis
+            HPDF_Page_MoveTo(page, chartStartX, chartStartY);
+            HPDF_Page_LineTo(page, chartStartX + chartWidth, chartStartY);
+            HPDF_Page_Stroke(page);
+
+            // Add arrowhead for the X-axis
+            HPDF_Page_MoveTo(page, chartStartX + chartWidth, chartStartY);  // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + chartWidth - arrowSize, chartStartY + arrowSize / 2);
+            HPDF_Page_Stroke(page);
+            HPDF_Page_MoveTo(page, chartStartX + chartWidth, chartStartY);  // Tip of the arrow
+            HPDF_Page_LineTo(page, chartStartX + chartWidth - arrowSize, chartStartY - arrowSize / 2);
+            HPDF_Page_Stroke(page);
+
+
+            // Add X-axis label "Month"
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); // Black color for text
+            HPDF_Page_TextOut(page, chartStartX + chartWidth + 15, chartStartY - 5, "Month");
+            HPDF_Page_EndText(page);
+
+            // Draw bars
+            for (size_t i = 0; i < months.size(); i++) {
+                float barHeight = (sales[i] / maxSales) * chartHeight;
+                float barX = chartStartX + (i * barSpacing * 2) + barSpacing;
+
+                // Draw bar
+                HPDF_Page_SetRGBFill(page, 0.6, 0.8, 0.4); // Green bars for monthly sales
+                HPDF_Page_Rectangle(page, barX, chartStartY, barWidth, barHeight);
+                HPDF_Page_FillStroke(page);
+
+                // Add month labels
+                HPDF_Page_BeginText(page);
+                HPDF_Page_SetFontAndSize(page, font, 8);
+
+                // Set text color to black
+                HPDF_Page_SetRGBFill(page, 0.0, 0.0, 0.0); // Black color for month labels
+
+                // Convert month number to abbreviated name for graph labels
+                int monthNum = stoi(months[i]);
+                string monthAbbrev;
+                switch (monthNum) {
+                case 1: monthAbbrev = "Jan"; break;
+                case 2: monthAbbrev = "Feb"; break;
+                case 3: monthAbbrev = "Mar"; break;
+                case 4: monthAbbrev = "Apr"; break;
+                case 5: monthAbbrev = "May"; break;
+                case 6: monthAbbrev = "Jun"; break;
+                case 7: monthAbbrev = "Jul"; break;
+                case 8: monthAbbrev = "Aug"; break;
+                case 9: monthAbbrev = "Sep"; break;
+                case 10: monthAbbrev = "Oct"; break;
+                case 11: monthAbbrev = "Nov"; break;
+                case 12: monthAbbrev = "Dec"; break;
+                }
+
+                HPDF_Page_TextOut(page, barX, chartStartY - 15, monthAbbrev.c_str());
+                HPDF_Page_EndText(page);
+            }
+
+            // Add title for graph
+            HPDF_Page_BeginText(page);
+            HPDF_Page_SetFontAndSize(page, font, 10);
+            HPDF_Page_TextOut(page, chartStartX, chartStartY + chartHeight + 30, "Monthly Sales Bar Chart");
+            HPDF_Page_EndText(page);
+
+
         }
         else {
             cerr << "Query Execution Problem for Monthly Report: " << mysql_error(conn) << endl;
@@ -3067,7 +3180,8 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
             string date = row[0];
             int totalSales = atoi(row[1]);
             double totalIncome = atof(row[2]);
-
+           
+            y -= 15;
             // Add a date header
             string dateHeader = "Date: " + date;
             HPDF_Page_TextOut(page, margin, y, dateHeader.c_str());
@@ -3164,7 +3278,7 @@ void ViewData::ViewStaffAccount(int id)
     string Staff_Name;
     SetConsoleColor(0, 9);
     cout << "===================================" << endl;
-    cout << "       STAFF ACCOUNT INFORMATION         " << endl;
+    cout << "       STAFF ACCOUNT INFORMATION   " << endl;
     cout << "===================================" << endl;
 
     SetConsoleColor(0,11);
@@ -3897,10 +4011,9 @@ void  ViewData::PatientReport()
     }
 }
 
-void ViewData::ViewDrugList(string name)
+void ViewData::ViewDrugList(int id ,string name)
 {
     login lg;
-    int Patient_ID=0;
     system("cls");
     SetConsoleColor(0, 9); // Light Blue Text
     cout << "********************" << endl;
@@ -3939,7 +4052,7 @@ void ViewData::ViewDrugList(string name)
 
             system("pause");
             system("cls");
-            lg.PatientMainMenu(name, Patient_ID); // Replace this if you have a different menu or return point
+            lg.PatientMainMenu(name,id); // Replace this if you have a different menu or return point
         }
         else
         {
@@ -3947,7 +4060,7 @@ void ViewData::ViewDrugList(string name)
             cout << "No medication records found!" << endl;
             SetConsoleColor(0, 7); // Reset to White Text
             system("pause");
-            lg.PatientMainMenu(name, Patient_ID); // Replace this if you have a different menu or return point
+            lg.PatientMainMenu(name, id); // Replace this if you have a different menu or return point
         }
     }
     else
@@ -3957,7 +4070,7 @@ void ViewData::ViewDrugList(string name)
         cout << "Error Message: " << mysql_error(conn) << endl;
         SetConsoleColor(0, 7); // Reset to White Text
         system("pause");
-        lg.PatientMainMenu(name, Patient_ID);// Replace this if you have a different menu or return point
+        lg.PatientMainMenu(name, id);// Replace this if you have a different menu or return point
     }
 
 
@@ -4367,7 +4480,6 @@ void ViewData::StaffReport()
         //array used to print out the gender type
         string arrayGenderType[2] = { "Male", "Female" };
 
-        //Display the graph
         cout << "\n" << endl;
         SetConsoleColor(0, 4);
         cout << "****************************************************" << endl;
@@ -4375,39 +4487,50 @@ void ViewData::StaffReport()
         cout << "****************************************************" << endl;
         SetConsoleColor(0, 11);
         cout << endl;
-        cout << setw(6) << "Gender" << right << " Number of Staff" << endl;
-        cout << setw(8) << right << "/ \\" << endl;
 
-        for (int i = 0; i < 2; i++)
-        {
-            cout << setw(6) << left << arrayGenderType[i] << left << "|";
+        // Find the maximum value for scaling
+        int* maxNum = max_element(arrayGender, arrayGender + 2);
+        //// Print the values
+        //cout << setw(8) << " ";
+        //for (int i = 0; i < 2; i++) {
+        //    SetConsoleColor(14, 11); // Yellow text
+        //    cout << setw(8) << arrayGender[i];
+        //    SetConsoleColor(0, 11);  // Reset to default
+        //}
+        //cout << "\n" << endl;
 
-            for (int j = 0; j < arrayGender[i]; j++)
-            {
-                cout << "*";
+        // Print the vertical bars with arrow at top
+        cout << setw(8) << "No of staff" << endl;
+        cout << setw(8) << "^" << endl;  // Add arrow head for y-axis
+        for (int height = *maxNum; height > 0; height--) {
+            cout << setw(8) << "|";
+            for (int i = 0; i < 2; i++) {
+                if (arrayGender[i] >= height) {
+                    cout << setw(8) << "*";
+                }
+                else {
+                    cout << setw(8) << " ";
+                }
             }
-            if (arrayGender[i] != 0) //showing the number of each gender in the graph
-            {
-                SetConsoleColor(14, 11); // Yellow text (14), Black background (0)
-                cout << " " << arrayGender[i];
-                SetConsoleColor(0, 11);  // Reset to default (White text, Black background)
-                cout << std::endl;
-            }
-            else
-            {
-                cout << endl;
-            }
+            cout << endl;
         }
 
-        cout << setw(7) << right;
-        int* maxNum;
-        maxNum = max_element(arrayGender, arrayGender + 1);
-        for (int i = 0; i < *maxNum + 5; i++)
-        {
-            cout << "-";
+        // Print the base line with arrow at end
+        cout << setw(8) << "+";
+        for (int i = 0; i < 2; i++) {
+            cout << setw(8) << "---------";
         }
-        cout << ">" << endl;
-        cout << "\n" << endl;
+        cout << "> Gender";  // Add arrow head for x-axis
+        cout << endl;
+
+        // Print gender labels
+        cout << setw(8) << " ";
+        for (int i = 0; i < 2; i++) {
+            cout << setw(8) << arrayGenderType[i];
+        }
+        cout << endl;
+
+        
         goto confirmRpt1;
 
     confirmRpt1:
@@ -4488,12 +4611,9 @@ void ViewData::StaffReport()
         cout << "The following graph showing the number of staff based on gender: " << endl;
 
         //array for int calculated number of staff based on gender
-        int arrayPosition[3] = { StaffPosition1, StaffPosition2,StaffPosition3 };
-
+        int arrayPosition[3] = { StaffPosition1, StaffPosition2, StaffPosition3 };
         //array used to print out the gender type
-        string arrayPostType[3] = { "Pharmacist", "Pharmacy Assistant ", "Staff" };
-
-        //Display the graph
+        string arrayPostType[3] = { "Pharmacist", "Pharmacy Assistant", "Staff" };
         cout << "\n" << endl;
         SetConsoleColor(0, 4);
         cout << "******************************************************" << endl;
@@ -4501,39 +4621,50 @@ void ViewData::StaffReport()
         cout << "******************************************************" << endl;
         SetConsoleColor(0, 11);
         cout << endl;
-        cout << setw(10) << left << "Position" << setw(25) <<right << " Number of Staff" << endl;
-        cout << setw(21) << right << "^" << endl;
 
-        // Display the graph
+        // Add Y-axis arrowhead at the top
+        cout << "     No of Staff" << endl;
+
+        // Add Y-axis arrowhead at the top
+        cout << "     ^" << endl;
+
+        // Find the maximum value to determine graph height
+        int maxNum = *max_element(arrayPosition, arrayPosition + 3);
+
+        // Display the vertical bars
+        for (int height = maxNum; height > 0; height--)
+        {
+            cout << "     |";
             for (int i = 0; i < 3; i++)
             {
-                cout << setw(20) << left << arrayPostType[i] << "|";
-
-                for (int j = 0; j < arrayPosition[i]; j++)
+                if (arrayPosition[i] >= height)
                 {
-                    cout << "*";
+                    cout << "            *          ";
                 }
-
-                if (arrayPosition[i] != 0)
+                else
                 {
-                    SetConsoleColor(4, 11); // Yellow text, Black background
-                    cout << " " << arrayPosition[i];
-                    SetConsoleColor(0,11); // Reset to default
+                    cout << "                    ";
                 }
-
-                cout << endl;
             }
-
-        // Draw the horizontal line
-        int maxNum = *max_element(arrayPosition, arrayPosition + 3);
-        cout << setw(20) << right << " ";
-        for (int i = 0; i < maxNum + 5; i++)
-        {
-            cout << "-";
+            cout << endl;
         }
-        cout << ">" << endl;
 
-        // Prompt to continue
+        // Draw the horizontal axis with arrowhead
+        cout << "     +";
+        for (int i = 0; i < 3; i++)
+        {
+            cout << "----------------------";
+        }
+        cout << "> Postition" << endl;  // Add X-axis arrowhead
+
+        // Print position labels
+        cout << "     ";
+        for (int i = 0; i < 3; i++)
+        {
+            cout << setw(9) << left << " " << arrayPostType[i];
+        }
+        cout << endl;
+   
         char continueRpt;
     confirmRpt2:
         cout << "\nDo you want to continue viewing report? [Y/N]: ";

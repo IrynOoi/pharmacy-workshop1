@@ -37,14 +37,12 @@ void login::mainlogin_pg()
 
 	cout << "[2]Login As Patient" << endl;
 
-	cout << "[3] Forget Password" << endl;
-
-	cout << "[4] Back to Main Menu" << endl;
+	cout << "[3] Back to Main Menu" << endl;
 	cout << endl;
 
 	while (1)
 	{
-		cout << "Enter your choice (Number 1 - 5 only): ";
+		cout << "Enter your choice (Number 1 - 3 only): ";
 		cin >> choiceLogin;
 
 		
@@ -59,12 +57,8 @@ void login::mainlogin_pg()
 			break;
 		}
 
+
 		else if (choiceLogin == '3')
-		{
-			ForgetPassword();
-			break;
-		}
-		else if (choiceLogin == '4')
 		{
 			system("cls");
 			main();
@@ -75,7 +69,7 @@ void login::mainlogin_pg()
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
 			cout << "\n";
 			system("pause");
-			main();
+			mainlogin_pg();
 		}
 	}
 }
@@ -268,9 +262,6 @@ void login::AdminControlMenu(string name)
 	case 'A':
 	case 'a':
 		id.AddStaffs();
-		
-
-
 		break;
 
 	case 'B':
@@ -586,7 +577,7 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 
 	case 'A':
 	case 'a':
-		vr.ViewDrugList(patientInfo[1]);
+		vr.ViewDrugList(stoi(patientInfo[0]), patientInfo[1]);
 		break;
 
 	case 'B':
@@ -618,11 +609,6 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 
 }
 
-void login::SupplierMenu()
-{}
-
-
-
 
 	
 
@@ -652,10 +638,9 @@ void login::StaffMainMenu(string name, int Staff_ID)
 	cout << "[3] Patient Report " << endl;
 	cout << "[4] Account Information Staff" << endl;
 	cout << "[5] Administration Control" << endl;
-	cout << "[6] Supplier menu" << endl;
-	cout << "[7] Staff Report" << endl;
-	cout << "[8] Back to  Login Main Menu" << endl;
-	cout << "\nYour choice (1 - 8): ";
+	cout << "[6] Staff Report" << endl;
+	cout << "[7] Back to  Login Main Menu" << endl;
+	cout << "\nYour choice (1 - 7): ";
 	cin >> StaffMainChoice ;
 
 	while (1)
@@ -669,7 +654,7 @@ void login::StaffMainMenu(string name, int Staff_ID)
 
 		else if (StaffMainChoice == '2')
 		{
-			vd.getreport();
+			vd.SalesReport();
 			break;
 		}
 		else if (StaffMainChoice == '3')
@@ -691,19 +676,15 @@ void login::StaffMainMenu(string name, int Staff_ID)
 			break;
 		}
 
+	
 		else if (StaffMainChoice == '6')
-		{
-			SupplierMenu();
-			break;
-		}
-		else if (StaffMainChoice == '7')
 		{
 			vd.StaffReport();
 			break;
 		}
 
 		
-		else if (StaffMainChoice == '8')
+		else if (StaffMainChoice == '7')
 		{
 			mainlogin_pg();
 			break;
@@ -712,7 +693,7 @@ void login::StaffMainMenu(string name, int Staff_ID)
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
 			cout << "\n";
 			system("pause");
-			mainlogin_pg();
+			StaffMainMenu(name, Staff_ID);
 		}
 	}
 
