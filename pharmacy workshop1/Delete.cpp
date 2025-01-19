@@ -65,12 +65,11 @@
 
 
 
-void Delete ::DeleteHospitalMenu()
+void Delete ::DeleteHospitalMenu(string name)
 {
 
 	login lg;
 	int Hospital_ID;
-	string name;
 	char confirmDel, continueDel;
 	bool validInput;
 	system("cls");
@@ -131,7 +130,7 @@ void Delete ::DeleteHospitalMenu()
 			cout << "\nHospital_ID  cannot be found. Want to try again? (Y/N): ";
 			cin >> c; 
 			if (c == 'y' || c == 'Y')
-				DeleteHospitalMenu();
+				DeleteHospitalMenu(name);
 			else
 				lg.StaffControlMain(name); 
 		}
@@ -142,7 +141,7 @@ void Delete ::DeleteHospitalMenu()
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 		system("pause");
-		DeleteHospitalMenu();
+		DeleteHospitalMenu(name);
 	}
 
 
@@ -171,7 +170,7 @@ void Delete ::DeleteHospitalMenu()
 
 				// Check for valid input
 				if (continueDel == 'y' || continueDel == 'Y') {
-					DeleteHospitalMenu();
+					DeleteHospitalMenu(name);
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
@@ -189,7 +188,7 @@ void Delete ::DeleteHospitalMenu()
 			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
 			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 			system("pause");
-			DeleteHospitalMenu();
+			DeleteHospitalMenu(name);
 		}
 	}
 	else
@@ -201,10 +200,9 @@ void Delete ::DeleteHospitalMenu()
 
 
 }
-void Delete::DeleteDrugMenu()
+void Delete::DeleteDrugMenu(string name)
 {
 	login lg;
-	string  name;
 	int Medication_ID;
 	char confirmDel, continueDel;
 	bool validInput = false;
@@ -267,7 +265,7 @@ void Delete::DeleteDrugMenu()
 			cout << "\nInvalid Medication_ID . Want to try again? (Y/N): ";
 			cin >> c; // Ask the user if they want to try again
 			if (c == 'y' || c == 'Y')
-				DeleteDrugMenu(); // If yes, call the DeleteDrugMenu function to try again
+				DeleteDrugMenu(name); // If yes, call the DeleteDrugMenu function to try again
 			else
 				lg.StaffControlMain(name); // If no, call the DeleteRecord  function to return to the main login menu
 		}
@@ -305,7 +303,7 @@ void Delete::DeleteDrugMenu()
 
 				// Check for valid input
 				if (continueDel == 'y' || continueDel == 'Y') {
-					DeleteDrugMenu();
+					DeleteDrugMenu(name);
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
@@ -323,7 +321,7 @@ void Delete::DeleteDrugMenu()
 			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
 			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 			system("pause");
-			DeleteDrugMenu();
+			DeleteDrugMenu(name);
 		}
 	}
 	else
@@ -335,10 +333,10 @@ void Delete::DeleteDrugMenu()
 
 }
 
-void Delete ::DeleteMedicationTransactionMenu()
+void Delete ::DeleteMedicationTransactionMenu(string name)
 {
 	login lg;
-	string Transaction_ID, name;
+	string Transaction_ID;
 	char confirmDel, continueDel;
 	system("cls");
 	SetConsoleColor(0, 9);
@@ -385,7 +383,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 			cout << "\nInvalid Transaction ID. Want to try again? (Y/N): ";
 			cin >> c; // Ask the user if they want to try again
 			if (c == 'y' || c == 'Y')
-				DeleteMedicationTransactionMenu(); // If yes, call the DeleteDrugMenu function to try again
+				DeleteMedicationTransactionMenu(name); // If yes, call the DeleteDrugMenu function to try again
 			else
 				lg.StaffControlMain(name); // If no, call the DeleteRecord  function to return to the main login menu
 		}
@@ -423,7 +421,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 
 				// Check for valid input
 				if (continueDel == 'y' || continueDel == 'Y') {
-					DeleteMedicationTransactionMenu();
+					DeleteMedicationTransactionMenu(name);
 					validInput = true;
 				}
 				else if (continueDel == 'n' || continueDel == 'N') {
@@ -441,7 +439,7 @@ void Delete ::DeleteMedicationTransactionMenu()
 			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
 			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 			system("pause");
-			DeleteDrugMenu();
+			DeleteDrugMenu(name);
 		}
 	}
 	else
@@ -453,10 +451,10 @@ void Delete ::DeleteMedicationTransactionMenu()
 
 }
 
-void Delete::DeletePatientMenu()
+void Delete::DeletePatientMenu(string name)
 {
 	login lg;
-	string Patient_ID, name;
+	string Patient_ID;
 	char choice, confirmDel;
 
 	do
@@ -636,7 +634,7 @@ void Delete::DeletePatientMenu()
 					cout << "\nInvalid username or password. Want to try again? (Y/N): ";
 					cin >> c; // Ask the user if they want to try again
 					if (c == 'y' || c == 'Y')
-						DeletePatientMenu(); // If yes, call the AdminLogin function to try again
+						DeletePatientMenu(name); // If yes, call the AdminLogin function to try again
 					else
 						lg.StaffControlMain(name); // If no, call the MainLogin function to return to the main login menu
 				}
@@ -646,7 +644,7 @@ void Delete::DeletePatientMenu()
 				// If the query execution failed
 				cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
 				system("pause");
-				DeletePatientMenu();
+				DeletePatientMenu(name);
 			}
 
 			char confirminactive;
@@ -672,7 +670,7 @@ void Delete::DeletePatientMenu()
 						cin >> continueDel;
 
 						if (continueDel == 'y' || continueDel == 'Y')
-							DeletePatientMenu();
+							DeletePatientMenu(name);
 						else if (continueDel == 'n' || continueDel == 'N')
 							lg.StaffControlMain(name);  // Assuming this is the next menu or function after deletion
 					} while (continueDel == 'y' || continueDel == 'Y' || continueDel != 'n' || continueDel == 'N');
@@ -682,7 +680,7 @@ void Delete::DeletePatientMenu()
 					cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
 					cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 					system("pause");
-					DeletePatientMenu();
+					DeletePatientMenu(name);
 				}
 			}
 			else
@@ -700,10 +698,10 @@ void Delete::DeletePatientMenu()
 
 }
 
-void Delete:: InactivateStaff()
+void Delete:: InactivateStaff(string name)
 {
 	login lg;
-	string Staff_ID,name;
+	string Staff_ID;
 	char choice, confirmDel;
 	do
 	{
@@ -717,7 +715,7 @@ void Delete:: InactivateStaff()
 		/*cout << "[A] Delete Staff Record" << endl;*/
 		cout << "[A] Inactive Staff Record" << endl;
 
-		cout << "Your choice (A ): ";
+		cout << "Your choice (A): ";
 		cin >> choice;
 
 		//if (choice == 'A' || choice == 'a')
@@ -876,7 +874,7 @@ void Delete:: InactivateStaff()
 					cout << "\nInvalid username or password. Want to try again? (Y/N): ";
 					cin >> c; // Ask the user if they want to try again
 					if (c == 'y' || c == 'Y')
-						InactivateStaff(); // If yes, call the AdminLogin function to try again
+						InactivateStaff(name); // If yes, call the AdminLogin function to try again
 					else
 						lg.AdminControlMenu(name); // If no, call the MainLogin function to return to the main login menu
 				}
@@ -910,7 +908,7 @@ void Delete:: InactivateStaff()
 						cin >> continueDel;
 
 						if (continueDel == 'y' || continueDel == 'Y')
-							InactivateStaff();
+							InactivateStaff(name);
 						else if (continueDel == 'n' || continueDel == 'N')
 							lg.AdminControlMenu(name);  // Assuming this is the next menu or function after deletion
 					} while (continueDel == 'y' || continueDel == 'Y' || continueDel != 'n' || continueDel == 'N');
@@ -920,7 +918,7 @@ void Delete:: InactivateStaff()
 					cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
 					cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 					system("pause");
-					InactivateStaff();
+					InactivateStaff(name);
 				}
 			}
 			else
@@ -933,5 +931,5 @@ void Delete:: InactivateStaff()
 
 
 		}
-	} while (choice != 'A' && choice != 'a' && choice != 'B' && choice != 'b');
+	} while (choice != 'A' && choice != 'a' );
 }

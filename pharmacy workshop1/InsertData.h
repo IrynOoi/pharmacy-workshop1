@@ -7,12 +7,12 @@ class InsertData
 public:
 
 	/*void AddRecord();*/
-	void AddPatientMenu();
-	void AddHospitalMenu();
-	void AddDrugMenu();
-	void AddMedicationTransactionMenu();
+	void AddPatientMenu(string name);
+	void AddHospitalMenu(string name);
+	void AddDrugMenu(string name);
+	void AddMedicationTransactionMenu(string name);
 	void AddMedicationTransactionMenuSameTimestamp(string timestamp);
-	void AddStaffs();
+	void AddStaffs(string name);
 
 
 

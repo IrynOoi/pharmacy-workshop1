@@ -119,10 +119,10 @@ bool isValidDate(const string& date)
 //}
 
 
-void ViewData::ViewHospitalMenu()
+void ViewData::ViewHospitalMenu(string name)
 {
     login lg;
-    string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Staff_Name, Availability;
+    string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availability;
     char SearchHosp;
     int searchHospChoice;
     system("cls");
@@ -160,12 +160,12 @@ void ViewData::ViewHospitalMenu()
         cout << "\nEnter Hospital ID to search (positive number input): ";
         cin >> Hospital_ID;
         string search_query = "SELECT Hospital_ID, Hospital_Name, Hospital_Street,Hospital_City, Hospital_State,Availability FROM Hospital WHERE Hospital_ID = '" + Hospital_ID + "';";
-        const char* q = search_query.c_str();
-        qstate = mysql_query(conn, q);
-        if (!qstate)
+        const char* q = search_query.c_str(); // Convert a std::string to a C-style string (const char*)
+        qstate = mysql_query(conn, q);        // Send the query to the MySQL server
+        if (!qstate)                          // Check if the query execution was successful
         {
-            res = mysql_store_result(conn);
-            while (row = mysql_fetch_row(res))
+            res = mysql_store_result(conn);   // Retrieve the results of the query
+            while (row = mysql_fetch_row(res))// Fetch each row of the result set one by one
             {
 
                 SetConsoleColor(1, 11);
@@ -182,15 +182,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
     }
     else if (searchHospChoice == 2)
@@ -222,15 +222,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
     }
 
@@ -263,15 +263,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
     }
 
@@ -302,15 +302,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
     }
 
@@ -342,15 +342,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
 
 
@@ -412,15 +412,15 @@ void ViewData::ViewHospitalMenu()
             cout << endl << "Do you want to search other hospital?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewHospitalMenu();
+                ViewHospitalMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
-                lg.StaffControlMain(Staff_Name);
+                lg.StaffControlMain(name);
         }
         else
         {
             cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
             system("pause");
-            lg.StaffControlMain(Staff_Name);
+            lg.StaffControlMain(name);
         }
 
 
@@ -428,14 +428,14 @@ void ViewData::ViewHospitalMenu()
 
     else if (searchHospChoice == 7)
     {
-        lg.StaffControlMain(Staff_Name);
+        lg.StaffControlMain(name);
     }
 
     else
     {
         cout << "Error! Invalid input for searching!" << endl;
         system("pause");
-        lg.StaffControlMain(Staff_Name);
+        lg.StaffControlMain(name);
     }
 
 
@@ -444,10 +444,10 @@ void ViewData::ViewHospitalMenu()
 
 
 }
-void ViewData::ViewDrugMenu()
+void ViewData::ViewDrugMenu(string name)
 {
     login lg;
-    string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name, searchDChoice;
+    string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text,  searchDChoice;
     double Price;
     int numericChoice;
     char SearchHosp;
@@ -531,7 +531,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other drugs with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -586,7 +586,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other drugs with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -648,7 +648,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other drugs with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -702,7 +702,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other drugs with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -763,7 +763,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other drugs with other attribute?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -824,7 +824,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -882,7 +882,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -940,7 +940,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -1005,7 +1005,7 @@ void ViewData::ViewDrugMenu()
             cout << endl << "Do you want to search other hospital with other attributes?[Y/N]: ";
             cin >> SearchHosp;
             if (SearchHosp == 'y' || SearchHosp == 'Y')
-                ViewDrugMenu();
+                ViewDrugMenu(name);
             else if (SearchHosp == 'n' || SearchHosp == 'N')
                 lg.StaffControlMain(name);
         }
@@ -1042,10 +1042,10 @@ void ViewData::ViewDrugMenu()
 
 
 
-void ViewData::ViewPatientMenu()
+void ViewData::ViewPatientMenu(string name)
 {
     login lg;
-    string  Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Patient_Password, Active_Status, name;
+    string  Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Email, Medical_History, Diagnosed_Symptoms, Patient_Password, Active_Status;
     string year, month, day, DOB, UpdChoice;
     int Patient_Age, Patient_ID;
     double Patient_Height, Patient_Weight;
@@ -1162,7 +1162,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1226,7 +1226,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1289,7 +1289,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1359,7 +1359,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1413,7 +1413,8 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                 
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1467,7 +1468,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1520,7 +1521,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1636,7 +1637,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1690,7 +1691,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1741,7 +1742,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1792,7 +1793,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1857,7 +1858,7 @@ void ViewData::ViewPatientMenu()
             cout << endl << "Do you want to search other patient with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewPatientMenu();
+                ViewPatientMenu(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.StaffControlMain(name);
         }
@@ -1890,10 +1891,10 @@ void ViewData::ViewPatientMenu()
 }
 
 
-void ViewData::ViewMedicationTransactionMenu()
+void ViewData::ViewMedicationTransactionMenu(string name)
 {
     login lg;
-    string  Transaction_Date, MdId, UpdChoice, status, name, Transaction_Time;
+    string  Transaction_Date, MdId, UpdChoice, status, Transaction_Time;
 
     int Medication_ID, Transaction_ID, SearchMtChoice, Patient_ID, Hospital_ID, quantity, choicestatus;
     char SearchMt;
@@ -1988,7 +1989,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2045,7 +2046,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2103,7 +2104,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2164,7 +2165,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2224,7 +2225,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2282,7 +2283,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2348,7 +2349,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -2431,7 +2432,7 @@ void ViewData::ViewMedicationTransactionMenu()
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
             cin >> SearchMt;
             if (SearchMt == 'y' || SearchMt == 'Y')
-                ViewMedicationTransactionMenu();
+                ViewMedicationTransactionMenu(name);
             else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
@@ -3422,11 +3423,11 @@ void ViewData::ViewStaffAccount(string name,int id)
     }
 
 }
-void  ViewData:: ViewStaff()
+void  ViewData:: ViewStaff(string name)
 {
 
     login lg;
-    string  Staff_Name, Staff_Gender, Staff_Position, Staff_Address, Staff_TelNo, Staff_Email, Staff_Password, Active_Status, name;
+    string  Staff_Name, Staff_Gender, Staff_Position, Staff_Address, Staff_TelNo, Staff_Email, Staff_Password, Active_Status;
     string  UpdChoice;
     int Staff_Age, Staff_ID, Hospital_ID;
     string searchPChoice;
@@ -3509,7 +3510,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -3570,7 +3571,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -3629,7 +3630,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -3699,7 +3700,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -3814,7 +3815,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
                 lg.AdminControlMenu(name);
         }
         else
@@ -3895,7 +3896,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -3974,7 +3975,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
@@ -4037,7 +4038,7 @@ void  ViewData:: ViewStaff()
             cout << endl << "Do you want to search other Staff with other attribute?[Y/N]: ";
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
-                ViewStaff();
+                ViewStaff(name);
             else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }

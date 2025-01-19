@@ -6,11 +6,11 @@ class UpdateData
 {
 public:
 	/*void UpdateRecord();*/
-	void UpdatePatientMenu();
-	void UpdateHospitalMenu();
-	void UpdateDrugMenu();
-	void UpdateMedicationTransactionMenu();
-	void UpdateStaff();
+	void UpdatePatientMenu(string name);
+	void UpdateHospitalMenu(string name);
+	void UpdateDrugMenu(string name);
+	void UpdateMedicationTransactionMenu(string name);
+	void UpdateStaff(string name);
 	void UpdatePatientOwnDetail(int PatientID,string name);
 
 

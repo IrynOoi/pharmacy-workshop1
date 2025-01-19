@@ -79,7 +79,7 @@ double Patient_Height, Patient_Weight;
 //}
 
 
-void UpdateData::UpdatePatientMenu()
+void UpdateData::UpdatePatientMenu(string name)
 {
 
 	int change;
@@ -184,7 +184,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -215,7 +215,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -269,7 +269,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -302,7 +302,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -325,7 +325,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -349,7 +349,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -437,7 +437,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -459,7 +459,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -479,7 +479,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -499,7 +499,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -545,7 +545,7 @@ void UpdateData::UpdatePatientMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -569,10 +569,11 @@ void UpdateData::UpdatePatientMenu()
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
-		UpdatePatientMenu();
+		UpdatePatientMenu(name);
 	}
 
 }
+
 void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 {
 	system("cls");
@@ -824,6 +825,8 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 
 				cout << "Patient Weight: ";
 				while (!(cin >> Patient_Weight) || Patient_Weight < 0)
+					// - The user input is invalid (cin fails to read input), OR
+					// - The entered weight is negative.
 				{
 					cout << "Invalid input. Please enter a positive number: ";
 					cin.clear();
@@ -1066,11 +1069,11 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 
 
 
-void UpdateData::UpdateHospitalMenu()
+void UpdateData::UpdateHospitalMenu(string name)
 {
 	login lg;
 	int change2;
-	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availibility, name;
+	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availibility;
 	char UpdChoice, confirmUpd, continueUpd;
 	bool valid = false;
 	system("cls");
@@ -1154,7 +1157,7 @@ void UpdateData::UpdateHospitalMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateHospitalMenu();
+					UpdateHospitalMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1173,7 +1176,7 @@ void UpdateData::UpdateHospitalMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateHospitalMenu();
+					UpdateHospitalMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1203,7 +1206,7 @@ void UpdateData::UpdateHospitalMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateHospitalMenu();
+					UpdateHospitalMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1236,7 +1239,7 @@ void UpdateData::UpdateHospitalMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateHospitalMenu();
+					UpdateHospitalMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1274,7 +1277,7 @@ void UpdateData::UpdateHospitalMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateHospitalMenu();
+					UpdateHospitalMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1296,15 +1299,15 @@ void UpdateData::UpdateHospitalMenu()
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
-		UpdateHospitalMenu();
+		UpdateHospitalMenu(name);
 	}
 
 }
 
-void UpdateData::UpdateDrugMenu()
+void UpdateData::UpdateDrugMenu(string name)
 {
 	login lg;
-	string  Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name;
+	string  Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text;
 	double Price;
 	int Medication_ID;
 	char UpdChoice, confirmUpd, continueUpd;
@@ -1410,7 +1413,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1436,7 +1439,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1462,7 +1465,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1488,7 +1491,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1516,7 +1519,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -1545,7 +1548,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 
@@ -1574,7 +1577,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1607,7 +1610,7 @@ void UpdateData::UpdateDrugMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateDrugMenu();
+					UpdateDrugMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1615,7 +1618,7 @@ void UpdateData::UpdateDrugMenu()
 			{
 				cout << "Error in updation! " << endl;
 				system("pause");
-				UpdateDrugMenu();
+				UpdateDrugMenu(name);
 			}
 
 		}
@@ -1629,18 +1632,18 @@ void UpdateData::UpdateDrugMenu()
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
-		UpdateDrugMenu();
+		UpdateDrugMenu(name);
 	}
 
 
 
 }
 
-void UpdateData::UpdateMedicationTransactionMenu()
+void UpdateData::UpdateMedicationTransactionMenu(string name)
 {
 	login lg;
 	system("cls");
-	string  Transaction_Date, MdId, UpdChoice, status, name;
+	string  Transaction_Date, MdId, UpdChoice, status;
 	int quantity = 0;
 	int Medication_ID, Patient_ID, Hospital_ID, Transaction_ID;
 
@@ -1793,7 +1796,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateMedicationTransactionMenu(); // Recursive call to allow further updates
+					UpdateMedicationTransactionMenu(name); // Recursive call to allow further updates
 				else
 					lg.StaffControlMain(name); // Exit or go back to the previous menu
 			}
@@ -1872,7 +1875,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateMedicationTransactionMenu(); // Recursive call to allow further updates
+					UpdateMedicationTransactionMenu(name); // Recursive call to allow further updates
 				else
 					lg.StaffControlMain(name); // Exit or go back to the previous menu
 			}
@@ -1907,7 +1910,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateMedicationTransactionMenu();
+					UpdateMedicationTransactionMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -1966,7 +1969,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateMedicationTransactionMenu();
+					UpdateMedicationTransactionMenu(name);
 				else
 					lg.StaffControlMain(name);
 			}
@@ -2015,7 +2018,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateMedicationTransactionMenu();
+					UpdateMedicationTransactionMenu(name);
 				else
 					lg.StaffControlMain(name);
 					}
@@ -2024,7 +2027,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 			{
 				cout << "Error in updation! " << endl;
 				system("pause");
-				UpdateMedicationTransactionMenu();
+				UpdateMedicationTransactionMenu(name);
 			}
 		}
 		else
@@ -2037,14 +2040,14 @@ void UpdateData::UpdateMedicationTransactionMenu()
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 		system("pause");
-		UpdateMedicationTransactionMenu();
+		UpdateMedicationTransactionMenu(name);
 	}
 }
 
-void UpdateData::UpdateStaff()
+void UpdateData::UpdateStaff(string name)
 {
 	login lg;
-	string Staff_ID, Staff_Name, Staff_Gender, Staff_DOB, Staff_Address, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Staff_Password, Active_Status, name, Staff_Position, UpdChoice;
+	string Staff_ID, Staff_Name, Staff_Gender, Staff_DOB, Staff_Address, Staff_TelNo, Staff_Email, Medical_History, Diagnosed_Symptoms, Staff_Password, Active_Status, Staff_Position, UpdChoice;
 	int Admin_ID, Hospital_ID;
 
 	char  confirmUpd, continueUpd;
@@ -2140,7 +2143,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 			}
@@ -2172,7 +2175,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 			}
@@ -2207,7 +2210,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 			}
@@ -2292,7 +2295,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 			}
@@ -2329,7 +2332,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 
@@ -2383,7 +2386,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 
@@ -2429,7 +2432,7 @@ void UpdateData::UpdateStaff()
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdateStaff();
+					UpdateStaff(name);
 				else
 					lg.AdminControlMenu(name);
 		     }
@@ -2441,7 +2444,7 @@ void UpdateData::UpdateStaff()
 				cout << "Error in updation! " << endl;
 				cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 				system("pause");
-				UpdateStaff();
+				UpdateStaff(name);
 			}
 		}
 		else
@@ -2454,7 +2457,7 @@ void UpdateData::UpdateStaff()
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 		system("pause");
-		UpdateStaff();
+		UpdateStaff(name);
 	}
 
 

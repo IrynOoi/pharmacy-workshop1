@@ -6,11 +6,11 @@ class Delete
 {
 public:
 	/*void DeleteRecord();*/
-	void DeletePatientMenu();
-	void DeleteHospitalMenu();
-	void DeleteDrugMenu();
-	void DeleteMedicationTransactionMenu();
-	void InactivateStaff();
+	void DeletePatientMenu(string name);
+	void DeleteHospitalMenu(string name);
+	void DeleteDrugMenu(string name);
+	void DeleteMedicationTransactionMenu(string name);
+	void InactivateStaff(string name);
 	
 
 };

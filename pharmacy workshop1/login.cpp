@@ -20,7 +20,7 @@ using namespace std;
 
 void login::mainlogin_pg()
 {
-	char choiceLogin;
+	string choiceLogin;
 	system("color E0");
 
 	system("cls");
@@ -46,19 +46,19 @@ void login::mainlogin_pg()
 		cin >> choiceLogin;
 
 		
-		if (choiceLogin == '1')
+		if (choiceLogin == "1")
 		{
 			login_staff();
 			break;
 		}
-		else if (choiceLogin == '2')
+		else if (choiceLogin == "2")
 		{
 			login_patient();
 			break;
 		}
 
 
-		else if (choiceLogin == '3')
+		else if (choiceLogin == "3")
 		{
 			system("cls");
 			main();
@@ -236,6 +236,8 @@ void login::AdminControlMenu(string name)
 	Delete dl;
 	ViewData vr;
 	char AddStaff;
+	string AdminInfo[1];
+	AdminInfo[0] = name;
 	system("cls");
 	SetConsoleColor(0, 9);
 	char AdminControl;
@@ -248,7 +250,7 @@ void login::AdminControlMenu(string name)
 	cout << endl;
 
 	cout << "[A] Add Staff" << endl;
-	cout << "[B] Delete Staff" << endl;
+	cout << "[B] Inactivate Staff" << endl;
 	cout << "[C] Update Staff" << endl;
 	cout << "[D] Search and View Staff" << endl;
 	cout << "[M] Back to Staff Main Menu" << endl;
@@ -261,39 +263,39 @@ void login::AdminControlMenu(string name)
 
 	case 'A':
 	case 'a':
-		id.AddStaffs();
+		id.AddStaffs(AdminInfo[0]);
 		break;
 
 	case 'B':
 	case 'b':
 		system("cls");
-		dl.InactivateStaff();
+		dl.InactivateStaff(AdminInfo[0]);
 		break;
 
 	case 'C':
 	case 'c':
 		system("cls");
-		ud.UpdateStaff();
+		ud.UpdateStaff(AdminInfo[0]);
 		break;
 
 	case 'D':
 	case 'd':
 		system("cls");
-		vr.ViewStaff();
+		vr.ViewStaff(AdminInfo[0]);
 		break;
 
 
 	case 'M':
 	case 'm':
 		system("cls");
-		StaffMainMenu(name, Staff_ID);
+		StaffMainMenu(AdminInfo[0], Staff_ID);
 		break;
 
 
 	default:
 		cout << "Invalid choice!" << endl;
 		system("pause");
-		AdminControlMenu(name);
+		AdminControlMenu(AdminInfo[0]);
 	}
 
 	
@@ -305,151 +307,8 @@ void login::AdminControlMenu(string name)
 
 
 
-void login::StaffControlMain(string Staff_Name)
-{
-	InsertData id;
-	UpdateData ud;
-	int Staff_ID=0;
-	char StaffControl;
-	string timestamp;
-	Delete dl;
-	ViewData vd;
-	system("cls");
-	SetConsoleColor(0, 9);
-
-	cout << "********************" << endl;
-	cout << " STAFF CONTROL MENU " << endl;
-	cout << "********************" << endl;
-	SetConsoleColor(0, 11);
-
-	cout << "Welcome, " << Staff_Name << "! What would you like to do?" << endl;
-	cout << endl;
-
-	cout << "[A] Add Record of Patient" << endl;
-	cout << "[B] Add Record of Hospital" << endl;
-	cout << "[C] Add Record of Drugs" << endl;
-	cout << "[D] Add Record of Medical Transaction" << endl;
-	cout << "[E] Inactive Patient Record" << endl;
-	cout << "[F] Delete Hospital Record" << endl;
-	cout << "[G] Delete Drug Record" << endl;
-	cout << "[H] Delete Medication Transaction Record" << endl;
-	cout << "[I] Update Record of Patient" << endl;
-	cout << "[J] Update Record of Hospital" << endl;
-	cout << "[K] Update Record of Drug  " << endl;
-	cout << "[L] Update Record of Medication Transaction" << endl;
-	cout << "[M] Search and View Record of Patient" << endl;
-	cout << "[N] Search and View Record of Hospital" << endl;
-	cout << "[O] Search and View Record of Drug  " << endl;
-	cout << "[P] Search and View Record of Medication Transaction" << endl;
-	cout << "[Q] Back to Staff  Main Menu" << endl;
 
 
-	cout << "\nPlease enter your choice (A-Q): ";
-	cin >> StaffControl;
-
-	
-
-	switch (StaffControl)
-	{
-
-	case 'A':
-	case 'a':
-		id.AddPatientMenu();
-		break;
-
-	case 'B':
-	case 'b':
-		system("cls");
-		id.AddHospitalMenu();
-		break;
-
-	case 'C':
-	case 'c':
-		system("cls");
-		id.AddDrugMenu();
-		break;
-
-	case 'D':
-	case 'd':
-		system("cls");
-		id.AddMedicationTransactionMenu();
-		break;
-
-	case 'E':
-	case 'e':
-		dl.DeletePatientMenu();
-		break;
-	case 'F':
-	case 'f':
-		dl.DeleteHospitalMenu();
-		break;
-
-
-	case 'G':
-	case 'g':
-		dl.DeleteDrugMenu();
-		break;
-
-	case 'H':
-	case 'h':
-		dl.DeleteMedicationTransactionMenu();
-		break;
-	case 'I':
-	case 'i':
-		ud.UpdatePatientMenu();
-		break;
-
-	case 'J':
-	case 'j':
-		ud.UpdateHospitalMenu();
-		break;
-
-	case 'K':
-	case 'k':
-		ud.UpdateDrugMenu();
-		break;
-
-	case 'L':
-	case 'l':
-		ud.UpdateMedicationTransactionMenu();
-		break;
-
-	case 'M':
-	case 'm':
-		vd.ViewPatientMenu();
-		break;
-
-	case 'N':
-	case 'n':
-		vd.ViewHospitalMenu();
-		break;
-
-	case 'O':
-	case 'o':
-		vd.ViewDrugMenu();
-		break;
-
-	case 'P':
-	case 'p':
-		vd.ViewMedicationTransactionMenu();
-		break;
-	
-
-	case 'Q':
-	case 'q':
-		system("cls");
-		StaffMainMenu(Staff_Name,Staff_ID);
-		break;
-
-
-
-	default:
-		cout << "Invalid choice!" << endl;
-		system("pause");
-		StaffControlMain(Staff_Name);
-		
-	}
-}
 
 
 void login::login_patient()
@@ -609,7 +468,153 @@ void login::PatientMainMenu(string name, int Patient_ID)
 
 }
 
+void login::StaffControlMain(string Staff_Name)
+{
+	string StaffInfo[1];
+	StaffInfo[0] = Staff_Name;
+	InsertData id;
+	UpdateData ud;
+	int Staff_ID = 0;
+	char StaffControl;
+	string timestamp;
+	Delete dl;
+	ViewData vd;
+	system("cls");
+	SetConsoleColor(0, 9);
 
+	cout << "********************" << endl;
+	cout << " STAFF CONTROL MENU " << endl;
+	cout << "********************" << endl;
+	SetConsoleColor(0, 11);
+
+	cout << "Welcome, " << Staff_Name << "! What would you like to do?" << endl;
+	cout << endl;
+
+	cout << "[A] Add Record of Patient" << endl;
+	cout << "[B] Add Record of Hospital" << endl;
+	cout << "[C] Add Record of Drugs" << endl;
+	cout << "[D] Add Record of Medical Transaction" << endl;
+	cout << "[E] Inactive Patient Record" << endl;
+	cout << "[F] Delete Hospital Record" << endl;
+	cout << "[G] Delete Drug Record" << endl;
+	cout << "[H] Delete Medication Transaction Record" << endl;
+	cout << "[I] Update Record of Patient" << endl;
+	cout << "[J] Update Record of Hospital" << endl;
+	cout << "[K] Update Record of Drug  " << endl;
+	cout << "[L] Update Record of Medication Transaction" << endl;
+	cout << "[M] Search and View Record of Patient" << endl;
+	cout << "[N] Search and View Record of Hospital" << endl;
+	cout << "[O] Search and View Record of Drug  " << endl;
+	cout << "[P] Search and View Record of Medication Transaction" << endl;
+	cout << "[Q] Back to Staff  Main Menu" << endl;
+
+
+	cout << "\nPlease enter your choice (A-Q): ";
+	cin >> StaffControl;
+
+
+
+	switch (StaffControl)
+	{
+
+	case 'A':
+	case 'a':
+		id.AddPatientMenu(StaffInfo[0]);
+		break;
+
+	case 'B':
+	case 'b':
+		system("cls");
+		id.AddHospitalMenu(StaffInfo[0]);
+		break;
+
+	case 'C':
+	case 'c':
+		system("cls");
+		id.AddDrugMenu(StaffInfo[0]);
+		break;
+
+	case 'D':
+	case 'd':
+		system("cls");
+		id.AddMedicationTransactionMenu(StaffInfo[0]);
+		break;
+
+	case 'E':
+	case 'e':
+		dl.DeletePatientMenu(StaffInfo[0]);
+		break;
+	case 'F':
+	case 'f':
+		dl.DeleteHospitalMenu(StaffInfo[0]);
+		break;
+
+
+	case 'G':
+	case 'g':
+		dl.DeleteDrugMenu(StaffInfo[0]);
+		break;
+
+	case 'H':
+	case 'h':
+		dl.DeleteMedicationTransactionMenu(StaffInfo[0]);
+		break;
+	case 'I':
+	case 'i':
+		ud.UpdatePatientMenu(StaffInfo[0]);
+		break;
+
+	case 'J':
+	case 'j':
+		ud.UpdateHospitalMenu(StaffInfo[0]);
+		break;
+
+	case 'K':
+	case 'k':
+		ud.UpdateDrugMenu(StaffInfo[0]);
+		break;
+
+	case 'L':
+	case 'l':
+		ud.UpdateMedicationTransactionMenu(StaffInfo[0]);
+		break;
+
+	case 'M':
+	case 'm':
+		vd.ViewPatientMenu(StaffInfo[0]);
+		break;
+
+	case 'N':
+	case 'n':
+		vd.ViewHospitalMenu(StaffInfo[0]);
+		break;
+
+	case 'O':
+	case 'o':
+		vd.ViewDrugMenu(StaffInfo[0]);
+		break;
+
+	case 'P':
+	case 'p':
+		vd.ViewMedicationTransactionMenu(StaffInfo[0]);
+		break;
+
+
+	case 'Q':
+	case 'q':
+		system("cls");
+		StaffMainMenu(StaffInfo[0], Staff_ID);
+		break;
+
+
+
+	default:
+		cout << "Invalid choice!" << endl;
+		system("pause");
+		StaffControlMain(StaffInfo[0]);
+
+	}
+}
 
 
 void login::StaffMainMenu(string name, int Staff_ID) {
@@ -704,8 +709,24 @@ void login::login_staff()
 	cout << "*****************" << endl;
 	cout << endl;
 	SetConsoleColor(0, 11);
-	cout << "Enter Staff ID: ";
-	cin >> Staff_ID;
+	while (true) 
+	{
+		cout << "Enter Staff ID (positive integer only): ";
+		cin >> Staff_ID;
+
+		// Validate input
+		if (cin.fail() || Staff_ID <= 0) {
+			cout << "Invalid input. Please enter a positive numeric Staff ID.\n";
+
+			// Clear the error state and discard invalid input
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		else {
+			// Input is valid
+			break;
+		}
+	}
 	cout << "Enter Password: ";
 	char ch;
 	while ((ch = _getch()) != 13)
@@ -758,5 +779,7 @@ void login::login_staff()
 	}
 	else
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+	system("pause");
+
 }
 

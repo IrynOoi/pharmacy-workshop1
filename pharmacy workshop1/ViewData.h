@@ -7,14 +7,14 @@ class ViewData
 public:
 
 
-	void ViewPatientMenu();
-	void ViewHospitalMenu();
-	void ViewDrugMenu();
-	void ViewMedicationTransactionMenu();
+	void ViewPatientMenu(string name);
+	void ViewHospitalMenu(string name);
+	void ViewDrugMenu(string name);
+	void ViewMedicationTransactionMenu(string name);
 	void SalesReport(string name);
 	void GeneratePDFSalesReport(MYSQL* conn);
 	void ViewStaffAccount(string name,int id); 
-	void ViewStaff();
+	void ViewStaff(string name);
 	void ViewDrugList(int id,string name);
 	void ViewPatientAcc(int id,string name);
 	void ViewPatientReceipt(int PatientID,string name);

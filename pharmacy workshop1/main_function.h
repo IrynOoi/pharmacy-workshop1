@@ -8,7 +8,7 @@ using namespace std;
 // Function declarations
 int main();
 void Loading();
-int calculateAge(int year, int month, int day);
+//int calculateAge(int year, int month, int day);
 bool isAlphabetic(const string& str);
 void showtime();
 void ForgetPassword();

@@ -69,11 +69,11 @@
 //}
 
 
-void  InsertData::AddPatientMenu()
+void  InsertData::AddPatientMenu(string name)
 {
 	login lg;
 	system("cls");
-	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms, name;
+	string Patient_Name, Patient_Gender, Patient_DOB, Patient_Address, Patient_TelNo, Patient_Password, Patient_Email, Medical_History, Diagnosed_Symptoms;
 	double Patient_Height, Patient_Weight;
 
 	int d_year, d_month, d_day;
@@ -346,7 +346,7 @@ void  InsertData::AddPatientMenu()
 		cin >> AddPatient;
 		if (AddPatient == 'y' || AddPatient == 'Y')
 		{
-			AddPatientMenu();
+			AddPatientMenu(name);
 		}
 		else if (AddPatient == 'n' || AddPatient == 'N')
 		{
@@ -359,10 +359,10 @@ void  InsertData::AddPatientMenu()
 
 
 
-void  InsertData::AddHospitalMenu()
+void  InsertData::AddHospitalMenu(string name)
 {
 	login lg;
-	string  Hospital_Name, Hospital_Street, Hospital_State, Hospital_City, name;
+	string  Hospital_Name, Hospital_Street, Hospital_State, Hospital_City;
 	char AddHospital;
 
 	system("cls");
@@ -438,7 +438,7 @@ void  InsertData::AddHospitalMenu()
 		cin >> AddHospital;
 		if (AddHospital == 'y' || AddHospital == 'Y')
 		{
-			AddHospitalMenu();
+			AddHospitalMenu(name);
 		}
 		else if (AddHospital == 'n' || AddHospital == 'N')
 		{
@@ -449,11 +449,11 @@ void  InsertData::AddHospitalMenu()
 }
 
 
-void  InsertData::AddDrugMenu()
+void  InsertData::AddDrugMenu(string name)
 {
 	login lg;
 	system("cls");
-	string Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text, name;
+	string Medication_Name, Medication_Type, Dosage_Form, Strength, Description, Side_Effect, usage_text;
 	char AddDrug;
 	double Price ;
 
@@ -631,7 +631,7 @@ void  InsertData::AddDrugMenu()
 		cin >> AddDrug;
 		if (AddDrug == 'y' || AddDrug == 'Y')
 		{
-			AddDrugMenu();
+			AddDrugMenu(name);
 		}
 		else if (AddDrug == 'n' || AddDrug == 'N')
 		{
@@ -1021,12 +1021,12 @@ void  InsertData::AddMedicationTransactionMenuSameTimestamp(string timestamp)
 }
 
 
-void  InsertData::AddMedicationTransactionMenu()
+void  InsertData::AddMedicationTransactionMenu(string name)
 {
 	login lg;
 	system("cls");
 	int  quantity, Medication1_ID, Hospital_ID;
-	string year, month, day, Transaction_Date, status, name, transaction_time;
+	string year, month, day, Transaction_Date, status,  transaction_time;
 	bool validInput = false;
 	cout << "Enter new records: " << endl;
 
@@ -1422,10 +1422,9 @@ void  InsertData::AddMedicationTransactionMenu()
 }
 
 
-void InsertData::AddStaffs()
+void InsertData::AddStaffs(string name)
 {
 
-	string name;
 	login lg;
 	string Staff_Name, Staff_Gender, Staff_Address, Staff_TelNo, Staff_Password, Staff_Email,  Staff_Position, Active_Status;
 	int Staff_Age, Admin_ID, Hospital_ID;
@@ -1674,7 +1673,7 @@ void InsertData::AddStaffs()
 		cin >> AddStaff;
 		if (AddStaff == 'y' || AddStaff == 'Y')
 		{
-			AddStaffs();
+			AddStaffs(name);
 		}
 		else if (AddStaff == 'n' || AddStaff == 'N')
 		{
