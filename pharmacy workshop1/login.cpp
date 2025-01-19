@@ -267,7 +267,7 @@ void login::AdminControlMenu(string name)
 	case 'B':
 	case 'b':
 		system("cls");
-		dl.DeleteStaff();
+		dl.InactivateStaff();
 		break;
 
 	case 'C':
@@ -329,7 +329,7 @@ void login::StaffControlMain(string Staff_Name)
 	cout << "[B] Add Record of Hospital" << endl;
 	cout << "[C] Add Record of Drugs" << endl;
 	cout << "[D] Add Record of Medical Transaction" << endl;
-	cout << "[E] Delete / Inactive Patient Record" << endl;
+	cout << "[E] Inactive Patient Record" << endl;
 	cout << "[F] Delete Hospital Record" << endl;
 	cout << "[G] Delete Drug Record" << endl;
 	cout << "[H] Delete Medication Transaction Record" << endl;
@@ -543,7 +543,7 @@ void login::login_patient()
 }
 
 
-void login:: PatientMainMenu(string name, int Patient_ID)
+void login::PatientMainMenu(string name, int Patient_ID)
 {
 	char PatientControl;
 	ViewData vr;
@@ -610,28 +610,25 @@ void login:: PatientMainMenu(string name, int Patient_ID)
 }
 
 
-	
 
 
-
-
-
-
-void login::StaffMainMenu(string name, int Staff_ID)
-{
-
+void login::StaffMainMenu(string name, int Staff_ID) {
 	char StaffMainChoice;
 	system("cls");
 	ViewData vd;
+	string staffInfo[2]; // Array to store Staff_ID and Staff_Name
+
+	// Store Staff_ID and Staff_Name
+	staffInfo[0] = to_string(Staff_ID);  // Convert Staff_ID to string
+	staffInfo[1] = name;
+
 	SetConsoleColor(0, 9);
 	cout << "******************" << endl;
 	cout << " STAFF MAIN MENU  " << endl;
 	cout << "******************" << endl;
-	SetConsoleColor(0,11);
+	SetConsoleColor(0, 11);
 
-
-	cout << "Welcome, staff " << name << "!" << endl;
-
+	cout << "Welcome, staff " << staffInfo[1] << "!" << endl;
 
 	cout << "[1] Staff Control Panel" << endl;
 	cout << "[2] Sales report " << endl;
@@ -641,51 +638,36 @@ void login::StaffMainMenu(string name, int Staff_ID)
 	cout << "[6] Staff Report" << endl;
 	cout << "[7] Back to  Login Main Menu" << endl;
 	cout << "\nYour choice (1 - 7): ";
-	cin >> StaffMainChoice ;
+	cin >> StaffMainChoice;
 
 	while (1)
 	{
-
 		if (StaffMainChoice == '1')
 		{
-			StaffControlMain(name);
+			StaffControlMain(staffInfo[1]); // Pass staff name
 			break;
 		}
-
-		else if (StaffMainChoice == '2')
-		{
-			vd.SalesReport();
+		else if (StaffMainChoice == '2') {
+			vd.SalesReport(staffInfo[1]);
 			break;
 		}
-		else if (StaffMainChoice == '3')
-		{
-			vd.PatientReport();
+		else if (StaffMainChoice == '3') {
+			vd.PatientReport(staffInfo[1]);
 			break;
 		}
-		
-		else if (StaffMainChoice == '4')
-		{
-			vd.ViewStaffAccount(Staff_ID);
+		else if (StaffMainChoice == '4') {
+			vd.ViewStaffAccount(staffInfo[1],stoi(staffInfo[0])); // Use Staff_ID from array
 			break;
 		}
-
-
-		if (StaffMainChoice == '5')
-		{
-			AdminControlMenu(name);
+		else if (StaffMainChoice == '5') {
+			AdminControlMenu(staffInfo[1]); // Pass staff name
 			break;
 		}
-
-	
-		else if (StaffMainChoice == '6')
-		{
-			vd.StaffReport();
+		else if (StaffMainChoice == '6') {
+			vd.StaffReport(staffInfo[1]);
 			break;
 		}
-
-		
-		else if (StaffMainChoice == '7')
-		{
+		else if (StaffMainChoice == '7') {
 			mainlogin_pg();
 			break;
 		}
@@ -693,13 +675,20 @@ void login::StaffMainMenu(string name, int Staff_ID)
 			cout << "Invalid Choice! Only numeric number! Please enter again! ";
 			cout << "\n";
 			system("pause");
-			StaffMainMenu(name, Staff_ID);
+			StaffMainMenu(staffInfo[1], stoi(staffInfo[0])); // Pass name and Staff_ID from array
 		}
 	}
-
-
-
 }
+
+
+
+	
+
+
+
+
+
+
 
 void login::login_staff()
 {

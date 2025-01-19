@@ -11,15 +11,15 @@ public:
 	void ViewHospitalMenu();
 	void ViewDrugMenu();
 	void ViewMedicationTransactionMenu();
-	void SalesReport();
+	void SalesReport(string name);
 	void GeneratePDFSalesReport(MYSQL* conn);
-	void ViewStaffAccount(int id); 
+	void ViewStaffAccount(string name,int id); 
 	void ViewStaff();
 	void ViewDrugList(int id,string name);
 	void ViewPatientAcc(int id,string name);
 	void ViewPatientReceipt(int PatientID,string name);
-	void PatientReport();
-	void StaffReport();
+	void PatientReport(string name);
+	void StaffReport(string name);
 	
 
 

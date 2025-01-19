@@ -166,13 +166,25 @@ void  InsertData::AddPatientMenu()
 		// Check if the input is valid (no alphabetic characters) and non-negative
 		if (cin.fail() || d_year < 0 || d_month < 1 || d_month > 12 || d_day < 1 || d_day > 31)
 		{
-			cout << "Invalid input!" <<endl;
-		    cout<< "Please enter valid numerical values for year, month, and day.\n";
+			cout << "Invalid input! Please enter valid numerical values for year, month, and day.\n";
 			cin.clear(); // Clear the error flags
 			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
 		}
 		else
 		{
+			//DOB details: convert int to string
+			string year = to_string(d_year);
+			string month = to_string(d_month);
+			string day = to_string(d_day);
+			string DOB;
+			DOB.append(year);
+			DOB.append("-");
+			DOB.append(month);
+			DOB.append("-");
+			DOB.append(day);
+
+			//store the copied single string into Patient_DOB to insert into database later
+			Patient_DOB = DOB;
 			break; // Exit loop if the input is valid
 		}
 	}

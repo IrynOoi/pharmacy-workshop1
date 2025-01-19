@@ -137,33 +137,39 @@ void Loading()
 	}
 }
 
-//calculate age
+// Function to calculate the age of a person given their birth year, month, and day
 int calculateAge(int year, int month, int day)
 {
-	//Getting the current date
+	// Variables to store the current date
 	int currYear, currMonth, currDay;
-	int age = 0;
+	int age = 0; // Initialize age to 0
 
-	time_t now = time(0);
-	tm ltm;
-	localtime_s(&ltm, &now);  // Use localtime_s instead of localtime
+	// Get the current time
+	time_t now = time(0); // Get the current system time in seconds since the epoch
+	tm ltm;               // Structure to store the local time information
+	localtime_s(&ltm, &now);  // Safely convert time to local time and store in ltm
 
-	currYear = 1900 + ltm.tm_year;
-	currMonth = 1 + ltm.tm_mon;
-	currDay = ltm.tm_mday;
+	// Extract the current year, month, and day from the tm structure
+	currYear = 1900 + ltm.tm_year; // tm_year gives years since 1900
+	currMonth = 1 + ltm.tm_mon;    // tm_mon is 0-based, so add 1 for the correct month
+	currDay = ltm.tm_mday;         // tm_mday gives the day of the month
 
-	// Getting the age by comparing current date and user input date
+	// Determine the age by comparing the current date with the given birth date
 	if (currMonth < month || (currMonth == month && currDay < day))
 	{
+		// If the current month is before the birth month, or it's the same month but the current day is before the birth day,
+		// the person has not had their birthday this year, so subtract one from the age.
 		age = currYear - year - 1;
 	}
 	else
 	{
+		// Otherwise, the person has already had their birthday this year.
 		age = currYear - year;
 	}
 
-	return age;
+	return age; // Return the calculated age
 }
+
 
 // Function to check if a string contains only alphabetic characters and spaces
 bool isAlphabetic(const string& str)
@@ -198,16 +204,18 @@ void showtime()
 void ForgetPassword()
 {
 	login lg;
+
 	system("cls");
 	SetConsoleColor(0, 3);
+	char  confirmRpt1, confirmRpt2;
 	cout << "*******************" << endl;
 	cout << " PASSWORD RECOVERY " << endl;
 	cout << "*******************" << endl;
 	SetConsoleColor(0,14);
-
+	
 	char recover;
 
-	cout << "\nAre you a ?" << endl;
+	cout << "\nAre you a  " << endl;
 	cout << " Staff or Patient ?" << endl;
 	cout << "[1] Staff" << endl;
 	cout << "[2] Patient " << endl;
@@ -218,14 +226,36 @@ void ForgetPassword()
 
 	if (recover == '1')
 	{
+	confirmRpt1:
 		system("cls");
+		SetConsoleColor(0, 3);
 		cout << "*************" << endl;
-		cout << " ADMIN/STAFF " << endl;
+		cout << "   STAFF     " << endl;
 		cout << "*************" << endl;
+		SetConsoleColor(0, 14);
 
 
-		cout << "\nPlease insert your staff ID: ";
-		cin >> Staff_ID;
+		while (true) 
+		{
+			cout << "\nPlease insert your staff ID (integer only): ";
+			cin >> Staff_ID;
+
+			// Check if the input is valid (integer) and not empty
+			if (cin.fail()) {
+				std::cout << "Invalid input. Please enter a numeric Staff ID.\n";
+
+				// Clear the error state and discard invalid input
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			}
+			else if (Staff_ID <= 0) {
+				cout << "Staff ID cannot be zero or negative. Please try again.\n";
+			}
+			else {
+				// Input is valid
+				break;
+			}
+		}
 
 		string search_query = "SELECT Staff_ID FROM staff WHERE Staff_ID = '" + to_string(Staff_ID) + "' AND Active_Status = 'Active'";
 		const char* q = search_query.c_str();
@@ -233,12 +263,23 @@ void ForgetPassword()
 		if (!qstate)
 		{
 			res = mysql_store_result(conn);
-			while (row = mysql_fetch_row(res))
+			if (res && mysql_num_rows(res) > 0) // Check if there are any rows
 			{
-				Staff_ID = atoi(row[0]); // Convert the char* to an int using atoi
+				while (row = mysql_fetch_row(res))
+				{
+					Staff_ID = atoi(row[0]); // Convert the char* to an int using atoi
+				}
+				cout << "Staff found!" << endl;
 
+				// Prompt for new password and update logic here
 			}
-			cout << "Staff found!" << endl;
+			else
+			{
+				cout << "Sorry, no such ID exists! Please try again!" << endl;
+				system("pause");
+				goto confirmRpt1;
+			}
+			
 			cout << "Set your new password: ";
 			string Staff_Password;
 			char ch;
@@ -283,11 +324,37 @@ void ForgetPassword()
 	else if (recover == '2')
 	{
 		system("cls");
+		SetConsoleColor(0, 3);
 		cout << "*************" << endl;
 		cout << "   PATIENT   " << endl;
 		cout << "*************" << endl;
-		cout << "\nPlease insert your Patient ID: ";
-		cin >> Patient_ID;
+		SetConsoleColor(0, 14);
+
+	confirmRpt2:
+
+		while (true)
+		{
+			cout << "\nPlease insert your Patient ID (integer only): ";
+			cin >> Patient_ID;
+
+			// Check if the input is valid (integer) and not empty
+			if (cin.fail()) {
+				std::cout << "Invalid input. Please enter a numeric Patient ID.\n";
+
+				// Clear the error state and discard invalid input
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			}
+			else if (Patient_ID <= 0) {
+				cout << "Patient ID cannot be zero or negative. Please try again.\n";
+			}
+			else {
+				// Input is valid
+				break;
+			}
+		}
+
+
 
 		string search_query = "SELECT Patient_ID FROM patient WHERE Patient_ID = '" + to_string(Patient_ID) + "' AND Active_Status = 'Active'";
 		const char* q = search_query.c_str();
@@ -295,9 +362,21 @@ void ForgetPassword()
 		if (!qstate)
 		{
 			res = mysql_store_result(conn);
-			while (row = mysql_fetch_row(res))
+			if (res && mysql_num_rows(res) > 0) // Check if there are any rows
 			{
-				Patient_ID = atoi(row[0]);  // Convert the char* to an int using atoi
+				while (row = mysql_fetch_row(res))
+				{
+					Staff_ID = atoi(row[0]); // Convert the char* to an int using atoi
+				}
+
+
+				// Prompt for new password and update logic here
+			}
+			else
+			{
+				cout << "Sorry, no such ID exists! Please try again!" << endl;
+				system("pause");
+				goto confirmRpt2;
 
 			}
 			cout << "Patient found!" << endl;
@@ -310,7 +389,7 @@ void ForgetPassword()
 			{ // Read each character of the password until Enter key (ASCII 13) is pressed
 				if (ch == 8)
 				{ // If the character is backspace (ASCII 8)
-					if (! Patient_Password.empty())
+					if (!Patient_Password.empty())
 					{
 						Patient_Password.pop_back(); // Remove last character from the password string
 						cout << "\b \b"; // Move the cursor back, print space to overwrite the asterisk, and move back again
@@ -327,7 +406,7 @@ void ForgetPassword()
 				}
 			}
 
-			string update_query = "UPDATE patient SET Patient_Password = sha1('" + Patient_Password + "') WHERE Patient_ID = '" + to_string(Patient_ID )+ "'";
+			string update_query = "UPDATE patient SET Patient_Password = sha1('" + Patient_Password + "') WHERE Patient_ID = '" + to_string(Patient_ID) + "'";
 			const char* q = update_query.c_str();
 			qstate = mysql_query(conn, q);
 			cout << "\n Successfully Updated!" << endl;
@@ -339,20 +418,21 @@ void ForgetPassword()
 			cout << "Sorry, no such ID exist! Please try again!" << mysql_errno(conn) << endl;
 			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 			system("pause");
-			lg.mainlogin_pg();
+			ForgetPassword();
 		}
 
 	}
 	else if (recover == 'M' || recover == 'm')
 	{
-		lg.mainlogin_pg();
+		main();
 	}
 
 	else
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
-		lg.mainlogin_pg();
+		ForgetPassword();
 	}
+
 }
 

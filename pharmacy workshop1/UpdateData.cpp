@@ -5,7 +5,7 @@
 #include "main_function.h"
 #include "db_connection.h"
 #include "UpdateData.h"
-#include <regex> // Required for regex
+//#include <regex> // Required for regex
 #include <string>
 #undef max    // Undefine the `max` macro
 #include <algorithm> // For std::transform
@@ -82,7 +82,7 @@ double Patient_Height, Patient_Weight;
 void UpdateData::UpdatePatientMenu()
 {
 
-
+	int change;
 	bool valid = false;
 	system("cls");
 	SetConsoleColor(0, 9);
@@ -93,7 +93,6 @@ void UpdateData::UpdatePatientMenu()
 	cout << "\nEnter Patient ID to search (positive numberic input): ";
 	cin >> Patient_ID;
 
-	cout << "\nHere's the record found: \n" << endl;
 	string searchUpd_query = "SELECT * FROM patient WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
 	const char* q = searchUpd_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -126,15 +125,20 @@ void UpdateData::UpdatePatientMenu()
 
 		if (confirmUpd == 'Y' || confirmUpd == 'y')
 		{
+			
+
+		
 			cout << endl << endl;
 			cout << "================================================================================================================================================================================================================" << endl;
 			cout << endl << endl << endl;
+
+		change:
 			SetConsoleColor(0, 9);
 			cout << "****************************" << endl;
 			cout << "  Updation of Information   " << endl;
 			cout << "****************************" << endl;
 			SetConsoleColor(0, 11);
-			cout << "\nEnter information that you want to upd2ate: " << endl;
+			cout << "\nEnter information that you want to update: " << endl;
 			cout << "[1] Patient Name" << endl;
 			cout << "[2] Patient Gender" << endl;
 			cout << "[3] Date of Birth" << endl;
@@ -234,10 +238,23 @@ void UpdateData::UpdatePatientMenu()
 					}
 					else
 					{
+						//DOB details: convert int to string
+						string year = to_string(d_year);
+						string month = to_string(d_month);
+						string day = to_string(d_day);
+						string DOB;
+						DOB.append(year);
+						DOB.append("-");
+						DOB.append(month);
+						DOB.append("-");
+						DOB.append(day);
+
+						//store the copied single string into Patient_DOB to insert into database later
+						Patient_DOB = DOB;
 						break; // Exit loop if the input is valid
 					}
 				}
-				
+
 
 
 				string update_query = "UPDATE patient SET Patient_DOB = '" + Patient_DOB +
@@ -539,7 +556,8 @@ void UpdateData::UpdatePatientMenu()
 				cout << "Error in updation! " << endl;
 				cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 				system("pause");
-				UpdatePatientMenu();
+				system("cls");
+				goto change;
 			}
 		}
 		else
@@ -555,11 +573,10 @@ void UpdateData::UpdatePatientMenu()
 	}
 
 }
-
 void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 {
-	bool valid = false;
 	system("cls");
+	bool valid = false;
 	SetConsoleColor(0, 9);
 	cout << "*************************************" << endl;
 	cout << " UPDATE YOUR OWN  PATIENT'S DETAIL   " << endl;
@@ -577,7 +594,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 		while (row = mysql_fetch_row(res))
 		{
 			SetConsoleColor(1, 11);
-		
+
 			cout << "Patient ID: " << row[0] << endl;
 			cout << "Patient Name: " << row[1] << endl;
 			cout << "Patient Gender: " << row[2] << endl;
@@ -617,13 +634,13 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 			cout << "[6] Patient Weight" << endl;
 			cout << "[7] Patient Tel No" << endl;
 			cout << "[8] Patient Email" << endl;
-			cout << "[9] Medical History" << endl;
+			/*cout << "[9] Medical History" << endl;
 			cout << "[10] Diagnosed Symptoms" << endl;
-			cout << "[11] Active Status" << endl;
+			cout << "[11] Active Status" << endl;*/
 
 
 
-			cout << "\nYour choice (choose 1 number from 1-10)>> ";
+			cout << "\nYour choice (choose 1 number from 1-8)>> ";
 			cin >> UpdChoice;
 
 			if (UpdChoice == "1")
@@ -654,7 +671,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 			}
@@ -685,7 +702,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 			}
@@ -708,6 +725,19 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 					}
 					else
 					{
+						//DOB details: convert int to string
+						string year = to_string(d_year);
+						string month = to_string(d_month);
+						string day = to_string(d_day);
+						string DOB;
+						DOB.append(year);
+						DOB.append("-");
+						DOB.append(month);
+						DOB.append("-");
+						DOB.append(day);
+
+						//store the copied single string into Patient_DOB to insert into database later
+						Patient_DOB = DOB;
 						break; // Exit loop if the input is valid
 					}
 				}
@@ -725,8 +755,10 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cout << "Do you want to continue update record? [Y/N]: ";
 				cin >> continueUpd;
 
+
+
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 			}
@@ -759,7 +791,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 			}
@@ -782,7 +814,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 			}
@@ -806,7 +838,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 
@@ -894,7 +926,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 
@@ -916,104 +948,104 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
+					UpdatePatientOwnDetail(PatientID, name);
 				else
 					lg.PatientMainMenu(name, Patient_ID);
 
 			}
 
-			else if (UpdChoice == "9")
-			{
-				cout << "Medical_History: ";
-				cin.ignore(); // Clear newline character from previous input
-				getline(cin, Medical_History);
+			//else if (UpdChoice == "9")
+			//{
+			//	cout << "Medical_History: ";
+			//	cin.ignore(); // Clear newline character from previous input
+			//	getline(cin, Medical_History);
 
-				string update_query = "UPDATE patient SET Medical_History  = '" + Medical_History + "'WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
-				const char* q = update_query.c_str();
-				qstate = mysql_query(conn, q);
-				cout << "\n Successfully Updated!" << endl;
-				cout << "Do you want to continue update record? [Y/N]: ";
-				cin >> continueUpd;
+			//	string update_query = "UPDATE patient SET Medical_History  = '" + Medical_History + "'WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
+			//	const char* q = update_query.c_str();
+			//	qstate = mysql_query(conn, q);
+			//	cout << "\n Successfully Updated!" << endl;
+			//	cout << "Do you want to continue update record? [Y/N]: ";
+			//	cin >> continueUpd;
 
-				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
-				else
-					lg.PatientMainMenu(name, Patient_ID);
+			//	if (continueUpd == 'Y' || continueUpd == 'y')
+			//		UpdatePatientOwnDetail(PatientID, name);
+			//	else
+			//		lg.PatientMainMenu(name, Patient_ID);
 
-			}
+			//}
 
-			else if (UpdChoice == "10")
-			{
-				cout << "Diagnosed Symtoms : ";
-				cin.ignore(); // Clear newline character from previous input
-				getline(cin, Diagnosed_Symptoms);
+			//else if (UpdChoice == "10")
+			//{
+			//	cout << "Diagnosed Symtoms : ";
+			//	cin.ignore(); // Clear newline character from previous input
+			//	getline(cin, Diagnosed_Symptoms);
 
-				string update_query = "UPDATE patient SET Diagnosed_Symptoms  = '" + Diagnosed_Symptoms + "'WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
-				const char* q = update_query.c_str();
-				qstate = mysql_query(conn, q);
-				cout << "\n Successfully Updated!" << endl;
-				cout << "Do you want to continue update record? [Y/N]: ";
-				cin >> continueUpd;
+			//	string update_query = "UPDATE patient SET Diagnosed_Symptoms  = '" + Diagnosed_Symptoms + "'WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
+			//	const char* q = update_query.c_str();
+			//	qstate = mysql_query(conn, q);
+			//	cout << "\n Successfully Updated!" << endl;
+			//	cout << "Do you want to continue update record? [Y/N]: ";
+			//	cin >> continueUpd;
 
-				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
-				else
-					lg.PatientMainMenu(name, Patient_ID);
+			//	if (continueUpd == 'Y' || continueUpd == 'y')
+			//		UpdatePatientOwnDetail(PatientID, name);
+			//	else
+			//		lg.PatientMainMenu(name, Patient_ID);
 
-			}
+			//}
 
 
 
-			else if (UpdChoice == "11")
-			{
-				while (true)
-				{
-					int choice; // Use an integer for the user input
-					cout << "Enter Active Status (1 for Active, 2 for Inactive): ";
-					cin >> choice;
+			//else if (UpdChoice == "11")
+			//{
+			//	while (true)
+			//	{
+			//		int choice; // Use an integer for the user input
+			//		cout << "Enter Active Status (1 for Active, 2 for Inactive): ";
+			//		cin >> choice;
 
-					// Map numeric input to corresponding strings
-					if (choice == 1)
-					{
-						Active_Status = "Active";
-						break; // Exit the loop if valid
-					}
-					else if (choice == 2)
-					{
-						Active_Status = "Inactive";
-						break; // Exit the loop if valid
-					}
-					else
-					{
-						cout << "Invalid input. Please enter 1 for 'Active' or 2 for 'Inactive'.\n";
-						// Clear the error state and discard invalid input
-						cin.clear();
-						cin.ignore(numeric_limits<streamsize>::max(), '\n');
-						continue;
-					}
-				}
+			//		// Map numeric input to corresponding strings
+			//		if (choice == 1)
+			//		{
+			//			Active_Status = "Active";
+			//			break; // Exit the loop if valid
+			//		}
+			//		else if (choice == 2)
+			//		{
+			//			Active_Status = "Inactive";
+			//			break; // Exit the loop if valid
+			//		}
+			//		else
+			//		{
+			//			cout << "Invalid input. Please enter 1 for 'Active' or 2 for 'Inactive'.\n";
+			//			// Clear the error state and discard invalid input
+			//			cin.clear();
+			//			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			//			continue;
+			//		}
+			//	}
 
-				// Prepare and execute the update query
-				string update_query = "UPDATE patient SET Active_Status = '" + Active_Status + "' WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
-				const char* q = update_query.c_str();
-				qstate = mysql_query(conn, q);
-				cout << "\n Successfully Updated!" << endl;
-				cout << "Do you want to continue update record? [Y/N]: ";
-				cin >> continueUpd;
+			//	// Prepare and execute the update query
+			//	string update_query = "UPDATE patient SET Active_Status = '" + Active_Status + "' WHERE Patient_ID = '" + to_string(Patient_ID) + "';";
+			//	const char* q = update_query.c_str();
+			//	qstate = mysql_query(conn, q);
+			//	cout << "\n Successfully Updated!" << endl;
+			//	cout << "Do you want to continue update record? [Y/N]: ";
+			//	cin >> continueUpd;
 
-				if (continueUpd == 'Y' || continueUpd == 'y')
-					UpdatePatientMenu();
-				else
-					lg.PatientMainMenu(name, Patient_ID);
+			//	if (continueUpd == 'Y' || continueUpd == 'y')
+			//		UpdatePatientOwnDetail(PatientID, name);
+			//	else
+			//		lg.PatientMainMenu(name, Patient_ID);
 
-			}
+			//}
 
 			else
 			{
 				cout << "Error in updation! " << endl;
 				cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 				system("pause");
-				UpdatePatientMenu();
+				UpdatePatientOwnDetail(PatientID, name);
 			}
 		}
 		else
@@ -1025,7 +1057,7 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 	{
 		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
 		system("pause");
-		UpdatePatientMenu();
+		UpdatePatientOwnDetail(PatientID, name);
 	}
 
 }
@@ -1033,9 +1065,11 @@ void  UpdateData::UpdatePatientOwnDetail(int PatientID, string name)
 
 
 
+
 void UpdateData::UpdateHospitalMenu()
 {
 	login lg;
+	int change2;
 	string Hospital_ID, Hospital_Name, Hospital_Street, Hospital_City, Hospital_State, Availibility, name;
 	char UpdChoice, confirmUpd, continueUpd;
 	bool valid = false;
@@ -1075,6 +1109,8 @@ void UpdateData::UpdateHospitalMenu()
 			cout << endl << endl;
 			cout << "================================================================================================================================================================================================================" << endl;
 			cout << endl << endl << endl;
+		change2:
+		
 			SetConsoleColor(0, 9);
 			cout << "****************************" << endl;
 			cout << "  Updation of Information   " << endl;
@@ -1247,7 +1283,8 @@ void UpdateData::UpdateHospitalMenu()
 			{
 				cout << "Error in updation! " << endl;
 				system("pause");
-				UpdateHospitalMenu();
+				system("cls");
+				goto change2;
 			}
 		}
 		else
@@ -1643,7 +1680,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 			cout << "Transaction ID: " << row[0] << endl;
 			cout << "Transaction Time: " << row[1] << endl;
 			cout << "Medication_ID " << row[2] << endl;
-			cout << "Qusntity: " << row[3] << endl;
+			cout << "Quantity: " << row[3] << endl;
 			cout << "Patient_ID: " << row[4] << endl;
 			cout << "Status: " << row[5] << endl;
 			cout << "Hospital_ID: " << row[6] << endl;
@@ -1918,7 +1955,7 @@ void UpdateData::UpdateMedicationTransactionMenu()
 					}
 				}
 
-				string update_query = "UPDATE medication_transaction Status = '" + status + "'WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
+				string update_query = "UPDATE medication_transaction SET Status = '" + status + "'WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
 
@@ -1952,18 +1989,37 @@ void UpdateData::UpdateMedicationTransactionMenu()
 						break; // Exit loop if input is valid
 					}
 				}
-				string update_query = "UPDATE medication_transaction SET Hospital_ID  = '" + to_string(Hospital_ID) + "'WHERE Transaction_ID = '" + to_string(Transaction_ID) + "';";
+
+				// Construct the query
+				string update_query = "UPDATE medication_transaction SET Hospital_ID = " + to_string(Hospital_ID) +
+					" WHERE Transaction_ID = " + to_string(Transaction_ID) + ";";
+
+			
+
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
-				cout << "\n Successfully Updated!" << endl;
-				cout << "Do you want to continue update record? [Y/N]: ";
+
+				// Check if the query was successful
+				if (qstate == 0)
+				{
+					cout << "\nSuccessfully Updated!" << endl;
+				}
+				else
+				{
+					// Log the error message
+					cout << "Failed to update Hospital_ID. Error: " << mysql_error(conn) << endl;
+				}
+
+				// Ask to continue updating records
+				cout << "Do you want to continue updating records? [Y/N]: ";
 				cin >> continueUpd;
 
 				if (continueUpd == 'Y' || continueUpd == 'y')
 					UpdateMedicationTransactionMenu();
 				else
 					lg.StaffControlMain(name);
-			}
+					}
+
 			else
 			{
 				cout << "Error in updation! " << endl;
@@ -2005,7 +2061,6 @@ void UpdateData::UpdateStaff()
 	cout << "\nEnter Staff ID to search (positive numberic input): ";
 	cin >> Staff_ID;
 
-	cout << "\nHere's the record found: \n" << endl;
 	string searchUpd_query = "SELECT * FROM Staff WHERE Staff_ID = '" + Staff_ID + "';";
 	const char* q = searchUpd_query.c_str();
 	qstate = mysql_query(conn, q);
@@ -2336,7 +2391,8 @@ void UpdateData::UpdateStaff()
 
 			else if (UpdChoice == "7")
 			{
-				// Prompt user for Medication ID with validation
+				// Prompt user for Hospital ID with validation
+				bool valid = false;
 				do
 				{
 					cout << "Hospital_ID (e.g. 1): ";
@@ -2355,11 +2411,20 @@ void UpdateData::UpdateStaff()
 					}
 				} while (!valid);
 
+				// Prepare and execute the update query
+				string update_query = "UPDATE Staff SET Hospital_ID = " + to_string(Hospital_ID) + " WHERE Staff_ID = '" + Staff_ID + "';";
+				cout << "Executing query: " << update_query << endl; // Debugging
 
-				string update_query = "UPDATE Staff SET Hospital_ID  = '" + to_string(Hospital_ID) + "'WHERE Staff_ID = '" + Staff_ID + "';";
 				const char* q = update_query.c_str();
 				qstate = mysql_query(conn, q);
-				cout << "\n Successfully Updated!" << endl;
+
+				if (qstate == 0) {
+					cout << "\n Successfully Updated!" << endl;
+				}
+				else {
+					cout << "\n Update failed! Error: " << mysql_error(conn) << endl;
+				}
+
 				cout << "Do you want to continue update record? [Y/N]: ";
 				cin >> continueUpd;
 
@@ -2367,8 +2432,8 @@ void UpdateData::UpdateStaff()
 					UpdateStaff();
 				else
 					lg.AdminControlMenu(name);
+		     }
 
-			}
 
 
 			else

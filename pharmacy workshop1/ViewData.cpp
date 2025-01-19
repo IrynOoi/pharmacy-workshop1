@@ -5,13 +5,13 @@
 #include "main_function.h"
 #include "db_connection.h"
 #include "UpdateData.h"
-#include <regex> // Required for regex
+//#include <regex> // Required for regex
 #include <string>
 #include <hpdf.h>
-#include <sstream>
 #undef max    // Undefine the `max` macro
-#include <algorithm> // For std::transform
+//#include <algorithm> // For std::transform
 #include <sstream>
+#include <vector>
 #include "ViewData.h"
 #include <thread>
 #include <chrono>
@@ -139,9 +139,21 @@ void ViewData::ViewHospitalMenu()
     cout << "[5] Hospital State " << endl;
     cout << "[6] Availability   " << endl;
     cout << "[7] Back to Staff Control Menu " << endl;
-    cout << "\nYour Choice >> ";
-    cin.ignore(1, '\n');
-    cin >> searchHospChoice;
+    while (true) {
+        cout << "\nYour Choice >> ";
+        // Input the choice once
+        if (cin >> searchHospChoice && searchHospChoice >= 1 && searchHospChoice <= 7) {
+            // Valid input
+            break;
+        }
+        else {
+            // Invalid input: clear and prompt again
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input! Please enter a valid number between 1 and 7." << endl;
+        }
+    }
+ 
 
     if (searchHospChoice == 1)
     {
@@ -347,8 +359,37 @@ void ViewData::ViewHospitalMenu()
 
     else if (searchHospChoice == 6)
     {
-        cout << "\nEnter Availability to search: ";
-        cin >> Availability;
+        int Availabilityinput;
+        while (true)
+        {
+            cout << "\nEnter Availability to search (1 for Available, 2 for Unavailable): ";
+            cin >> Availabilityinput;
+
+            // Check for valid input
+            if (cin.fail() || (Availabilityinput!= 1 && Availabilityinput != 2))
+            {
+                // Clear the error flag and ignore invalid input
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                cout << "Invalid input! Please enter 1 for Available or 2 for Unavailable." << endl;
+                continue; // Prompt the user again
+            }
+
+            // Input is valid
+            break;
+        }
+
+        // Output the chosen availability
+        if (Availabilityinput == 1)
+        {
+            Availability = "Available";
+        }
+        else if (Availabilityinput == 2)
+        {
+            Availability = "Unavailable";
+        }
+
         string search_query = "SELECT Hospital_ID, Hospital_Name, Hospital_Street, Hospital_State, Hospital_City,Availability  FROM hospital WHERE Availability LIKE '%" + Availability + "';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
@@ -408,7 +449,7 @@ void ViewData::ViewDrugMenu()
     login lg;
     string Medication_ID, Medication_Name, Medication_Type, Dosage_Form, Strength, Description_text, Side_Effects, usage_text, name, searchDChoice;
     double Price;
-
+    int numericChoice;
     char SearchHosp;
     bool valid = false;
     system("cls");
@@ -430,11 +471,31 @@ void ViewData::ViewDrugMenu()
     cout << "[10] Back to Staff Control Menu " << endl;
 
 
-    cout << "\nYour Choice >> ";
+
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
-    cin >> searchDChoice;
 
+    while (true) {
+        cout << "\nYour Choice >> ";
+        cin >> searchDChoice;
 
+        // Check if input is not empty and is a number
+        bool isNumeric = true;
+        for (char c : searchDChoice) {
+            if (!isdigit(c)) {
+                isNumeric = false;
+                break;
+            }
+        }
+
+        if (!searchDChoice.empty() && isNumeric) {
+           
+            break;
+        }
+        else {
+            // Invalid input
+            cout << "Invalid input! Please enter a valid number." << endl;
+        }
+    }
 
     if (searchDChoice == "1")
     {
@@ -968,8 +1029,9 @@ void ViewData::ViewDrugMenu()
         if (cin.fail())
         {
             cin.clear(); // Clear the error flag
-            cin.ignore(INT_MAX, '\n'); // Ignore invalid input
+     
             cout << "Please enter a valid choice." << endl;
+            system("pause"); // Ignore invalid input
             lg.StaffControlMain(name);
         }
 
@@ -1019,9 +1081,32 @@ void ViewData::ViewPatientMenu()
 
     SetConsoleColor(0, 11);
 
-    cout << "\nYour Choice >> ";
+    while (true)
+    {
+        cout << "\nYour Choice >> ";
+        cin >> searchPChoice;
 
-    cin >> searchPChoice;
+        // Check if the input contains any alphabetic characters
+        bool isNumeric = true;
+        for (char c : searchPChoice)
+        {
+            if (!isdigit(c)) // Check if character is not a digit
+            {
+                isNumeric = false;
+                break;
+            }
+        }
+
+        if (!isNumeric)
+        {
+            cout << "Invalid input! Please enter numbers only." << endl;
+            continue; // Prompt the user again
+        }
+
+        // Input is valid
+        cout << "You entered: " << searchPChoice << endl;
+        break;
+    }
 
 
     if (searchPChoice == "1")
@@ -1810,8 +1895,8 @@ void ViewData::ViewMedicationTransactionMenu()
     login lg;
     string  Transaction_Date, MdId, UpdChoice, status, name, Transaction_Time;
 
-    int Medication_ID, Transaction_ID, searchHospChoice, Patient_ID, Hospital_ID, quantity, choicestatus;
-    char SearchHosp;
+    int Medication_ID, Transaction_ID, SearchMtChoice, Patient_ID, Hospital_ID, quantity, choicestatus;
+    char SearchMt;
     double total_price;
     bool valid = false;
 
@@ -1833,11 +1918,32 @@ void ViewData::ViewMedicationTransactionMenu()
     cout << "[8]  Status  " << endl;
     cout << "[9] Back to Staff Control Menu " << endl;
 
-    cout << "\nYour Choice >> ";
-    cin.ignore(1, '\n');
-    cin >> searchHospChoice;
 
-    if (searchHospChoice == 1)
+    while (true)
+    {
+        cout << "\nYour Choice >> ";
+
+        if (cin >> SearchMtChoice) {
+            // Check if the input is non-negative
+            if (SearchMtChoice >= 0 && SearchMtChoice <= 9)
+            {
+                // Valid input
+                cout << "You entered a valid choice: " << SearchMtChoice << endl;
+                break;
+            }
+            else {
+                // Negative input
+                cout << "Invalid input! Please enter a number from 1-10." << endl;
+            }
+        }
+        else {
+            // Non-numeric input
+            cout << "Invalid input! Please enter a valid number." << endl;
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        }
+    }
+    if (SearchMtChoice == 1)
     {
         do
         {
@@ -1880,10 +1986,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -1894,7 +2000,7 @@ void ViewData::ViewMedicationTransactionMenu()
         }
     }
 
-    if (searchHospChoice == 2)
+    if (SearchMtChoice == 2)
     {
         do
         {
@@ -1937,10 +2043,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -1950,9 +2056,9 @@ void ViewData::ViewMedicationTransactionMenu()
             lg.StaffControlMain(name);
         }
     }
- 
 
-    if (searchHospChoice == 3)
+
+    if (SearchMtChoice == 3)
     {
         do
         {
@@ -1995,10 +2101,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2011,7 +2117,7 @@ void ViewData::ViewMedicationTransactionMenu()
 
     }
 
-    if (searchHospChoice == 4)
+    if (SearchMtChoice == 4)
     {
         do
         {
@@ -2056,10 +2162,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2072,7 +2178,7 @@ void ViewData::ViewMedicationTransactionMenu()
 
     }
 
-    if (searchHospChoice == 5)
+    if (SearchMtChoice == 5)
     {
         do
         {
@@ -2116,10 +2222,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2130,7 +2236,7 @@ void ViewData::ViewMedicationTransactionMenu()
         }
     }
 
-    if (searchHospChoice == 6)
+    if (SearchMtChoice == 6)
     {
         do
         {
@@ -2174,10 +2280,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2191,7 +2297,7 @@ void ViewData::ViewMedicationTransactionMenu()
 
     }
 
-    if (searchHospChoice == 7)
+    if (SearchMtChoice == 7)
     {
         do
         {
@@ -2240,10 +2346,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2257,7 +2363,7 @@ void ViewData::ViewMedicationTransactionMenu()
 
     }
 
-    if (searchHospChoice == 8)
+    if (SearchMtChoice == 8)
     {
         do
         {
@@ -2323,10 +2429,10 @@ void ViewData::ViewMedicationTransactionMenu()
 
             }
             cout << endl << "Do you want to search other medication_transaction with other attribute?[Y/N]: ";
-            cin >> SearchHosp;
-            if (SearchHosp == 'y' || SearchHosp == 'Y')
+            cin >> SearchMt;
+            if (SearchMt == 'y' || SearchMt == 'Y')
                 ViewMedicationTransactionMenu();
-            else if (SearchHosp == 'n' || SearchHosp == 'N')
+            else if (SearchMt == 'n' || SearchMt == 'N')
                 lg.StaffControlMain(name);
         }
         else
@@ -2337,7 +2443,7 @@ void ViewData::ViewMedicationTransactionMenu()
         }
 
     }
-    else if (searchHospChoice == 9)
+    else if (SearchMtChoice == 9)
     {
         lg.StaffControlMain(name);
     }
@@ -2360,12 +2466,12 @@ void ViewData::ViewMedicationTransactionMenu()
 
 
 
-void ViewData::SalesReport()
+
+void ViewData::SalesReport(string name)
 {
     system("cls");
     login lg;
     char option;
-    string name;
     int Staff_ID = 0, maxSales = 0;
     int month ;
     int totalSales;
@@ -3271,11 +3377,10 @@ void ViewData::GeneratePDFSalesReport(MYSQL* conn)
     HPDF_Free(pdf);
 }
 
-void ViewData::ViewStaffAccount(int id)
+void ViewData::ViewStaffAccount(string name,int id)
 {
     system("cls");
     login lg;
-    string Staff_Name;
     SetConsoleColor(0, 9);
     cout << "===================================" << endl;
     cout << "       STAFF ACCOUNT INFORMATION   " << endl;
@@ -3306,14 +3411,14 @@ void ViewData::ViewStaffAccount(int id)
         }
         system("pause");
         system("cls");
-        lg.StaffMainMenu(Staff_Name, id);
+        lg.StaffMainMenu(name, id);
     }
     else
     {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
         system("pause");
         system("cls");
-        lg.StaffMainMenu( Staff_Name,id);
+        lg.StaffMainMenu(name,id);
     }
 
 }
@@ -3435,7 +3540,7 @@ void  ViewData:: ViewStaff()
             }
         } while (!valid); // Continue looping until valid input is received
 
-        string search_query = "SELECT * FROM Staff  WHERE Staff_Name LIKE '%" + Staff_Name + "%';";
+        string search_query = "SELECT * FROM Staff WHERE Staff_Name LIKE '%" + Staff_Name + "%';";
         const char* q = search_query.c_str();
         qstate = mysql_query(conn, q);
         if (!qstate)
@@ -3546,21 +3651,23 @@ void  ViewData:: ViewStaff()
 
     else if (searchPChoice == "4")
     {
+        string Staff_Address;
+
         // Clear the input buffer before getting input again
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        do
-        {
-            cout << "Staff Address: ";
-            // Use getline for robust input handling
 
+        do {
+            cout << "Staff Address: ";
+
+            // Use getline for robust input handling
             getline(cin, Staff_Address);
 
             // Validate the input
-            if (Staff_Address.empty())
-            {
+            if (Staff_Address.empty()) {
                 cerr << "Error: Address cannot be empty. Please try again." << endl;
             }
         } while (Staff_Address.empty());
+
 
         string search_query = "SELECT * FROM Staff WHERE Staff_Address LIKE '%" + Staff_Address + "%';";
         const char* q = search_query.c_str();
@@ -3708,7 +3815,6 @@ void  ViewData:: ViewStaff()
             cin >> searchPChoice;
             if (searchPChoice == "y" || searchPChoice == "Y")
                 ViewStaff();
-            else if (searchPChoice == "n" || searchPChoice == "N")
                 lg.AdminControlMenu(name);
         }
         else
@@ -3723,25 +3829,40 @@ void  ViewData:: ViewStaff()
     {
         cin.clear(); // Clear the error flag
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-        do
-        {
-            cout << "Staff Position: ";
-            getline(cin, Staff_Position);  // Read the entire line including spaces
+        int positionChoice;
+        string Staff_Position;
 
-            // Check if the input is empty
-            if (Staff_Position.empty())
-            {
-                cout << "Input cannot be empty. Please enter a valid position." << endl;
-            }
-            // Check if the input contains any numeric characters
-            else if (any_of(Staff_Position.begin(), Staff_Position.end(), ::isdigit)) {
-                cout << "Input cannot contain numbers. Please enter a valid position." << endl;
+        do {
+            cout << "Staff Position (1=Pharmacist, 2=Pharmacist Assistant, 3=Staff): ";
+            cin >> positionChoice;
+
+            // Validate the numeric input
+            if (cin.fail() || positionChoice < 1 || positionChoice > 3) {
+                // Clear invalid input
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input. Please enter 1 for Pharmacist, 2 for Pharmacist Assistant, or 3 for Staff." << endl;
             }
             else {
-                break;  // Valid input, exit the loop
+                // Assign corresponding position based on the user's choice
+                switch (positionChoice) {
+                case 1:
+                    Staff_Position = "Pharmacist";
+                    break;
+                case 2:
+                    Staff_Position = "Pharmacist Assistant";
+                    break;
+                case 3:
+                    Staff_Position = "Staff";
+                    break;
+                }
+                break;  // Exit loop on valid input
             }
-
         } while (true);  // Keep looping until valid input is provided
+
+        // Output the selected position (for confirmation)
+        cout << "You have selected: " << Staff_Position << endl;
+
         string search_query = "SELECT * FROM Staff WHERE Staff_Position LIKE '%" + Staff_Position + "%';";
 
 
@@ -3929,7 +4050,7 @@ void  ViewData:: ViewStaff()
 
     }
 
-    else if (searchPChoice == "10")
+    else if (searchPChoice == "9")
     {
         lg.AdminControlMenu(name);
     }
@@ -3947,10 +4068,10 @@ void  ViewData:: ViewStaff()
     }
 
 }
-void  ViewData::PatientReport()
+void ViewData::PatientReport(string name)
 {
     login lg;
-    string name;
+
     system("cls");
     SetConsoleColor(0, 9); // Light Blue Text
     cout << "********************" << endl;
@@ -3958,7 +4079,7 @@ void  ViewData::PatientReport()
     cout << "********************" << endl;
 
     SetConsoleColor(0, 11); // Cyan Text
-    cout << " \n" << endl;
+    cout << "\n" << endl;
 
     string viewPatientList_query = "SELECT Patient_ID, Patient_Name, Patient_Address, Patient_TelNo, Medical_History, Diagnosed_Symptoms, Active_Status FROM patient";
     const char* vtr = viewPatientList_query.c_str();
@@ -3969,27 +4090,34 @@ void  ViewData::PatientReport()
         res = mysql_store_result(conn);
         if (res->row_count >= 1)
         {
-            SetConsoleColor(0, 14); //Light Yellow background
-            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-            printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
+            SetConsoleColor(0, 14); // Light Yellow Text                                                                                                                                                                          ------------------------------------------
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            printf("| %-10s | %-30s | %-60s | %-15s | %-30s | %-30s | %-8s |\n",
                 "Patient ID", "Name", "Address", "Tel. No", "Med. History", "Symptoms", "Status");
-            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 
-            SetConsoleColor(0, 7); // White background
+            SetConsoleColor(0, 7); // White Text
+
             while (row = mysql_fetch_row(res))
             {
-                printf("| %-10s | %-60s | %-80s | %-15s | %-40s | %-40s | %-8s |\n",
-                    row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
+                printf("| %-10.10s | %-30.30s | %-60.60s | %-15.15s | %-30.30s | %-30.30s | %-8.8s |\n",
+                    row[0] ? row[0] : "N/A",  // Patient ID
+                    row[1] ? row[1] : "N/A",  // Name
+                    row[2] ? row[2] : "N/A",  // Address
+                    row[3] ? row[3] : "N/A",  // Tel. No
+                    row[4] ? row[4] : "N/A",  // Medical History
+                    row[5] ? row[5] : "N/A",  // Symptoms
+                    row[6] ? row[6] : "N/A"); // Status
             }
 
-            SetConsoleColor(0, 14); // Yellow background
-            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            SetConsoleColor(0, 14); // Light Yellow Text
+            cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 
-            SetConsoleColor(0, 11); // Cyan background
+            SetConsoleColor(0, 11); // Cyan Text
 
             system("pause");
             system("cls");
-            lg.StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+            lg.StaffMainMenu(name, Staff_ID); // Go back to the main menu
         }
         else
         {
@@ -3997,7 +4125,7 @@ void  ViewData::PatientReport()
             cout << "No patient records found!" << endl;
             SetConsoleColor(0, 7); // Reset to White Text
             system("pause");
-           lg. StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+            lg.StaffMainMenu(name, Staff_ID); // Go back to the main menu
         }
     }
     else
@@ -4007,9 +4135,11 @@ void  ViewData::PatientReport()
         cout << "Error Message: " << mysql_error(conn) << endl;
         SetConsoleColor(0, 7); // Reset to White Text
         system("pause");
-        lg.StaffMainMenu(name, Staff_ID); // Replace this if you have a different menu or return point
+        lg.StaffMainMenu(name, Staff_ID); // Go back to the main menu
     }
 }
+
+
 
 void ViewData::ViewDrugList(int id ,string name)
 {
@@ -4045,10 +4175,10 @@ void ViewData::ViewDrugList(int id ,string name)
                     row[0], row[1], row[2], row[3], row[4]);
             }
 
-            SetConsoleColor(0,2); //Green background
+            SetConsoleColor(0,2);
             cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 
-            SetConsoleColor(0, 11); // Cyan Text
+            SetConsoleColor(0, 11);
 
             system("pause");
             system("cls");
@@ -4225,16 +4355,40 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
         cin >> option;
         if (option == 'y' || option == 'Y')
         {
+            // PDF filename
+            const char* filename = "receipt.pdf";
+
+            // Check if file exists
+            std::ifstream fileExistsCheck(filename);
+            if (fileExistsCheck.good()) {
+                std::cout << "The file \"" << filename << "\" already exists. Do you want to overwrite it? (y/n): ";
+                char overwriteChoice;
+                std::cin >> overwriteChoice;
+
+                if (tolower(overwriteChoice) != 'y') {
+                    std::cout << "Operation canceled. The receipt will not be overwritten." << std::endl;
+                    return;
+                }
+            }
+            fileExistsCheck.close();
+
+            // Open a stream to overwrite the file
+            std::ofstream fileCheck(filename, std::ios::out | std::ios::trunc);
+            if (!fileCheck.good()) {
+                std::cerr << "Error opening file for writing." << std::endl;
+                return;
+            }
+            fileCheck.close();
+
             // Create a new PDF document
             HPDF_Doc pdf = HPDF_New(NULL, NULL);
-            if (!pdf) 
-            {
+            if (!pdf) {
                 std::cerr << "Error creating PDF document." << std::endl;
                 return;
             }
 
             // Fetch distinct transaction times for the patient
-            string search_query = "SELECT DISTINCT Transaction_Time FROM medication_transaction WHERE Patient_ID = '" + std::to_string(PatientID) + "';";
+            std::string search_query = "SELECT DISTINCT Transaction_Time FROM medication_transaction WHERE Patient_ID = '" + std::to_string(PatientID) + "';";
             const char* q = search_query.c_str();
             int qstate = mysql_query(conn, q);
 
@@ -4243,9 +4397,8 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
                 MYSQL_ROW row;
 
                 // Loop through each transaction time
-                while ((row = mysql_fetch_row(res)))
-                {
-                    string medication_time = row[0];
+                while ((row = mysql_fetch_row(res))) {
+                    std::string medication_time = row[0];
 
                     // Create a new page in the PDF
                     HPDF_Page page = HPDF_AddPage(pdf);
@@ -4253,7 +4406,7 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
                     HPDF_Page_BeginText(page);
 
                     // Print header for the receipt
-                    HPDF_Page_MoveTextPos(page, 160, 780); // Center-aligned for header
+                    HPDF_Page_MoveTextPos(page, 160, 780);
                     HPDF_Page_ShowText(page, "- - - - O F F I C I A L    R E C E I P T - - - -");
 
                     HPDF_Page_SetFontAndSize(page, HPDF_GetFont(pdf, "Helvetica", NULL), 12);
@@ -4264,7 +4417,7 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
                     struct tm ltm;
                     localtime_s(&ltm, &now);
                     HPDF_Page_ShowText(page, "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    HPDF_Page_MoveTextPos(page, 0, -20); // Move to the next line
+                    HPDF_Page_MoveTextPos(page, 0, -20);
                     char dateTime[50];
                     snprintf(dateTime, sizeof(dateTime), "Date  : %02d-%02d-%d    Time  : %02d:%02d:%02d",
                         ltm.tm_mday, (1 + ltm.tm_mon), (1900 + ltm.tm_year), ltm.tm_hour, ltm.tm_min, ltm.tm_sec);
@@ -4344,10 +4497,11 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
             }
 
             // Save the PDF to a file
-            HPDF_SaveToFile(pdf, "receipt.pdf");
+            HPDF_SaveToFile(pdf, filename);
 
             // Clean up
             HPDF_Free(pdf);
+            std::cout << "Receipt has been successfully saved to \"" << filename << "\"." << std::endl;
 
         }
         else if (option == 'N' || option == 'n')
@@ -4366,13 +4520,13 @@ void ViewData::ViewPatientReceipt(int PatientID,string name)
 }
 
 
-void ViewData::StaffReport()
+void ViewData::StaffReport(string name)
 {
       login lg;
     system("cls");
     showtime();
   
-    string nostaff, name;
+    string nostaff;
     int choice, Staff_ID = 0, gender1, gender2, StaffPosition1, StaffPosition2, StaffPosition3;
     int StaffAge1=0, StaffAge2=0, StaffAge3=0, StaffAge4=0;
     SetConsoleColor(0, 9);
@@ -4540,7 +4694,7 @@ void ViewData::StaffReport()
 
         if (continueRpt == 'y' || continueRpt == 'Y')
         {
-            StaffReport();
+            StaffReport(name);
         }
         else if (continueRpt == 'n' || continueRpt == 'N')
         {
@@ -4672,7 +4826,7 @@ void ViewData::StaffReport()
 
         if (continueRpt == 'y' || continueRpt == 'Y')
         {
-            StaffReport(); // Call the function again
+            StaffReport(name); // Call the function again
         }
         else if (continueRpt == 'n' || continueRpt == 'N')
         {
@@ -4697,9 +4851,10 @@ void ViewData::StaffReport()
 
     else
     {
+       
         cout << "Error in report generation!" << endl;
         system("cls");
-        StaffReport();
+        StaffReport(name);
     }
 
 

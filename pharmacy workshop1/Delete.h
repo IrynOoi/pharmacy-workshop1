@@ -10,7 +10,7 @@ public:
 	void DeleteHospitalMenu();
 	void DeleteDrugMenu();
 	void DeleteMedicationTransactionMenu();
-	void DeleteStaff();
+	void InactivateStaff();
 	
 
 };
