@@ -463,7 +463,7 @@ void Delete::DeletePatientMenu(string name)
 
 		SetConsoleColor(0, 9);
 		cout << "****************************************" << endl;
-		cout << " DELETE / INACTIVE PATIENT 'S RECORD    " << endl;
+		cout << "          INACTIVATE PATIENT 'S RECORD    " << endl;
 		cout << "****************************************" << endl << endl << endl;
 		SetConsoleColor(0, 11);
 		/*cout << "[A] Delete Patient Record" << endl;*/
@@ -698,238 +698,163 @@ void Delete::DeletePatientMenu(string name)
 
 }
 
-void Delete:: InactivateStaff(string name)
+
+void Delete::InactivateStaff(string name)
 {
 	login lg;
 	string Staff_ID;
-	char choice, confirmDel;
+	char choice, confirmDel, confirminactive;
+	bool validInput;
+
 	do
 	{
 		system("cls");
 
 		SetConsoleColor(0, 9);
 		cout << "****************************************" << endl;
-		cout << "          INACTIVE Staff 'S RECORD      " << endl;
+		cout << "          INACTIVATE Staff 'S RECORD      " << endl;
 		cout << "****************************************" << endl << endl << endl;
 		SetConsoleColor(0, 11);
-		/*cout << "[A] Delete Staff Record" << endl;*/
 		cout << "[A] Inactive Staff Record" << endl;
 
-		cout << "Your choice (A): ";
-		cin >> choice;
+		// Validate the choice input (must be 'A' or 'a')
+		validInput = false;
+		while (!validInput) {
+			cout << "Your choice (A): ";
+			cin >> choice;
 
-		//if (choice == 'A' || choice == 'a')
-		//{
+			// Check if the choice is valid ('A' or 'a')
+			if (choice == 'A' || choice == 'a') {
+				validInput = true;
+			}
+			else {
+				cout << "Invalid choice! Please enter 'A' or 'a' only." << endl;
+				// Clear the input buffer to prevent issues from invalid input
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				continue;
+			}
+		}
 
-		//	cout << "\nEnter Staff ID to search: ";
-		//	cin >> Staff_ID;
-
-		//	// Construct the SQL query to check for the matching Staff record 
-		//	string searchDel_query = "SELECT * FROM staff WHERE Staff_ID = '" + Staff_ID + "';";
-	
-		//	const char* q = searchDel_query.c_str();
-		//	qstate = mysql_query(conn, q);
-
-		//	if (!qstate)
-		//	{
-		//		res = mysql_store_result(conn);
-		//		if (res->row_count == 1) // If exactly one row is returned (one matching admin)
-		//		{
-
-		//			while (row = mysql_fetch_row(res))
-		//			{
-		//				SetConsoleColor(1, 11);
-		//				cout << "\nHere's the record found: \n" << endl;
-		//				cout << "Staff ID: " << row[0] << endl;
-		//				cout << "Staff Name: " << row[1] << endl;
-		//				cout << "Staff Gender: " << row[2] << endl;
-		//				cout << "Staff Address: " << row[3] << endl;  // Corrected to match ascending order
-		//				cout << "Staff Tel No: " << row[4] << endl;
-		//				cout << "Staff Position: " << row[5] << endl;
-		//				cout << "Staff Password: " << row[6] << endl;
-		//				cout << "Active Status: " << row[7] << endl;
-		//				cout << "Hospital ID: " << row[8] << endl;  // Adjusted to fit ascending order
-
-		//				SetConsoleColor(0, 11);
-
-		//			}
-		//		}
-		//		else // If no matching admin is found
-		//		{
-		//			char c;
-		//			cout << "\nInvalid Staff_ID . Want to try again? (Y/N): ";
-		//			cin >> c; // Ask the user if they want to try again
-		//			if (c == 'y' || c == 'Y')
-		//				InactivateStaff();
-		//			else
-		//				lg.AdminControlMenu(name);
-		//		}
-		//	}
-		//	else
-		//	{
-		//		// If the query execution failed
-		//		cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
-		//		cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
-		//		system("pause");
-		//		lg.AdminControlMenu(name);
-
-		//	}
-
-
-		//	cout << "Are you sure you want to delete this record? [Y/N]: ";
-		//	cin >> confirmDel;
-
-		//	if (confirmDel == 'Y' || confirmDel == 'y')
-		//	{
-		//		// Modify to delete query instead of update
-		//		string delete_query = "DELETE FROM Staff WHERE Staff_ID = '" + Staff_ID + "'";
-		//		const char* q = delete_query.c_str();
-		//		qstate = mysql_query(conn, q);
-
-		//		if (!qstate)
-		//		{
-		//			cout << "Successfully deleted the Staff's record!" << endl;
-		//			char continueDel;
-		//			bool validInput;
-		//			do
-		//			{
-		//				cout << "Do you want to continue deleting new records? [Y/N]: ";
-		//				cin >> continueDel;
-
-		//				// Clear input buffer
-		//				cin.clear();
-		//				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-		//				// Check for valid input
-		//				if (continueDel == 'y' || continueDel == 'Y') {
-		//					InactivateStaff();
-		//					validInput = true;
-		//				}
-		//				else if (continueDel == 'n' || continueDel == 'N') {
-		//					lg.AdminControlMenu(name);
-		//					validInput = true;
-		//				}
-		//				else {
-		//					cout << "Invalid input! Please enter Y or N only." << endl;
-		//					validInput = false;
-		//				}
-		//			} while (!validInput);
-		//		}
-		//		else
-		//		{
-		//			cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
-		//			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
-		//			system("pause");
-		//			InactivateStaff();
-		//		}
-		//	}
-		//	else
-		//	{
-		//		cout << "Staff record deletion cancelled." << endl;
-		//		system("pause");
-		//		lg.AdminControlMenu(name);
-		//	}
-
-
-
-		//}
-
-		if (choice == 'A' || choice == 'a')
+		// Validate Staff_ID: It must be alphanumeric, no spaces, and no invalid strings
+		validInput = false;
+		while (!validInput)
 		{
 			cout << "\nEnter Staff ID to search: ";
 			cin >> Staff_ID;
-			string search_query = "SELECT * FROM staff WHERE Staff_ID = '" + Staff_ID + "';";
 
+			bool hasInvalidChars = false;
+			// Check if the ID contains spaces
+			if (Staff_ID.find(" ") != string::npos) {
+				cout << "Invalid Staff ID! Staff ID cannot contain spaces. Please try again." << endl;
+				continue;  // Re-enter the Staff ID
+			}
 
-			
-			const char* q = search_query.c_str();
+			// Check if the ID contains non-alphanumeric characters
+			for (char c : Staff_ID) {
+				if (!isalnum(c)) {
+					hasInvalidChars = true;
+					break;
+				}
+			}
+
+			if (hasInvalidChars) {
+				cout << "Invalid Staff ID! Staff ID must be alphanumeric. Please try again." << endl;
+			}
+			else {
+				validInput = true; // Exit loop if valid input
+			}
+		}
+
+		// Construct the SQL query to check for the matching Staff record
+		string search_query = "SELECT * FROM staff WHERE Staff_ID = '" + Staff_ID + "';";
+		const char* q = search_query.c_str();
+		qstate = mysql_query(conn, q);
+
+		if (!qstate)
+		{
+			res = mysql_store_result(conn);
+			if (res->row_count == 1) // If exactly one row is returned (one matching staff)
+			{
+				while (row = mysql_fetch_row(res))
+				{
+					SetConsoleColor(1, 11);
+					cout << "\nHere's the record found: \n" << endl;
+					cout << "Staff ID: " << row[0] << endl;
+					cout << "Staff Name: " << row[1] << endl;
+					cout << "Staff Gender: " << row[2] << endl;
+					cout << "Staff Address: " << row[3] << endl;
+					cout << "Staff Tel No: " << row[4] << endl;
+					cout << "Staff Position: " << row[5] << endl;
+					cout << "Staff Password: " << row[6] << endl;
+					cout << "Active Status: " << row[7] << endl;
+					cout << "Hospital ID: " << row[8] << endl;
+					SetConsoleColor(0, 11);
+				}
+			}
+			else
+			{
+				char c;
+				cout << "\nInvalid Staff ID. Want to try again? (Y/N): ";
+				cin >> c;
+				if (c == 'y' || c == 'Y')
+					InactivateStaff(name); // If yes, call the InactivateStaff function again
+				else
+					lg.AdminControlMenu(name); // Go back to the Admin control menu
+			}
+		}
+		else
+		{
+			// If the query execution failed
+			cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
+			cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
+			system("pause");
+			InactivateStaff(name);
+		}
+
+		// Prompt for confirmation to update the status
+		cout << "Are you sure you want to inactive this record? [Y/N]: ";
+		cin >> confirminactive;
+
+		if (confirminactive == 'Y' || confirminactive == 'y')
+		{
+			// Update query to set Active_Status to 'Inactive' instead of deleting
+			string update_query = "UPDATE Staff SET Active_Status = 'Inactive' WHERE Staff_ID = '" + Staff_ID + "';";
+			const char* q = update_query.c_str();
 			qstate = mysql_query(conn, q);
 
 			if (!qstate)
 			{
-				res = mysql_store_result(conn);
-				if (res->row_count == 1) // If exactly one row is returned (one matching admin)
-				{
+				cout << "Successfully updated the Staff's status to Inactive!" << endl;
+				char continueDel;
 
-					while (row = mysql_fetch_row(res))
-					{
-						SetConsoleColor(1, 11);
-						cout << "\nHere's the record found: \n" << endl;
-						cout << "Staff ID: " << row[0] << endl;
-						cout << "Staff Name: " << row[1] << endl;
-						cout << "Staff Gender: " << row[2] << endl;
-						cout << "Staff Address: " << row[3] << endl;  // Corrected to match ascending order
-						cout << "Staff Tel No: " << row[4] << endl;
-						cout << "Staff Position: " << row[5] << endl;
-						cout << "Staff Password: " << row[6] << endl;
-						cout << "Active Status: " << row[7] << endl;
-						cout << "Hospital ID: " << row[8] << endl;  // Adjusted to fit ascending order
-						SetConsoleColor(0, 11);
-
-					}
-				}
-				else // If no matching admin is found
+				do
 				{
-					char c;
-					cout << "\nInvalid username or password. Want to try again? (Y/N): ";
-					cin >> c; // Ask the user if they want to try again
-					if (c == 'y' || c == 'Y')
-						InactivateStaff(name); // If yes, call the AdminLogin function to try again
-					else
-						lg.AdminControlMenu(name); // If no, call the MainLogin function to return to the main login menu
-				}
+					cout << "Do you want to continue inactivating records? [Y/N]: ";
+					cin >> continueDel;
+
+					if (continueDel == 'y' || continueDel == 'Y')
+						InactivateStaff(name);
+					else if (continueDel == 'n' || continueDel == 'N')
+						lg.AdminControlMenu(name);  // Return to Admin menu
+				} while (continueDel == 'y' || continueDel == 'Y' || continueDel == 'n' || continueDel == 'N');
 			}
 			else
 			{
-				// If the query execution failed
-				cout << "Query Execution Problem!" << mysql_errno(conn) << endl; // Display the MySQL error number
-			}
-
-			char confirminactive;
-
-			cout << "Are you sure you want to inactive this record? [Y/N]: ";
-			cin >> confirminactive;
-
-			if (confirminactive == 'Y' || confirminactive == 'y')
-			{
-				// Update query to set Active_Status to 'Inactive' instead of deleting
-				string update_query = "UPDATE Staff SET Active_Status = 'Inactive' WHERE Staff_ID = '" + Staff_ID + "'";
-				const char* q = update_query.c_str();
-				qstate = mysql_query(conn, q);
-
-				if (!qstate)
-				{
-					cout << "Successfully updated the Staff's status to Inactive!" << endl;
-					char continueDel;
-
-					do
-					{
-						cout << "Do you want to continue inactive records? [Y/N]: ";
-						cin >> continueDel;
-
-						if (continueDel == 'y' || continueDel == 'Y')
-							InactivateStaff(name);
-						else if (continueDel == 'n' || continueDel == 'N')
-							lg.AdminControlMenu(name);  // Assuming this is the next menu or function after deletion
-					} while (continueDel == 'y' || continueDel == 'Y' || continueDel != 'n' || continueDel == 'N');
-				}
-				else
-				{
-					cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
-					cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
-					system("pause");
-					InactivateStaff(name);
-				}
-			}
-			else
-			{
-				cout << "Staff record deletion cancelled." << endl;
+				cout << "Query Execution Problem! Error: " << mysql_errno(conn) << endl;
+				cout << "Error Message: " << mysql_error(conn) << endl; // Print detailed error message
 				system("pause");
-				lg.AdminControlMenu(name);
+				InactivateStaff(name);
 			}
-
-
-
 		}
-	} while (choice != 'A' && choice != 'a' );
+		else
+		{
+			cout << "Staff record inactivation cancelled." << endl;
+			system("pause");
+			lg.AdminControlMenu(name); // Return to the Admin menu
+		}
+
+	} while (choice != 'A' && choice != 'a');
 }
+
+

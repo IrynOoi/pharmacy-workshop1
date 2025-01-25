@@ -25,8 +25,6 @@ void registration::Registration()
 	string name;
 	system("cls");
 
-
-
 	system("color 70"); // 'F' is white for background, '0' is black for text
 	SetConsoleColor(0, 8);
 	cout << "**********************" << endl;
@@ -38,32 +36,38 @@ void registration::Registration()
 	cout << "[1] As Patient" << endl;
 	cout << "[2] Back to Main Menu" << endl;
 	cout << "\nYour choice (1 - 2): ";
-	cin >> userRole;
 
+	// Input handling with proper error checking
+	while (true) {  // Loop until a valid input is received
+		cin >> userRole;
+
+		if (cin.fail()) {
+			cin.clear();  // Clears the error state
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discards invalid input
+			cout << "Invalid choice! Please enter a number between 1 and 2: ";
+		}
+		else if (userRole < 1 || userRole > 2) {
+			// If input is out of range
+			cout << "Invalid choice! Please enter a number between 1 and 2: ";
+		}
+		else {
+			break;  // Exit the loop if input is valid
+		}
+	}
 
 	switch (userRole)
 	{
-	/*case 1:
-		verify_identity();
-		registrationStaff();
-		break;*/
-
 	case 1: // Patient Registration
-		
-		registrationPatient();// Save or process patient details here
-		
+		registrationPatient(); // Save or process patient details here
 		break;
 
-	case 2: 
-		main();
+	case 2:
+		main();  // Assuming you have a function to go back to the main menu
 		cout << "Returning to Main Menu..." << endl;
-
 		break;
 
-	default: // Invalid choice
-		cout << "Invalid choice! Please enter a number between 1 and 3." << endl;
-		system("pause");
-		Registration();
+	default: // This block is technically unreachable due to the input check above
+		cout << "Invalid choice! Please enter a number between 1 and 2." << endl;
 		break;
 	}
 }

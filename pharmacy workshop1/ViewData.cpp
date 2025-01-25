@@ -2580,7 +2580,7 @@ void ViewData::SalesReport(string name)
         cout << "\t\t\t\t" << " ";
         for (int i = 0; i < numYears; ++i) 
         {
-            cout << "   " << yearLabels[i] << "  ";
+            cout << " " << yearLabels[i] << "  ";
         }
     }
     else 

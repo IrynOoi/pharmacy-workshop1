@@ -228,19 +228,18 @@ void login::mainlogin_pg()
 //
 //}
 
-void login::AdminControlMenu(string name) 
-{
+void login::AdminControlMenu(string name) {
 	InsertData id;
 	UpdateData ud;
 	login lg;
 	Delete dl;
 	ViewData vr;
-	char AddStaff;
+	char AdminControl;
 	string AdminInfo[1];
 	AdminInfo[0] = name;
 	system("cls");
 	SetConsoleColor(0, 9);
-	char AdminControl;
+
 	cout << "********************" << endl;
 	cout << " ADMIN CONTROL MENU " << endl;
 	cout << "********************" << endl;
@@ -255,12 +254,26 @@ void login::AdminControlMenu(string name)
 	cout << "[D] Search and View Staff" << endl;
 	cout << "[M] Back to Staff Main Menu" << endl;
 
-	cout << "\nPlease enter your choice (A, B, C, D, M): ";
-	cin >> AdminControl;
+	// Input validation loop
+	while (true) {
+		cout << "\nPlease enter your choice (A, B, C, D, M): ";
+		cin >> AdminControl;
 
-	switch (AdminControl)
-	{
+		// Check if input is valid: a single character and one of 'A'-'D' or 'M'
+		if (cin.fail() || (AdminControl < 'A' || AdminControl > 'D') && AdminControl != 'M' && (AdminControl < 'a' || AdminControl > 'd') && AdminControl != 'm' || cin.peek() != '\n') {
+			// Invalid input: clear the error state and discard the remaining characters
+			cin.clear();  // Clear error state
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discard invalid input
+			cout << "Invalid Choice! Only letters A, B, C, D, or M are allowed. Please enter again: ";
+		}
+		else {
+			// Valid input, break out of the loop
+			break;
+		}
+	}
 
+	// Handle valid inputs
+	switch (AdminControl) {
 	case 'A':
 	case 'a':
 		id.AddStaffs(AdminInfo[0]);
@@ -284,23 +297,22 @@ void login::AdminControlMenu(string name)
 		vr.ViewStaff(AdminInfo[0]);
 		break;
 
-
 	case 'M':
 	case 'm':
 		system("cls");
 		StaffMainMenu(AdminInfo[0], Staff_ID);
 		break;
 
-
 	default:
+		// Should never reach here due to validation
 		cout << "Invalid choice!" << endl;
 		system("pause");
 		AdminControlMenu(AdminInfo[0]);
+		break;
 	}
-
-	
-
 }
+
+
 
 
 
@@ -314,9 +326,9 @@ void login::AdminControlMenu(string name)
 void login::login_patient()
 {
 	string Patient_Password; // Variable to store the Patient's password
-	string  Patient_Name;
-
-	// Assuming you have already defined necessary variables and connections
+	string Patient_Name;
+	int Patient_ID = 0; // Initialize Patient_ID
+	bool validInput = false; // To check if the input is valid
 
 	system("color B0");
 	system("cls"); // Clear the console screen
@@ -327,33 +339,66 @@ void login::login_patient()
 	cout << endl;
 
 	SetConsoleColor(0, 11);
-	cout << "Enter Patient ID: ";
-	cin >> Patient_ID; // Read the Patient ID from the user
 
-	cout << "Enter Password: ";
-	char ch;
-	while ((ch = _getch()) != 13) // Read each character of the password until Enter key (ASCII 13) is pressed
-	{
-		if (ch == 8) // Backspace (ASCII 8)
-		{
-			if (!Patient_Password.empty())
-			{
-				Patient_Password.pop_back(); // Remove the last character from the password string
-				cout << "\b \b"; // Overwrite the asterisk and move back again
-			}
+	// Validate Patient ID input
+	while (!validInput) {
+		cout << "Enter Patient ID: ";
+		cin >> Patient_ID;
+
+		// Check if the Patient ID is a valid number (positive integer)
+		if (cin.fail() || Patient_ID <= 0) {
+			cin.clear(); // Clear error flag
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
+			cout << "Invalid Patient ID! Please enter a valid positive number." << endl;
 		}
-		else if (ch == ' ') // Allow spaces in the password
-		{
-			Patient_Password += ch;
-			cout << " "; // Display a space
-		}
-		else
-		{
-			Patient_Password += ch; // Append each character to the password string
-			cout << "*"; // Display an asterisk for each character typed
+		else {
+			validInput = true;
 		}
 	}
-	cout << endl; // Move to the next line after pressing Enter
+
+	// Validate Patient Password input
+	validInput = false; // Reset validInput for password validation
+	while (!validInput) {
+		cout << "Enter Password: ";
+		char ch;
+		Patient_Password.clear(); // Clear any previous input
+
+		while ((ch = _getch()) != 13) // Read each character of the password until Enter key (ASCII 13) is pressed
+		{
+			if (ch == 8) // Backspace (ASCII 8)
+			{
+				if (!Patient_Password.empty()) {
+					Patient_Password.pop_back(); // Remove the last character from the password string
+					cout << "\b \b"; // Overwrite the asterisk and move back again
+				}
+			}
+			else if (ch == ' ') // Allow spaces in the password but check for more than one space
+			{
+				// Disallow consecutive spaces in the password
+				if (Patient_Password.empty() || Patient_Password.back() != ' ') {
+					Patient_Password += ch;
+					cout << " "; // Display a space
+				}
+			}
+			else
+			{
+				Patient_Password += ch; // Append each character to the password string
+				cout << "*"; // Display an asterisk for each character typed
+			}
+		}
+		cout << endl; // Move to the next line after pressing Enter
+
+		// Check if the password is valid (not empty and no multiple spaces)
+		if (Patient_Password.empty()) {
+			cout << "Password cannot be empty. Please enter a valid password." << endl;
+		}
+		else if (Patient_Password.find("  ") != string::npos) { // Check if there are multiple spaces
+			cout << "Password cannot contain multiple consecutive spaces. Please enter a valid password." << endl;
+		}
+		else {
+			validInput = true; // Valid password entered
+		}
+	}
 
 	// Construct the SQL query to check for a matching Patient user in the database
 	string checkUser_query = "SELECT Patient_ID, Patient_Name FROM Patient WHERE Patient_ID = '" + to_string(Patient_ID) + "' AND Patient_Password = sha1('" + Patient_Password + "') AND Active_Status = 'Active'";
@@ -379,7 +424,7 @@ void login::login_patient()
 				}
 
 				system("cls"); // Clear the console screen
-				PatientMainMenu(Patient_Name,Patient_ID); // Call the function to display the Patient main menu, passing the Patient_Name
+				PatientMainMenu(Patient_Name, Patient_ID); // Call the function to display the Patient main menu, passing the Patient_Name
 			}
 			else // If no matching Patient is found
 			{
@@ -397,9 +442,8 @@ void login::login_patient()
 			cout << "No results returned by the query. Error: " << mysql_errno(conn) << endl; // If there's no result from the query
 		}
 	}
-
-
 }
+
 
 
 void login::PatientMainMenu(string name, int Patient_ID)
@@ -468,8 +512,7 @@ void login::PatientMainMenu(string name, int Patient_ID)
 
 }
 
-void login::StaffControlMain(string Staff_Name)
-{
+void login::StaffControlMain(string Staff_Name) {
 	string StaffInfo[1];
 	StaffInfo[0] = Staff_Name;
 	InsertData id;
@@ -500,23 +543,35 @@ void login::StaffControlMain(string Staff_Name)
 	cout << "[H] Delete Medication Transaction Record" << endl;
 	cout << "[I] Update Record of Patient" << endl;
 	cout << "[J] Update Record of Hospital" << endl;
-	cout << "[K] Update Record of Drug  " << endl;
+	cout << "[K] Update Record of Drug" << endl;
 	cout << "[L] Update Record of Medication Transaction" << endl;
 	cout << "[M] Search and View Record of Patient" << endl;
 	cout << "[N] Search and View Record of Hospital" << endl;
-	cout << "[O] Search and View Record of Drug  " << endl;
+	cout << "[O] Search and View Record of Drug" << endl;
 	cout << "[P] Search and View Record of Medication Transaction" << endl;
-	cout << "[Q] Back to Staff  Main Menu" << endl;
-
+	cout << "[Q] Back to Staff Main Menu" << endl;
 
 	cout << "\nPlease enter your choice (A-Q): ";
-	cin >> StaffControl;
 
+	// Loop until valid input is received
+	while (true) {
+		cin >> StaffControl;
 
+		// Check if the input is a valid single character (A-Q or a-q)
+		if (cin.fail() || (StaffControl < 'A' || StaffControl > 'Q') && (StaffControl < 'a' || StaffControl > 'q') || cin.peek() != '\n') {
+			// Invalid input: clear the input buffer and prompt again
+			cin.clear();  // Clear error state
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discard invalid input
+			cout << "Invalid Choice! Only letters between A and Q (or a and q) are allowed! Please enter again: ";
+		}
+		else {
+			// Valid input, break out of the loop
+			break;
+		}
+	}
 
-	switch (StaffControl)
-	{
-
+	// Switch case to handle valid choices
+	switch (StaffControl) {
 	case 'A':
 	case 'a':
 		id.AddPatientMenu(StaffInfo[0]);
@@ -544,11 +599,11 @@ void login::StaffControlMain(string Staff_Name)
 	case 'e':
 		dl.DeletePatientMenu(StaffInfo[0]);
 		break;
+
 	case 'F':
 	case 'f':
 		dl.DeleteHospitalMenu(StaffInfo[0]);
 		break;
-
 
 	case 'G':
 	case 'g':
@@ -559,6 +614,7 @@ void login::StaffControlMain(string Staff_Name)
 	case 'h':
 		dl.DeleteMedicationTransactionMenu(StaffInfo[0]);
 		break;
+
 	case 'I':
 	case 'i':
 		ud.UpdatePatientMenu(StaffInfo[0]);
@@ -599,23 +655,22 @@ void login::StaffControlMain(string Staff_Name)
 		vd.ViewMedicationTransactionMenu(StaffInfo[0]);
 		break;
 
-
 	case 'Q':
 	case 'q':
 		system("cls");
 		StaffMainMenu(StaffInfo[0], Staff_ID);
 		break;
 
-
-
 	default:
 		cout << "Invalid choice!" << endl;
 		system("pause");
 		StaffControlMain(StaffInfo[0]);
-
+		break;
 	}
 }
 
+
+#include <limits> // for std::numeric_limits
 
 void login::StaffMainMenu(string name, int Staff_ID) {
 	char StaffMainChoice;
@@ -643,47 +698,50 @@ void login::StaffMainMenu(string name, int Staff_ID) {
 	cout << "[6] Staff Report" << endl;
 	cout << "[7] Back to  Login Main Menu" << endl;
 	cout << "\nYour choice (1 - 7): ";
-	cin >> StaffMainChoice;
 
-	while (1)
-	{
-		if (StaffMainChoice == '1')
-		{
-			StaffControlMain(staffInfo[1]); // Pass staff name
-			break;
-		}
-		else if (StaffMainChoice == '2') {
-			vd.SalesReport(staffInfo[1]);
-			break;
-		}
-		else if (StaffMainChoice == '3') {
-			vd.PatientReport(staffInfo[1]);
-			break;
-		}
-		else if (StaffMainChoice == '4') {
-			vd.ViewStaffAccount(staffInfo[1],stoi(staffInfo[0])); // Use Staff_ID from array
-			break;
-		}
-		else if (StaffMainChoice == '5') {
-			AdminControlMenu(staffInfo[1]); // Pass staff name
-			break;
-		}
-		else if (StaffMainChoice == '6') {
-			vd.StaffReport(staffInfo[1]);
-			break;
-		}
-		else if (StaffMainChoice == '7') {
-			mainlogin_pg();
-			break;
+	// Loop until valid input is received
+	while (true) {
+		cin >> StaffMainChoice;
+
+		// Check if the input is a valid number (between '1' and '7')
+		if (cin.fail() || StaffMainChoice < '1' || StaffMainChoice > '7' || cin.peek() != '\n') {
+			// Invalid input: clear the input buffer and prompt again
+			cin.clear();  // Clear error state
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Discard invalid input
+			cout << "Invalid Choice! Only numbers between 1 and 7 are allowed! Please enter again: ";
 		}
 		else {
-			cout << "Invalid Choice! Only numeric number! Please enter again! ";
-			cout << "\n";
-			system("pause");
-			StaffMainMenu(staffInfo[1], stoi(staffInfo[0])); // Pass name and Staff_ID from array
+			// Valid input, break out of the loop
+			break;
 		}
 	}
+
+	// Switch case to handle valid choices
+	switch (StaffMainChoice) {
+	case '1':
+		StaffControlMain(staffInfo[1]); // Pass staff name
+		break;
+	case '2':
+		vd.SalesReport(staffInfo[1]);
+		break;
+	case '3':
+		vd.PatientReport(staffInfo[1]);
+		break;
+	case '4':
+		vd.ViewStaffAccount(staffInfo[1], stoi(staffInfo[0])); // Use Staff_ID from array
+		break;
+	case '5':
+		AdminControlMenu(staffInfo[1]); // Pass staff name
+		break;
+	case '6':
+		vd.StaffReport(staffInfo[1]);
+		break;
+	case '7':
+		mainlogin_pg();
+		break;
+	}
 }
+
 
 
 
