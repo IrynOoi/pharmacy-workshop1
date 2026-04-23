@@ -5,20 +5,23 @@ The system will integrate key modules such as Authentication and Validation (use
 
 By automating these processes, the Pharmacy Management System aims to minimize human error, optimize stock control, and ensure efficient, reliable, and customer-centered pharmacy operations.
 
+<br><br>
 <img width="944" height="454" alt="image" src="https://github.com/user-attachments/assets/5cbcfd4f-73fa-45a4-afa3-ad56b1a72f11" />
 
+<br><br>
 
 <img width="944" height="589" alt="image" src="https://github.com/user-attachments/assets/89b02754-d6ed-4377-bdff-1ec08baea6db" />
 
+<br><br>
 
 <img width="928" height="576" alt="image" src="https://github.com/user-attachments/assets/4448f523-a4c4-44ed-af0d-982d288d6987" />
-
+<br><br>
 
 <img width="855" height="560" alt="image" src="https://github.com/user-attachments/assets/8c964a72-6e92-4947-a578-3b58e597175b" />
 
-
+<br><br>
 <img width="944" height="468" alt="image" src="https://github.com/user-attachments/assets/2243b747-1758-4508-8269-6b979d0eb8ab" />
-
+<br><br>
 
 <img width="944" height="636" alt="image" src="https://github.com/user-attachments/assets/17f0e411-3a19-4511-ac43-421a5387deff" />
 
