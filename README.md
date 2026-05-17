@@ -1,4 +1,4 @@
-## BITU 2913 WORKSHOP 1
+## Pharmacy Management System (BITU 2913 WORKSHOP 1)
 Pharmacies play a vital role in ensuring patients receive the right medications promptly and accurately. However, manual handling of prescriptions, stock management, and billing processes often lead to inefficiencies, delays, and errors. To address these challenges, this project proposes the development of an automated Pharmacy Management System designed to streamline pharmacy operations, enhance accuracy, and improve overall service delivery.
 
 The system will integrate key modules such as Authentication and Validation (user login, registration, and password recovery), User Profile Management (for both staff and patients), Medication and Prescription Management (to handle inventory and prescription records), and Report Generation (for monitoring prescriptions, medication history, and inventory levels).
