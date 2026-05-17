@@ -5,6 +5,12 @@ The system will integrate key modules such as Authentication and Validation (use
 
 By automating these processes, the Pharmacy Management System aims to minimize human error, optimize stock control, and ensure efficient, reliable, and customer-centered pharmacy operations.
 
+## Objectives
+-To develop a console application to integrate several modules consisting of inventory management, billing and report.
+-To perform calculation for the billing process and generate report
+
+
+
 <br><br>
 <img width="944" height="454" alt="image" src="https://github.com/user-attachments/assets/5cbcfd4f-73fa-45a4-afa3-ad56b1a72f11" />
 
