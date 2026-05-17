@@ -34,17 +34,17 @@ By automating these processes, the Pharmacy Management System aims to minimize h
 <img width="944" height="468" alt="image" src="https://github.com/user-attachments/assets/2243b747-1758-4508-8269-6b979d0eb8ab" />
 <br><br>
 
-# Staff Main Menu View
+# Patient Main Menu View
 <img width="944" height="636" alt="image" src="https://github.com/user-attachments/assets/17f0e411-3a19-4511-ac43-421a5387deff" />
 <br><br>
-
+# Sales Yearly Report View
 <img width="914" height="483" alt="image" src="https://github.com/user-attachments/assets/c0e67e4f-2566-4ce1-88e2-f1ab78396701" />
 <br><br>
-
+# Sales Monthly Report View
 <img width="914" height="629" alt="image" src="https://github.com/user-attachments/assets/95bb9b75-ccb2-4fc6-800b-c1ee8f61b2b3" />
 
 <br><br>
-
+# Sales Daily Report View 
 <img width="881" height="674" alt="image" src="https://github.com/user-attachments/assets/8fda2f38-7a1d-4ae6-8620-515c6ce89124" />
 <br><br>
 
