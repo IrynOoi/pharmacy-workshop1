@@ -7,6 +7,8 @@ By automating these processes, the Pharmacy Management System aims to minimize h
 
 ## Objectives
 -To develop a console application to integrate several modules consisting of inventory management, billing and report.
+<br><br>
+
 -To perform calculation for the billing process and generate report
 
 
