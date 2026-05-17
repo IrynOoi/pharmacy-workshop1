@@ -5,11 +5,42 @@ The system will integrate key modules such as Authentication and Validation (use
 
 By automating these processes, the Pharmacy Management System aims to minimize human error, optimize stock control, and ensure efficient, reliable, and customer-centered pharmacy operations.
 
-## Objectives
--To develop a console application to integrate several modules consisting of inventory management, billing and report.
-<br><br>
+## 📌 Overview
+The **Pharmacy Management System** is a C++ console-based application built for Windows that integrates with a MySQL database. It is designed to replace manual pharmacy workflows such as patient records, medication tracking, transactions, and reporting, which are often slow and error-prone.
 
--To perform calculation for the billing process and generate report
+This system provides a structured and efficient way to manage pharmacy operations with role-based access for staff and patients.
+
+---
+
+## 🎯 Objectives
+- Digitize pharmacy record management
+- Implement secure authentication for staff and patients
+- Manage operational data (patients, medications, transactions)
+- Generate reports and receipts automatically
+- Integrate C++ with MySQL and PDF reporting
+
+---
+
+## ⚙️ Features
+
+### 🔐 Authentication System
+- Staff and patient login
+- User registration
+- Password recovery
+
+### 📋 Record Management
+- Patient records
+- Hospital records
+- Medication records
+- Transaction management
+
+### 📊 Reporting & Billing
+- Daily, monthly, and yearly sales reports
+- Receipt generation
+- PDF export:
+  - `sales_report.pdf`
+  - `receipt.pdf`
+
 
 
 
