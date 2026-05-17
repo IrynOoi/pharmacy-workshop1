@@ -14,17 +14,19 @@ By automating these processes, the Pharmacy Management System aims to minimize h
 
 
 <br><br>
+# Loading bar View
 <img width="944" height="454" alt="image" src="https://github.com/user-attachments/assets/5cbcfd4f-73fa-45a4-afa3-ad56b1a72f11" />
 
 <br><br>
-
+# Welcome message View
 <img width="944" height="589" alt="image" src="https://github.com/user-attachments/assets/89b02754-d6ed-4377-bdff-1ec08baea6db" />
 
 <br><br>
-
+# Main Menu View
 <img width="928" height="576" alt="image" src="https://github.com/user-attachments/assets/4448f523-a4c4-44ed-af0d-982d288d6987" />
 <br><br>
 
+# Login Main Menu View
 <img width="855" height="560" alt="image" src="https://github.com/user-attachments/assets/8c964a72-6e92-4947-a578-3b58e597175b" />
 
 <br><br>
